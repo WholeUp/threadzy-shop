@@ -11,9 +11,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Top Announcement Bar -->
-    <div class="announcement-bar">
-      <span>FREE DELIVERY FOR MEMBERS ON ORDERS OVER ₹1999 | EASY 15-DAY RETURNS</span>
+    <!-- Top Utility Bar (Real H&M Style) -->
+    <div class="top-utility-bar">
+      <div class="utility-left">
+        <a href="#" class="info-trigger-link" data-page="customer-service">Customer Service</a>
+        <a href="#" class="info-trigger-link" data-page="newsletter">Newsletter</a>
+        <a href="#" class="info-trigger-link" data-page="find-store">Find a store</a>
+      </div>
+      <div class="utility-center">
+        <span>FREE SHIPPING ON ORDERS OVER ₹1999 | EASY RETURNS</span>
+      </div>
+      <div class="utility-right">
+        <span class="member-perk-text">Join Member Club & Get 15% Off</span>
+      </div>
     </div>
 
     <!-- Main Navigation Header -->
@@ -24,18 +34,22 @@
           <a href="#" class="brand-logo" id="brand-logo">THREADZY</a>
         </div>
 
-        <!-- Main Categories (Desktop Nav) -->
+        <!-- Main Categories (Desktop Nav - Exactly like H&M) -->
         <nav class="desktop-nav">
           <ul class="nav-links">
             <li><a href="#" class="nav-link active" data-category="all">Shop All</a></li>
+            <li><a href="#" class="nav-link" data-category="ladies">Ladies</a></li>
             <li><a href="#" class="nav-link" data-category="men">Men</a></li>
-            <li><a href="#" class="nav-link" data-category="women">Women</a></li>
             <li><a href="#" class="nav-link" data-category="divided">Divided</a></li>
-            <li><a href="#" class="nav-link" data-category="sale">Sale</a></li>
+            <li><a href="#" class="nav-link" data-category="kids">Kids</a></li>
+            <li><a href="#" class="nav-link" data-category="home">HOME</a></li>
+            <li><a href="#" class="nav-link" data-category="beauty">Beauty</a></li>
+            <li><a href="#" class="nav-link" data-category="sport">Sport</a></li>
+            <li><a href="#" class="nav-link text-red" data-category="sale">Sale</a></li>
           </ul>
         </nav>
 
-        <!-- Utility Navigation (Search, Favorites, Cart) -->
+        <!-- Utility Navigation (Search, Profile, Favorites, Cart) -->
         <div class="utility-nav">
           <!-- Search Bar (Inline expandable) -->
           <div class="search-wrapper">
@@ -45,13 +59,13 @@
               </svg>
             </button>
             <div class="search-input-container" id="search-container">
-              <input type="text" id="search-input" placeholder="Search products..." autocomplete="off">
+              <input type="text" id="search-input" placeholder="Search product, style..." autocomplete="off">
               <button id="search-clear-btn">&times;</button>
             </div>
           </div>
 
           <!-- User Profile -->
-          <button class="icon-btn" id="profile-btn" aria-label="Profile">
+          <button class="icon-btn info-trigger-link" data-page="member-club" aria-label="Profile">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
             </svg>
@@ -76,13 +90,14 @@
       </div>
     </header>
 
-    <!-- Mobile Nav Bar (Visible on smaller screens) -->
+    <!-- Mobile Nav Bar (Categories) -->
     <div class="mobile-nav-bar">
       <button class="mobile-link active" data-category="all">All</button>
+      <button class="mobile-link" data-category="ladies">Ladies</button>
       <button class="mobile-link" data-category="men">Men</button>
-      <button class="mobile-link" data-category="women">Women</button>
       <button class="mobile-link" data-category="divided">Divided</button>
-      <button class="mobile-link" data-category="sale">Sale</button>
+      <button class="mobile-link" data-category="kids">Kids</button>
+      <button class="mobile-link text-red" data-category="sale">Sale</button>
     </div>
 
     <main class="main-content">
@@ -90,11 +105,11 @@
       <section class="hero-section" id="hero-banner">
         <div class="hero-image-overlay"></div>
         <div class="hero-content">
-          <span class="hero-tagline">NEW SEASON SELECTIONS</span>
-          <h1 class="hero-title">STREETWEAR<br>REDEFINED</h1>
-          <p class="hero-description">Discover the latest drop featuring clean structures, retro graphic typography, and premium utility silhouettes.</p>
+          <span class="hero-tagline">STREETWEAR SEASON EXCLUSIVE</span>
+          <h1 class="hero-title">1000+ DESIGNS<br>UNLOCKED</h1>
+          <p class="hero-description">Discover the largest collection of retro graphic hoodies, camp collar shirts, utility overshirts, and custom tees.</p>
           <div class="hero-buttons">
-            <button class="btn btn-primary hero-btn" data-target-category="all">SHOP NOW</button>
+            <button class="btn btn-primary hero-btn" data-target-category="all">EXPLORE CATALOG</button>
             <button class="btn btn-secondary hero-btn" data-target-category="sale">SEASON SALE</button>
           </div>
         </div>
@@ -102,55 +117,160 @@
 
       <!-- Main E-commerce Layout -->
       <div class="store-layout-container">
-        <!-- Sidebar Filters -->
-        <aside class="filter-sidebar" id="filter-sidebar">
-          <div class="filter-header">
-            <h3>Filters</h3>
-            <button id="clear-all-filters-btn">Clear All</button>
+        <!-- Sidebar Navigation Tree & Expandable Filter System (DITTO H&M) -->
+        <aside class="sidebar-aside" id="sidebar-aside">
+          <!-- Sub-category Selection Tree -->
+          <div class="category-tree-container">
+            <h3 class="category-tree-title" id="active-category-title">Shop All</h3>
+            <ul class="category-tree-links" id="subcategory-links">
+              <li><button class="subcategory-btn active" data-subcategory="all">View All</button></li>
+              <li><button class="subcategory-btn" data-subcategory="t-shirts">T-shirts & Tanks</button></li>
+              <li><button class="subcategory-btn" data-subcategory="shirts">Shirts</button></li>
+              <li><button class="subcategory-btn" data-subcategory="hoodies">Hoodies & Sweatshirts</button></li>
+              <li><button class="subcategory-btn" data-subcategory="pants">Trousers & Joggers</button></li>
+              <li><button class="subcategory-btn" data-subcategory="jeans">Jeans</button></li>
+              <li><button class="subcategory-btn" data-subcategory="jackets">Jackets & Coats</button></li>
+            </ul>
           </div>
 
-          <!-- Price Filter -->
-          <div class="filter-group">
-            <h4 class="filter-title">Price Range</h4>
-            <div class="price-range-container">
-              <span id="price-min">₹0</span>
-              <input type="range" id="price-slider" min="0" max="4999" value="4999" step="100">
-              <span id="price-val">₹4999</span>
+          <!-- Expandable Filter Accordions -->
+          <div class="filter-accordion-system">
+            <div class="filter-header">
+              <h3>Filters</h3>
+              <button id="clear-all-filters-btn">Clear All</button>
             </div>
-          </div>
 
-          <!-- Color Filter -->
-          <div class="filter-group">
-            <h4 class="filter-title">Colors</h4>
-            <div class="color-options-grid">
-              <button class="color-swatch-filter" data-color="Black" title="Black" style="background-color: #1a1a1a; border: 1px solid #000;"></button>
-              <button class="color-swatch-filter" data-color="White" title="White" style="background-color: #fafafa; border: 1px solid #ccc;"></button>
-              <button class="color-swatch-filter" data-color="Cream" title="Cream" style="background-color: #f5f2eb; border: 1px solid #dcd8d0;"></button>
-              <button class="color-swatch-filter" data-color="Navy" title="Navy" style="background-color: #0b1f3f; border: 1px solid #0b1f3f;"></button>
-              <button class="color-swatch-filter" data-color="Sage" title="Sage" style="background-color: #8fa08c; border: 1px solid #8fa08c;"></button>
-              <button class="color-swatch-filter" data-color="Beige" title="Beige" style="background-color: #dfd3c3; border: 1px solid #cfc1b0;"></button>
+            <!-- Accordion Group: Sort By -->
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                <span>Sort By</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <select id="sort-selector" class="custom-select">
+                  <option value="default">Recommended</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="newest">Newest Arrivals</option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <!-- Size Filter -->
-          <div class="filter-group">
-            <h4 class="filter-title">Sizes</h4>
-            <div class="size-options-grid">
-              <button class="size-btn-filter" data-size="S">S</button>
-              <button class="size-btn-filter" data-size="M">M</button>
-              <button class="size-btn-filter" data-size="L">L</button>
-              <button class="size-btn-filter" data-size="XL">XL</button>
+            <!-- Accordion Group: Price Range -->
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                <span>Price</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <div class="price-range-container">
+                  <div class="price-labels">
+                    <span id="price-min">₹0</span>
+                    <span id="price-val">₹4999</span>
+                  </div>
+                  <input type="range" id="price-slider" min="500" max="4999" value="4999" step="100">
+                </div>
+              </div>
             </div>
-          </div>
 
-          <!-- Sort Filter -->
-          <div class="filter-group">
-            <h4 class="filter-title">Sort By</h4>
-            <select id="sort-selector" class="custom-select">
-              <option value="default">Default</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-            </select>
+            <!-- Accordion Group: Size -->
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                <span>Size</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <div class="size-options-grid-filter">
+                  <button class="size-btn-filter" data-size="XS">XS</button>
+                  <button class="size-btn-filter" data-size="S">S</button>
+                  <button class="size-btn-filter" data-size="M">M</button>
+                  <button class="size-btn-filter" data-size="L">L</button>
+                  <button class="size-btn-filter" data-size="XL">XL</button>
+                  <button class="size-btn-filter" data-size="XXL">XXL</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Group: Color -->
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                <span>Color</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <div class="color-options-grid">
+                  <button class="color-swatch-filter" data-color="Black" title="Black" style="background-color: #1a1a1a; border: 1px solid #000;"></button>
+                  <button class="color-swatch-filter" data-color="White" title="White" style="background-color: #fafafa; border: 1px solid #ccc;"></button>
+                  <button class="color-swatch-filter" data-color="Cream" title="Cream" style="background-color: #f5f2eb; border: 1px solid #dcd8d0;"></button>
+                  <button class="color-swatch-filter" data-color="Navy" title="Navy" style="background-color: #0b1f3f; border: 1px solid #0b1f3f;"></button>
+                  <button class="color-swatch-filter" data-color="Sage" title="Sage" style="background-color: #8fa08c; border: 1px solid #8fa08c;"></button>
+                  <button class="color-swatch-filter" data-color="Beige" title="Beige" style="background-color: #dfd3c3; border: 1px solid #cfc1b0;"></button>
+                  <button class="color-swatch-filter" data-color="Grey" title="Grey" style="background-color: #a0a0a0; border: 1px solid #a0a0a0;"></button>
+                  <button class="color-swatch-filter" data-color="Olive" title="Olive" style="background-color: #556b2f; border: 1px solid #556b2f;"></button>
+                  <button class="color-swatch-filter" data-color="Brown" title="Brown" style="background-color: #6f4e37; border: 1px solid #6f4e37;"></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Group: Fit -->
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                <span>Fit</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <div class="checkbox-filter-list">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="fit-checkbox" value="Regular Fit">
+                    <span>Regular Fit</span>
+                  </label>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="fit-checkbox" value="Slim Fit">
+                    <span>Slim Fit</span>
+                  </label>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="fit-checkbox" value="Oversized">
+                    <span>Oversized</span>
+                  </label>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="fit-checkbox" value="Relaxed Fit">
+                    <span>Relaxed Fit</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Group: Pattern -->
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                <span>Pattern</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <div class="checkbox-filter-list">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="pattern-checkbox" value="Solid Color">
+                    <span>Solid Color</span>
+                  </label>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="pattern-checkbox" value="Graphic Print">
+                    <span>Graphic Print</span>
+                  </label>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="pattern-checkbox" value="Striped">
+                    <span>Striped</span>
+                  </label>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="pattern-checkbox" value="Embroidered">
+                    <span>Embroidered</span>
+                  </label>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" class="pattern-checkbox" value="Patterned">
+                    <span>Patterned</span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </aside>
 
@@ -169,7 +289,7 @@
 
           <!-- Product Grid -->
           <div class="product-grid" id="product-grid">
-            <!-- Dynamically populated product cards go here -->
+            <!-- Programmatically populated product cards go here -->
           </div>
 
           <!-- Empty Catalog State -->
@@ -196,7 +316,7 @@
         </button>
       </div>
       <div class="drawer-content" id="cart-items-container">
-        <!-- Dynamically populated cart items go here -->
+        <!-- Cart items go here -->
       </div>
       <div class="drawer-footer" id="cart-footer">
         <div class="order-summary-row">
@@ -224,7 +344,20 @@
         </svg>
       </button>
       <div class="modal-body" id="detail-modal-body">
-        <!-- Dynamically populated details will go here -->
+        <!-- Dynamic detail details will go here -->
+      </div>
+    </div>
+
+    <!-- Info/Footer Pages Overlay Modal (DITTO H&M EXCLUSIVELY FUNCTIONAL) -->
+    <div class="modal-overlay" id="info-modal-overlay"></div>
+    <div class="info-modal-container" id="info-modal">
+      <button class="close-modal-btn" id="close-info-btn" aria-label="Close info">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="info-modal-body" id="info-modal-body">
+        <!-- Dynamically loaded custom content goes here -->
       </div>
     </div>
 
@@ -250,34 +383,45 @@
         <div class="footer-col">
           <h3>SHOP</h3>
           <ul>
-            <li><a href="#" class="footer-category-link" data-category="men">Men</a></li>
-            <li><a href="#" class="footer-category-link" data-category="women">Women</a></li>
-            <li><a href="#" class="footer-category-link" data-category="divided">Divided</a></li>
-            <li><a href="#" class="footer-category-link" data-category="sale">Sale</a></li>
+            <li><a href="#" class="nav-link" data-category="ladies">Ladies</a></li>
+            <li><a href="#" class="nav-link" data-category="men">Men</a></li>
+            <li><a href="#" class="nav-link" data-category="divided">Divided</a></li>
+            <li><a href="#" class="nav-link" data-category="kids">Kids</a></li>
+            <li><a href="#" class="nav-link" data-category="home">HOME</a></li>
+            <li><a href="#" class="nav-link" data-category="beauty">Beauty</a></li>
+            <li><a href="#" class="nav-link" data-category="sport">Sport</a></li>
+            <li><a href="#" class="nav-link text-red" data-category="sale">Sale</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3>CORPORATE INFO</h3>
           <ul>
-            <li><a href="#">Career at Threadzy</a></li>
-            <li><a href="#">About Threadzy Group</a></li>
-            <li><a href="#">Sustainability</a></li>
-            <li><a href="#">Investor Relations</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="careers">Career at Threadzy</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="about">About Threadzy Group</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="sustainability">Sustainability</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="press">Press</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="investor-relations">Investor Relations</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="corporate-governance">Corporate Governance</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3>HELP</h3>
           <ul>
-            <li><a href="#">Customer Service</a></li>
-            <li><a href="#">My Threadzy Account</a></li>
-            <li><a href="#">Find a Store</a></li>
-            <li><a href="#">Legal & Privacy</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="customer-service">Customer Service</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="member-club">My Threadzy Account</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="find-store">Find a Store</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="legal-privacy">Legal & Privacy</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="contact">Contact Us</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="cookies-notice">Cookie Notice</a></li>
+            <li><a href="#" class="info-trigger-link" data-page="cookies-settings">Cookie Settings</a></li>
           </ul>
         </div>
         <div class="footer-col newsletter-col">
-          <h3>JOIN THE SQUAD</h3>
-          <p>Sign up now to get 10% off on your first order and stay updated on the latest streetwear trends.</p>
+          <h3>Become a member</h3>
+          <p>Join now and get 15% off on your first purchase! Plus, enjoy exclusive members-only deals and rewards.</p>
+          <a href="#" class="btn btn-secondary info-trigger-link" data-page="member-club" style="margin-bottom: 20px; width: 100%;">SIGN UP NOW</a>
+          
+          <h3>JOIN THE NEWSLETTER</h3>
           <form class="newsletter-form" id="newsletter-form">
             <input type="email" placeholder="Enter your email" required id="newsletter-email">
             <button type="submit" class="btn btn-primary">JOIN</button>

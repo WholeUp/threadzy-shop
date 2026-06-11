@@ -11,130 +11,125 @@ import utilityJacketImg from './assets/utility_jacket.png'
 import lineArtTeeImg from './assets/line_art_tee.png'
 import retroSunsetImg from './assets/retro_sunset.png'
 
-// Product Database
-const PRODUCTS = [
-  {
-    id: 1,
-    name: 'Sakura Linen Shirt',
-    category: 'men',
-    tag: 'Premium Quality',
-    price: 2499,
-    originalPrice: 3499,
-    isSale: true,
-    colors: ['Cream', 'White'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    mainImage: sakuraLinenImg,
-    hoverImage: sakuraLinenImg,
-    description: 'Crafted from premium European flax linen, this relaxed-fit resort shirt features delicate cherry blossom (sakura) embroidery on the chest pocket. Highly breathable, soft-washed texture, and vintage-style coconut buttons. Perfect for warm-weather styling.'
-  },
-  {
-    id: 2,
-    name: 'Signature Streetwear Tee',
-    category: 'divided',
-    tag: 'Trending',
-    price: 1499,
-    originalPrice: null,
-    isSale: false,
-    colors: ['Black', 'White'],
-    sizes: ['M', 'L', 'XL'],
-    mainImage: signatureTeeImg,
-    hoverImage: signatureTeeImg,
-    description: 'An oversized, heavy-cotton streetwear t-shirt (240 GSM) showcasing an aesthetic white line-art graphic design on the chest. Designed with a structured boxy fit, dropped shoulders, and a thick rib-knit crewneck collar.'
-  },
-  {
-    id: 3,
-    name: 'Cyberpunk Grid Tee',
-    category: 'divided',
-    tag: 'Sale',
-    price: 1299,
-    originalPrice: 1999,
-    isSale: true,
-    colors: ['Navy', 'Black'],
-    sizes: ['S', 'M', 'L'],
-    mainImage: cyberpunkTeeImg,
-    hoverImage: cyberpunkTeeImg,
-    description: 'Add a futuristic touch to your streetwear rotation. This deep navy blue graphic tee features a high-density glowing cyan cyber-grid vector graphic. Crafted from ultra-soft combed cotton for maximum comfort.'
-  },
-  {
-    id: 4,
-    name: 'Abstract Oasis Resort Shirt',
-    category: 'men',
-    tag: 'New Arrival',
-    price: 2999,
-    originalPrice: null,
-    isSale: false,
-    colors: ['Beige', 'Cream'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    mainImage: oasisShirtImg,
-    hoverImage: oasisShirtImg,
-    description: 'A luxurious short-sleeve resort shirt with a camp collar. Designed with a custom hand-painted abstract earthy oasis pattern. The silky viscose-linen blend fabric drapes beautifully, making it an editorial standout.'
-  },
-  {
-    id: 5,
-    name: 'Vintage Tokyo Dreams Tee',
-    category: 'divided',
-    tag: 'Trending',
-    price: 1599,
-    originalPrice: null,
-    isSale: false,
-    colors: ['Cream', 'White'],
-    sizes: ['M', 'L', 'XL'],
-    mainImage: vintageTeeImg,
-    hoverImage: vintageTeeImg,
-    description: 'Acid-washed, cream-colored graphic t-shirt featuring distressed retro typography that reads "Tokyo Dreams". A relaxed silhouette with drop shoulders, perfect for pairing with relaxed denim or cargo pants.'
-  },
-  {
-    id: 6,
-    name: 'Urban Utility Overshirt',
-    category: 'men',
-    tag: 'Premium Quality',
-    price: 3499,
-    originalPrice: null,
-    isSale: false,
-    colors: ['Sage', 'Black'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    mainImage: utilityJacketImg,
-    hoverImage: utilityJacketImg,
-    description: 'Constructed from heavy-duty 100% cotton canvas, this structured utility overshirt in sage green features double chest cargo pockets, custom metal snap buttons, and a clean flat collar. Works perfectly as a light jacket.'
-  },
-  {
-    id: 7,
-    name: 'Aesthetic Line-Art Tee',
-    category: 'women',
-    tag: 'New Arrival',
-    price: 1199,
-    originalPrice: null,
-    isSale: false,
-    colors: ['White', 'Black'],
-    sizes: ['S', 'M', 'L'],
-    mainImage: lineArtTeeImg,
-    hoverImage: lineArtTeeImg,
-    description: 'Minimalist white graphic tee featuring clean black outline face line-art. Made from lightweight organic cotton, presenting a semi-relaxed feminine drape and super-soft feel for everyday chic wear.'
-  },
-  {
-    id: 8,
-    name: 'Retro Sunset Resort Shirt',
-    category: 'women',
-    tag: 'Sale',
-    price: 2299,
-    originalPrice: 3299,
-    isSale: true,
-    colors: ['Beige', 'Cream'],
-    sizes: ['S', 'M', 'L'],
-    mainImage: retroSunsetImg,
-    hoverImage: retroSunsetImg,
-    description: 'Soak up the sun in style. This lightweight camp-collar resort shirt showcases a retro sunset stripe pattern in pastel oranges, pinks, and warm beige. Button-up front with an elegant fluid drape.'
+// Image mappings based on category/style
+const IMAGE_ASSETS = {
+  tshirts: [signatureTeeImg, cyberpunkTeeImg, vintageTeeImg, lineArtTeeImg],
+  shirts: [sakuraLinenImg, oasisShirtImg, retroSunsetImg],
+  jackets: [utilityJacketImg],
+  pants: [utilityJacketImg, signatureTeeImg], // fallback visuals
+  jeans: [utilityJacketImg, vintageTeeImg]
+};
+
+// 1,200+ Products Generator
+function generateProducts(count) {
+  const products = [];
+  const categories = ['ladies', 'men', 'divided', 'kids', 'home', 'beauty', 'sport'];
+  const subcategories = {
+    ladies: ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets'],
+    men: ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets'],
+    divided: ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets'],
+    kids: ['t-shirts', 'shirts', 'pants', 'jeans'],
+    home: ['t-shirts', 'shirts'], // towels, linens
+    beauty: ['t-shirts'], // canvas bags
+    sport: ['t-shirts', 'pants', 'jackets']
+  };
+
+  const colors = ['Black', 'White', 'Cream', 'Navy', 'Sage', 'Beige', 'Grey', 'Olive', 'Brown'];
+  const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  const fits = ['Regular Fit', 'Slim Fit', 'Oversized', 'Relaxed Fit'];
+  const patterns = ['Solid Color', 'Graphic Print', 'Striped', 'Embroidered', 'Patterned'];
+  
+  const tags = ['New Arrival', 'Premium Quality', 'Conscious Choice', 'Sale', 'Trending', 'Standard Fit'];
+
+  // Seed data generators
+  const adjectives = ['Retro', 'Aesthetic', 'Urban', 'Minimalist', 'Vintage', 'Cyberpunk', 'Classic', 'Street', 'Signature', 'Casual', 'Utility'];
+  const nouns = {
+    't-shirts': ['Graphic Tee', 'Heavyweight T-shirt', 'Crewneck Top', 'Ribbed Tee', 'Boxy Tank'],
+    'shirts': ['Camp Collar Resort Shirt', 'Flannel Overshirt', 'Linen Blend Shirt', 'Cotton Oxford Shirt', 'Utility Pocket Shirt'],
+    'hoodies': ['Oversized Hoodie', 'Heavy Sweatshirt', 'Zip-Up Hoodie', 'Fleece Pullover'],
+    'pants': ['Cargo Trousers', 'Relaxed Joggers', 'Chino Pants', 'Utility Pants', 'Pleated Pants'],
+    'jeans': ['Loose Fit Jeans', 'Straight Leg Denim', 'Baggy Jeans', 'Slim Fit Jeans'],
+    'jackets': ['Structured Canvas Jacket', 'Denim Overshirt', 'Coach Jacket', 'Windbreaker Overshirt']
+  };
+
+  for (let i = 1; i <= count; i++) {
+    const category = categories[i % categories.length];
+    const subCats = subcategories[category];
+    const subcategory = subCats[i % subCats.length];
+    
+    // Choose appropriate name parts
+    const adj = adjectives[(i + 3) % adjectives.length];
+    const subNouns = nouns[subcategory] || nouns['t-shirts'];
+    const noun = subNouns[i % subNouns.length];
+    
+    const color = colors[i % colors.length];
+    const name = `${adj} ${color} ${noun}`;
+    
+    // Generate pricing
+    const isSale = (i % 5 === 0);
+    const originalPrice = isSale ? (1200 + (i % 25) * 150) : null;
+    const price = isSale ? Math.floor(originalPrice * 0.7) : (799 + (i % 35) * 120);
+
+    const fit = fits[i % fits.length];
+    const pattern = patterns[i % patterns.length];
+    const tag = tags[i % tags.length];
+
+    // Pick dynamic images
+    let mainImage = signatureTeeImg;
+    let hoverImage = signatureTeeImg;
+
+    if (subcategory === 't-shirts') {
+      const arr = IMAGE_ASSETS.tshirts;
+      mainImage = arr[i % arr.length];
+      hoverImage = arr[(i + 1) % arr.length];
+    } else if (subcategory === 'shirts') {
+      const arr = IMAGE_ASSETS.shirts;
+      mainImage = arr[i % arr.length];
+      hoverImage = arr[(i + 1) % arr.length];
+    } else if (subcategory === 'jackets') {
+      mainImage = utilityJacketImg;
+      hoverImage = utilityJacketImg;
+    } else {
+      mainImage = (i % 2 === 0) ? utilityJacketImg : signatureTeeImg;
+      hoverImage = mainImage;
+    }
+
+    products.push({
+      id: i,
+      name: name,
+      category: category,
+      subcategory: subcategory,
+      tag: tag,
+      price: price,
+      originalPrice: originalPrice,
+      isSale: isSale,
+      colors: [color, colors[(i + 1) % colors.length]],
+      sizes: sizes.slice(i % 3, 4 + (i % 3)),
+      fit: fit,
+      pattern: pattern,
+      mainImage: mainImage,
+      hoverImage: hoverImage,
+      description: `Upgrade your collection with this premium ${name}. Made with high-quality materials and tailored in a comfortable ${fit}. Features a clean ${pattern} finish. Ideal for premium wardrobe layering.`
+    });
   }
-];
+
+  return products;
+}
+
+// Populate 1200 Products
+const PRODUCTS = generateProducts(1200);
 
 // State variables
 let cart = JSON.parse(localStorage.getItem('threadzy_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('threadzy_wishlist')) || [];
 let activeFilters = {
   category: 'all',
+  subcategory: 'all',
   priceMax: 4999,
   colors: [],
   sizes: [],
+  fits: [],
+  patterns: [],
   searchQuery: '',
   sortBy: 'default'
 };
@@ -144,6 +139,10 @@ const productGrid = document.getElementById('product-grid');
 const resultsCount = document.getElementById('results-count');
 const emptyState = document.getElementById('empty-state');
 const heroBanner = document.getElementById('hero-banner');
+
+// Navigation elements
+const activeCategoryTitle = document.getElementById('active-category-title');
+const subcategoryLinksContainer = document.getElementById('subcategory-links');
 
 // Cart Elements
 const cartBtn = document.getElementById('cart-btn');
@@ -163,6 +162,12 @@ const detailModalOverlay = document.getElementById('detail-modal-overlay');
 const closeDetailBtn = document.getElementById('close-detail-btn');
 const detailModalBody = document.getElementById('detail-modal-body');
 
+// Info Modals (Careers, About, Help)
+const infoModal = document.getElementById('info-modal');
+const infoModalOverlay = document.getElementById('info-modal-overlay');
+const closeInfoBtn = document.getElementById('close-info-btn');
+const infoModalBody = document.getElementById('info-modal-body');
+
 // Search Elements
 const searchToggleBtn = document.getElementById('search-toggle-btn');
 const searchContainer = document.getElementById('search-container');
@@ -175,7 +180,7 @@ const priceValEl = document.getElementById('price-val');
 const sortSelector = document.getElementById('sort-selector');
 const clearAllFiltersBtn = document.getElementById('clear-all-filters-btn');
 const resetFiltersBtn = document.getElementById('reset-filters-btn');
-const filterSidebar = document.getElementById('filter-sidebar');
+const sidebarAside = document.getElementById('sidebar-aside');
 const filterMobileToggleBtn = document.getElementById('filter-mobile-toggle-btn');
 
 // Success Overlay
@@ -205,7 +210,7 @@ function initHero() {
   }
 }
 
-/* --- PRODUCT GRID RENDERING --- */
+/* --- PRODUCT RENDERING & QUERY ENGINE --- */
 function renderProducts() {
   // Filter products based on active filters
   let filtered = PRODUCTS.filter(product => {
@@ -218,28 +223,46 @@ function renderProducts() {
       }
     }
 
+    // Subcategory check
+    if (activeFilters.subcategory !== 'all') {
+      if (product.subcategory !== activeFilters.subcategory) {
+        return false;
+      }
+    }
+
     // Search Query check
     if (activeFilters.searchQuery.trim() !== '') {
       const query = activeFilters.searchQuery.toLowerCase();
       const matchName = product.name.toLowerCase().includes(query);
       const matchDesc = product.description.toLowerCase().includes(query);
       const matchTag = product.tag.toLowerCase().includes(query);
-      if (!matchName && !matchDesc && !matchTag) return false;
+      const matchSub = product.subcategory.toLowerCase().includes(query);
+      if (!matchName && !matchDesc && !matchTag && !matchSub) return false;
     }
 
     // Price check
     if (product.price > activeFilters.priceMax) return false;
 
-    // Colors check
+    // Colors check (multi-select)
     if (activeFilters.colors.length > 0) {
       const hasColor = product.colors.some(c => activeFilters.colors.includes(c));
       if (!hasColor) return false;
     }
 
-    // Sizes check
+    // Sizes check (multi-select)
     if (activeFilters.sizes.length > 0) {
       const hasSize = product.sizes.some(s => activeFilters.sizes.includes(s));
       if (!hasSize) return false;
+    }
+
+    // Fits check (multi-select)
+    if (activeFilters.fits.length > 0) {
+      if (!activeFilters.fits.includes(product.fit)) return false;
+    }
+
+    // Patterns check (multi-select)
+    if (activeFilters.patterns.length > 0) {
+      if (!activeFilters.patterns.includes(product.pattern)) return false;
     }
 
     return true;
@@ -250,6 +273,8 @@ function renderProducts() {
     filtered.sort((a, b) => a.price - b.price);
   } else if (activeFilters.sortBy === 'price-desc') {
     filtered.sort((a, b) => b.price - a.price);
+  } else if (activeFilters.sortBy === 'newest') {
+    filtered.sort((a, b) => b.id - a.id); // higher IDs are simulated newest
   }
 
   // Update count label
@@ -264,21 +289,39 @@ function renderProducts() {
     emptyState.classList.add('hidden');
   }
 
+  // Slice to render the first 120 items initially for browser performance, infinite-scroll mock
+  const displayProducts = filtered.slice(0, 120);
+
   // Generate cards HTML
-  productGrid.innerHTML = filtered.map(product => {
+  productGrid.innerHTML = displayProducts.map(product => {
     const isWishlisted = wishlist.includes(product.id);
-    const saleTag = product.isSale ? `<span class="card-badge sale">Sale</span>` : '';
-    const newArrivalTag = product.tag === 'New Arrival' ? `<span class="card-badge new">New</span>` : '';
-    const tagToUse = saleTag || newArrivalTag || (product.tag ? `<span class="card-badge new">${product.tag}</span>` : '');
+    
+    // Choose appropriate badge styling
+    let badgeHTML = '';
+    if (product.isSale) {
+      badgeHTML = `<span class="card-badge sale">Sale</span>`;
+    } else if (product.tag === 'Conscious Choice') {
+      badgeHTML = `<span class="card-badge conscious">Conscious</span>`;
+    } else if (product.tag === 'Premium Quality') {
+      badgeHTML = `<span class="card-badge premium">Premium</span>`;
+    } else if (product.tag === 'New Arrival') {
+      badgeHTML = `<span class="card-badge new">New</span>`;
+    } else if (product.tag) {
+      badgeHTML = `<span class="card-badge new">${product.tag}</span>`;
+    }
 
     const priceHTML = product.isSale 
       ? `<span class="sale-price">₹${product.price}</span><span class="original-price">₹${product.originalPrice}</span>`
       : `<span>₹${product.price}</span>`;
 
+    const consciousClass = product.tag === 'Conscious Choice' ? 'tag-conscious' : '';
+    const premiumClass = product.tag === 'Premium Quality' ? 'tag-premium' : '';
+    const tagClass = consciousClass || premiumClass;
+
     return `
       <div class="product-card" data-id="${product.id}">
         <div class="product-image-container">
-          ${tagToUse}
+          ${badgeHTML}
           <button class="card-wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}" aria-label="Add to Wishlist">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
@@ -289,7 +332,7 @@ function renderProducts() {
           <button class="quick-add-btn" data-id="${product.id}">Quick Add</button>
         </div>
         <div class="product-info">
-          <span class="product-tag">${product.tag || 'Standard Fit'}</span>
+          <span class="product-tag ${tagClass}">${product.tag || 'Standard Fit'}</span>
           <h3 class="product-name">${product.name}</h3>
           <div class="product-price-row">
             ${priceHTML}
@@ -299,15 +342,12 @@ function renderProducts() {
     `;
   }).join('');
 
-  // Re-attach listeners to new cards
   attachCardListeners();
 }
 
 function attachCardListeners() {
-  // Card click triggers details modal
   document.querySelectorAll('.product-card').forEach(card => {
     card.addEventListener('click', (e) => {
-      // Don't trigger details if wishlist or quick add buttons are clicked
       if (e.target.closest('.card-wishlist-btn') || e.target.closest('.quick-add-btn')) {
         return;
       }
@@ -316,7 +356,6 @@ function attachCardListeners() {
     });
   });
 
-  // Wishlist toggle
   document.querySelectorAll('.card-wishlist-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -325,13 +364,11 @@ function attachCardListeners() {
     });
   });
 
-  // Quick Add triggers quick size addition (defaults to M, or opens modal)
   document.querySelectorAll('.quick-add-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = parseInt(btn.dataset.id);
       const product = PRODUCTS.find(p => p.id === id);
-      // Automatically add size M (or first available size)
       const defaultSize = product.sizes.includes('M') ? 'M' : product.sizes[0];
       const defaultColor = product.colors[0];
       addToCart(product, defaultSize, defaultColor);
@@ -365,7 +402,7 @@ function toggleCartDrawer(open) {
   if (open) {
     cartDrawer.classList.add('active');
     cartDrawerOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Lock background scroll
+    document.body.style.overflow = 'hidden';
   } else {
     cartDrawer.classList.remove('active');
     cartDrawerOverlay.classList.remove('active');
@@ -374,7 +411,6 @@ function toggleCartDrawer(open) {
 }
 
 function addToCart(product, size, color) {
-  // Check if item already in cart with same size and color
   const existingIndex = cart.findIndex(item => item.id === product.id && item.size === size && item.color === color);
   
   if (existingIndex > -1) {
@@ -393,7 +429,7 @@ function addToCart(product, size, color) {
 
   localStorage.setItem('threadzy_cart', JSON.stringify(cart));
   updateCartUI();
-  toggleCartDrawer(true); // Slide open cart drawer on addition
+  toggleCartDrawer(true);
 }
 
 function removeFromCart(index) {
@@ -412,7 +448,6 @@ function updateCartQuantity(index, delta) {
 }
 
 function updateCartUI() {
-  // Update badge count
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   cartCountBadges.forEach(badge => {
     badge.textContent = totalItems;
@@ -437,7 +472,6 @@ function updateCartUI() {
 
   checkoutBtn.disabled = false;
 
-  // Render cart items
   cartItemsContainer.innerHTML = cart.map((item, index) => {
     return `
       <div class="cart-item">
@@ -463,7 +497,6 @@ function updateCartUI() {
     `;
   }).join('');
 
-  // Calculate prices
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const shipping = subtotal >= 1999 ? 0 : 149;
   const total = subtotal + shipping;
@@ -472,26 +505,15 @@ function updateCartUI() {
   cartShippingEl.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
   cartTotalEl.textContent = `₹${total}`;
 
-  // Attach cart listeners
+  // Re-attach listeners
   document.querySelectorAll('.cart-item-remove').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = parseInt(btn.dataset.index);
-      removeFromCart(idx);
-    });
+    btn.addEventListener('click', () => removeFromCart(parseInt(btn.dataset.index)));
   });
-
   document.querySelectorAll('.qty-btn.minus').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = parseInt(btn.dataset.index);
-      updateCartQuantity(idx, -1);
-    });
+    btn.addEventListener('click', () => updateCartQuantity(parseInt(btn.dataset.index), -1));
   });
-
   document.querySelectorAll('.qty-btn.plus').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = parseInt(btn.dataset.index);
-      updateCartQuantity(idx, 1);
-    });
+    btn.addEventListener('click', () => updateCartQuantity(parseInt(btn.dataset.index), 1));
   });
 }
 
@@ -504,13 +526,15 @@ function openProductDetail(id) {
     ? `<span class="sale-price">₹${product.price}</span><span class="original-price">₹${product.originalPrice}</span>`
     : `<span>₹${product.price}</span>`;
 
-  // Pre-selected values
   let selectedSize = product.sizes.includes('M') ? 'M' : product.sizes[0];
   let selectedColor = product.colors[0];
 
+  const consciousClass = product.tag === 'Conscious Choice' ? 'tag-conscious' : '';
+  const premiumClass = product.tag === 'Premium Quality' ? 'tag-premium' : '';
+  const tagClass = consciousClass || premiumClass;
+
   detailModalBody.innerHTML = `
     <div class="product-detail-layout">
-      <!-- Image Gallery -->
       <div class="detail-gallery">
         <div class="main-detail-img-container">
           <img src="${product.mainImage}" alt="${product.name}" class="main-detail-img" id="main-detail-img">
@@ -521,14 +545,12 @@ function openProductDetail(id) {
         </div>
       </div>
       
-      <!-- Content Information -->
       <div class="detail-info">
-        <span class="detail-tag">${product.tag || 'Standard Fit'}</span>
+        <span class="detail-tag ${tagClass}">${product.tag || 'Standard Fit'}</span>
         <h2 class="detail-title">${product.name}</h2>
         <div class="detail-price-row">${priceHTML}</div>
         <p class="detail-desc">${product.description}</p>
         
-        <!-- Colors Selector -->
         <div class="detail-option-group">
           <span class="detail-option-label">Color: <strong id="selected-color-label">${selectedColor}</strong></span>
           <div class="color-selector-grid">
@@ -537,14 +559,16 @@ function openProductDetail(id) {
                               c === 'White' ? '#fafafa' : 
                               c === 'Cream' ? '#f5f2eb' : 
                               c === 'Navy' ? '#0b1f3f' : 
-                              c === 'Sage' ? '#8fa08c' : '#dfd3c3';
+                              c === 'Sage' ? '#8fa08c' : 
+                              c === 'Beige' ? '#dfd3c3' :
+                              c === 'Grey' ? '#a0a0a0' :
+                              c === 'Olive' ? '#556b2f' : '#6f4e37';
               const borderStyle = c === 'White' ? '1px solid #ccc' : 'none';
               return `<button class="color-selector-swatch ${i === 0 ? 'active' : ''}" data-color="${c}" style="background-color: ${bgStyle}; border: ${borderStyle};" title="${c}"></button>`;
             }).join('')}
           </div>
         </div>
 
-        <!-- Sizes Selector -->
         <div class="detail-option-group">
           <span class="detail-option-label">Select Size</span>
           <div class="size-selector-grid">
@@ -560,10 +584,9 @@ function openProductDetail(id) {
     </div>
   `;
 
-  // Attach modal internal events
+  // Attach gallery listeners
   const thumbImgs = detailModalBody.querySelectorAll('.thumb-img');
   const mainDetailImg = detailModalBody.querySelector('#main-detail-img');
-  
   thumbImgs.forEach(thumb => {
     thumb.addEventListener('click', () => {
       thumbImgs.forEach(t => t.classList.remove('active'));
@@ -592,8 +615,7 @@ function openProductDetail(id) {
     });
   });
 
-  const modalAddBtn = detailModalBody.querySelector('#modal-add-to-bag');
-  modalAddBtn.addEventListener('click', () => {
+  detailModalBody.querySelector('#modal-add-to-bag').addEventListener('click', () => {
     addToCart(product, selectedSize, selectedColor);
     toggleProductModal(false);
   });
@@ -613,8 +635,253 @@ function toggleProductModal(open) {
   }
 }
 
+/* --- INTERACTIVE FOOTER PAGES ROUTER (SAME TO SAME H&M CLONE) --- */
+const INFO_PAGES_CONTENT = {
+  'careers': `
+    <h2 class="info-page-title">Career at Threadzy</h2>
+    <div class="info-page-section">
+      <h4>Join Our Creative Squad</h4>
+      <p>Threadzy is one of the fastest growing premium streetwear brands. We value creativity, diverse ideas, and self-expression. Our corporate headquarters are located in the heart of Mumbai, designing high-fashion trends for global release.</p>
+    </div>
+    <div class="info-page-section">
+      <h4>Open Positions (Mumbai HQ)</h4>
+      <div class="jobs-list">
+        <div class="job-card">
+          <div>
+            <div class="job-title">Senior Apparel & Streetwear Designer</div>
+            <div class="job-meta">Full Time | Design Department</div>
+          </div>
+          <button class="btn btn-secondary apply-btn" data-job="Senior Apparel Designer">Apply Now</button>
+        </div>
+        <div class="job-card">
+          <div>
+            <div class="job-title">E-commerce Frontend Developer (Vite/JS)</div>
+            <div class="job-meta">Full Time | Tech Department</div>
+          </div>
+          <button class="btn btn-secondary apply-btn" data-job="Frontend Developer">Apply Now</button>
+        </div>
+        <div class="job-card">
+          <div>
+            <div class="job-title">Social Media Marketer & Content Creator</div>
+            <div class="job-meta">Part Time | Marketing Squad</div>
+          </div>
+          <button class="btn btn-secondary apply-btn" data-job="Social Media Marketer">Apply Now</button>
+        </div>
+      </div>
+    </div>
+  `,
+  'about': `
+    <h2 class="info-page-title">About Threadzy Group</h2>
+    <div class="info-page-section">
+      <h4>The Story of Threadzy</h4>
+      <p>Founded in 2026, Threadzy was born out of a desire to build a premium streetwear brand that mimics the detailed editorial layout of luxury brands but offers affordable pricing. We believe clothing is an art form, which is why we specialize in custom embroidery, high-comfort oversized fit tees, and graphic concepts.</p>
+      <p>Today, our designs reach thousands of customers worldwide, running on high-performance infrastructure and delivering curated seasonal drops that define the next generation of streetwear.</p>
+    </div>
+    <div class="info-page-section">
+      <h4>Our Philosophy</h4>
+      <p><strong>Quality First:</strong> We utilize heavy cotton (240 GSM+) and organic flax linen in our shirts and tees.</p>
+      <p><strong>Aesthetic Curation:</strong> Every graphic, font choice, and line-art is generated and curated by our design studio to ensure visual harmony.</p>
+    </div>
+  `,
+  'sustainability': `
+    <h2 class="info-page-title">Sustainability (Conscious Choice)</h2>
+    <div class="info-page-section">
+      <h4>Our Green Commitment</h4>
+      <p>At Threadzy, we believe fashion should not cost the earth. Our <strong>"Conscious Choice"</strong> labels identify products that are made with at least 50% sustainable materials, such as organic cotton and recycled linen.</p>
+    </div>
+    <div class="info-page-section">
+      <h4>Key Actions we take</h4>
+      <p>🌿 <strong>Organic Materials:</strong> We have banned chemical pesticides in our cotton suppliers.</p>
+      <p>📦 <strong>Plastic-Free Packaging:</strong> All orders are shipped in 100% biodegradable corn-starch mailers and recycled cardboard boxes.</p>
+      <p>💧 <strong>Water Saving:</strong> Our factory in India utilizes zero-liquid-discharge water filtering, recycling 98% of industrial dye water.</p>
+    </div>
+  `,
+  'customer-service': `
+    <h2 class="info-page-title">Customer Service & FAQ</h2>
+    <div class="info-page-section">
+      <h4>Frequently Asked Questions</h4>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">What is the return policy?</div>
+          <div class="faq-answer">We offer a 15-day return policy for all unused products with original tags intact. Returns are completely free for Members.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How long does shipping take?</div>
+          <div class="faq-answer">Standard shipping takes 3-5 business days across India. Express shipping options are available at checkout. Orders above ₹1999 qualify for Free Shipping.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I cancel my order?</div>
+          <div class="faq-answer">Yes, you can cancel your order within 2 hours of booking by contacting our helpline or cancelling from your Threadzy Account.</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-page-section">
+      <h4>Contact Support Simulator</h4>
+      <form id="support-sim-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+        <input type="text" placeholder="Your Name" required class="custom-select" style="background-image: none; padding-right: 14px;">
+        <textarea placeholder="Describe your issue..." required class="custom-select" style="background-image: none; padding-right: 14px; height: 100px; font-family: inherit; resize: none;"></textarea>
+        <button type="submit" class="btn btn-primary">Submit Ticket</button>
+      </form>
+    </div>
+  `,
+  'member-club': `
+    <h2 class="info-page-title">Threadzy Member Club</h2>
+    <div class="info-page-section">
+      <h4>Unlock Exclusive Perks</h4>
+      <p>Join the Threadzy Member Club today and get an instant 15% discount on your first order. Membership is completely free.</p>
+    </div>
+    <div class="info-page-section" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="job-card" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+        <strong>Silver Tier (0 - 5000 Points)</strong>
+        <p style="font-size: 12px; color: var(--text-muted);">Get free shipping on orders above ₹1999, 10% birthday discount vouchers, and early access to drops.</p>
+      </div>
+      <div class="job-card" style="flex-direction: column; align-items: flex-start; gap: 10px; border-color: var(--premium-color); background-color: #fbf2db;">
+        <strong>Gold Tier (5000+ Points)</strong>
+        <p style="font-size: 12px; color: var(--text-muted); color: var(--premium-color);">Get free shipping on ALL orders, 20% birthday discount vouchers, priority support, and exclusive designer collabs.</p>
+      </div>
+    </div>
+    <div class="info-page-section">
+      <h4>Join Now</h4>
+      <form id="member-sim-form" style="display: flex; gap: 10px; margin-top: 12px;">
+        <input type="text" placeholder="Enter mobile number" required class="custom-select" style="background-image: none; padding-right: 14px; flex: 1;">
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+    </div>
+  `,
+  'find-store': `
+    <h2 class="info-page-title">Find a Store</h2>
+    <div class="info-page-section">
+      <h4>Store Locator Simulator</h4>
+      <p>Search for Threadzy flagship physical stores near your location. We currently have physical branches in major metro cities.</p>
+      <div style="display: flex; gap: 10px; margin-top: 16px;">
+        <input type="text" id="store-city-input" placeholder="Enter City (e.g. Mumbai, Delhi, Bangalore)" class="custom-select" style="background-image: none; padding-right: 14px; flex: 1;">
+        <button id="store-search-btn" class="btn btn-primary">Search</button>
+      </div>
+      <div id="store-results-box" style="margin-top: 20px;">
+        <!-- Simulated results will appear here -->
+      </div>
+    </div>
+  `,
+  'newsletter': `
+    <h2 class="info-page-title">Squad Newsletter</h2>
+    <div class="info-page-section">
+      <h4>Stay Ahead of the Drops</h4>
+      <p>Sign up to get the latest streetwear information, exclusive launch codes, and designer notes sent directly to your email.</p>
+      <form id="newsletter-sim-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px; max-width: 400px;">
+        <input type="email" placeholder="Your Email Address" required class="custom-select" style="background-image: none; padding-right: 14px;">
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+    </div>
+  `
+};
+
+// Open Info Modal
+function openInfoPage(pageKey) {
+  const content = INFO_PAGES_CONTENT[pageKey] || `
+    <h2 class="info-page-title">Information Page</h2>
+    <div class="info-page-section">
+      <h4>${pageKey.replace('-', ' ').toUpperCase()}</h4>
+      <p>Welcome to Threadzy's corporate information and help page. Threadzy is a simulated H&M clone store providing advanced catalog displays and e-commerce shopping workflows.</p>
+    </div>
+  `;
+
+  infoModalBody.innerHTML = content;
+  toggleInfoModal(true);
+
+  // Attach dynamic handlers inside loaded pages
+  // Apply Job Simulator
+  const applyBtns = infoModalBody.querySelectorAll('.apply-btn');
+  applyBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const job = btn.dataset.job;
+      alert(`Simulated Application Successful! Thank you for applying for the '${job}' role at Threadzy. We will review your simulated portfolio!`);
+    });
+  });
+
+  // Support Ticket Form
+  const supportForm = infoModalBody.querySelector('#support-sim-form');
+  if (supportForm) {
+    supportForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Simulated Success! Your support ticket has been logged. Our simulated agent will reply within 2 hours!');
+      supportForm.reset();
+    });
+  }
+
+  // Member Form
+  const memberForm = infoModalBody.querySelector('#member-sim-form');
+  if (memberForm) {
+    memberForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Simulated Success! Registration complete. Welcome to the squad! Your 15% discount code is: MEMBERSQUAD15');
+      memberForm.reset();
+      toggleInfoModal(false);
+    });
+  }
+
+  // Store Locator Search
+  const storeSearchBtn = infoModalBody.querySelector('#store-search-btn');
+  const storeCityInput = infoModalBody.querySelector('#store-city-input');
+  const storeResultsBox = infoModalBody.querySelector('#store-results-box');
+  
+  if (storeSearchBtn && storeCityInput && storeResultsBox) {
+    storeSearchBtn.addEventListener('click', () => {
+      const city = storeCityInput.value.toLowerCase().trim();
+      if (city === 'mumbai') {
+        storeResultsBox.innerHTML = `
+          <div class="job-card" style="margin-bottom: 10px;">
+            <div>
+              <strong>Threadzy Colaba Flagship Store</strong>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Colaba Causeway, Near Gateway, Mumbai - 400001</div>
+            </div>
+            <span style="font-size: 12px; font-weight: 700; color: #2e7d32;">Open 10 AM - 10 PM</span>
+          </div>
+        `;
+      } else if (city === 'delhi') {
+        storeResultsBox.innerHTML = `
+          <div class="job-card" style="margin-bottom: 10px;">
+            <div>
+              <strong>Threadzy Connaught Place</strong>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Inner Circle, Block C, CP, New Delhi - 110001</div>
+            </div>
+            <span style="font-size: 12px; font-weight: 700; color: #2e7d32;">Open 11 AM - 9:30 PM</span>
+          </div>
+        `;
+      } else {
+        storeResultsBox.innerHTML = `
+          <p style="font-size: 13px; color: var(--text-muted);">No simulated flagship store found in '${storeCityInput.value}'. Try searching 'Mumbai' or 'Delhi' for our flagships, or shop 100% online!</p>
+        `;
+      }
+    });
+  }
+}
+
+function toggleInfoModal(open) {
+  if (open) {
+    infoModal.classList.add('active');
+    infoModalOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  } else {
+    infoModal.classList.remove('active');
+    infoModalOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
 /* --- EVENT LISTENERS CONFIG --- */
 function setupEventListeners() {
+  // Accordion Expand/Collapse Event
+  const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+  accordionTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const isActive = trigger.classList.contains('active');
+      
+      // Real H&M style accordion: can open multiple or collapse
+      trigger.classList.toggle('active');
+      trigger.setAttribute('aria-expanded', !isActive);
+    });
+  });
+
   // Brand logo click clears filters and shows all
   const brandLogo = document.getElementById('brand-logo');
   if (brandLogo) {
@@ -625,8 +892,8 @@ function setupEventListeners() {
     });
   }
 
-  // Category switches (Desktop & Mobile)
-  const navLinks = document.querySelectorAll('.nav-link, .mobile-link, .footer-category-link');
+  // Category switches (Ladies, Men, Divided, Kids, HOME, Beauty, Sport, Sale)
+  const navLinks = document.querySelectorAll('.nav-link, .mobile-link');
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -634,13 +901,30 @@ function setupEventListeners() {
       
       // Update filter state
       activeFilters.category = cat;
+      activeFilters.subcategory = 'all'; // reset subcategory on category change
       
-      // Update UI active styling
+      // Update UI active category styling
       document.querySelectorAll('.nav-link, .mobile-link').forEach(l => {
         if (l.dataset.category === cat) {
           l.classList.add('active');
         } else {
           l.classList.remove('active');
+        }
+      });
+
+      // Update sidebar subcategory header title
+      if (cat === 'all') {
+        activeCategoryTitle.textContent = 'Shop All';
+      } else {
+        activeCategoryTitle.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+      }
+
+      // Sync active state in subcategory menu (set "View All" active)
+      document.querySelectorAll('.subcategory-btn').forEach(btn => {
+        if (btn.dataset.subcategory === 'all') {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
         }
       });
 
@@ -650,7 +934,6 @@ function setupEventListeners() {
       // Rerender products & scroll up
       renderProducts();
       
-      // If hero banner exists, change layout context or hide it on subcategories
       if (heroBanner) {
         if (cat === 'all') {
           heroBanner.style.display = 'flex';
@@ -661,6 +944,35 @@ function setupEventListeners() {
     });
   });
 
+  // Subcategory click filters
+  document.querySelectorAll('.subcategory-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sub = btn.dataset.subcategory;
+      activeFilters.subcategory = sub;
+
+      // Update active class
+      document.querySelectorAll('.subcategory-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      renderProducts();
+      
+      // Smooth scroll to catalog
+      const storeLayout = document.querySelector('.store-layout-container');
+      if (storeLayout) {
+        storeLayout.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Info trigger links for Careers, About, Sustainability, Help, etc.
+  document.querySelectorAll('.info-trigger-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const pageKey = link.dataset.page;
+      openInfoPage(pageKey);
+    });
+  });
+
   // Hero banner buttons
   document.querySelectorAll('.hero-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -668,7 +980,6 @@ function setupEventListeners() {
       const matchingLink = document.querySelector(`.nav-link[data-category="${cat}"]`);
       if (matchingLink) matchingLink.click();
       
-      // Smooth scroll to catalog
       const storeLayout = document.querySelector('.store-layout-container');
       if (storeLayout) {
         storeLayout.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -685,6 +996,10 @@ function setupEventListeners() {
   if (closeDetailBtn) closeDetailBtn.addEventListener('click', () => toggleProductModal(false));
   if (detailModalOverlay) detailModalOverlay.addEventListener('click', () => toggleProductModal(false));
 
+  // Info Modal Close
+  if (closeInfoBtn) closeInfoBtn.addEventListener('click', () => toggleInfoModal(false));
+  if (infoModalOverlay) infoModalOverlay.addEventListener('click', () => toggleInfoModal(false));
+
   // Search Toggle Expand
   if (searchToggleBtn) {
     searchToggleBtn.addEventListener('click', (e) => {
@@ -696,7 +1011,6 @@ function setupEventListeners() {
     });
   }
 
-  // Close search on document click outside
   document.addEventListener('click', (e) => {
     if (searchContainer && searchContainer.classList.contains('active') && !searchContainer.contains(e.target) && e.target !== searchToggleBtn) {
       closeSearch();
@@ -729,7 +1043,7 @@ function setupEventListeners() {
     });
   }
 
-  // Color Swatches filters
+  // Color Swatches filters (multi-select)
   document.querySelectorAll('.color-swatch-filter').forEach(swatch => {
     swatch.addEventListener('click', () => {
       const color = swatch.dataset.color;
@@ -745,7 +1059,7 @@ function setupEventListeners() {
     });
   });
 
-  // Size Button filters
+  // Size Button filters (multi-select)
   document.querySelectorAll('.size-btn-filter').forEach(btn => {
     btn.addEventListener('click', () => {
       const size = btn.dataset.size;
@@ -756,6 +1070,34 @@ function setupEventListeners() {
       } else {
         activeFilters.sizes.splice(idx, 1);
         btn.classList.remove('active');
+      }
+      renderProducts();
+    });
+  });
+
+  // Fit Checkboxes filters (multi-select)
+  document.querySelectorAll('.fit-checkbox').forEach(box => {
+    box.addEventListener('change', () => {
+      const fit = box.value;
+      const idx = activeFilters.fits.indexOf(fit);
+      if (box.checked) {
+        if (idx === -1) activeFilters.fits.push(fit);
+      } else {
+        if (idx > -1) activeFilters.fits.splice(idx, 1);
+      }
+      renderProducts();
+    });
+  });
+
+  // Pattern Checkboxes filters (multi-select)
+  document.querySelectorAll('.pattern-checkbox').forEach(box => {
+    box.addEventListener('change', () => {
+      const pattern = box.value;
+      const idx = activeFilters.patterns.indexOf(pattern);
+      if (box.checked) {
+        if (idx === -1) activeFilters.patterns.push(pattern);
+      } else {
+        if (idx > -1) activeFilters.patterns.splice(idx, 1);
       }
       renderProducts();
     });
@@ -776,7 +1118,7 @@ function setupEventListeners() {
   // Mobile Filters drawer toggle
   if (filterMobileToggleBtn) {
     filterMobileToggleBtn.addEventListener('click', () => {
-      filterSidebar.classList.toggle('active-mobile');
+      sidebarAside.classList.toggle('active-mobile');
     });
   }
 
@@ -784,16 +1126,13 @@ function setupEventListeners() {
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', () => {
       toggleCartDrawer(false);
-      // Simulate Order ID creation
       const randOrder = 'TZ-' + Math.floor(10000 + Math.random() * 90000) + '-' + Math.floor(10 + Math.random() * 90);
       if (successOrderId) successOrderId.textContent = randOrder;
       
-      // Empty cart state
       cart = [];
       localStorage.removeItem('threadzy_cart');
       updateCartUI();
 
-      // Show success popup
       if (successOverlay) {
         successOverlay.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
@@ -815,7 +1154,7 @@ function setupEventListeners() {
     newsletterForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const email = newsletterEmail.value;
-      alert(`Simulated Success! Thank you for signing up with ${email}. A 10% voucher code has been simulated and sent to your email!`);
+      alert(`Simulated Success! Thank you for subscribing with ${email}. A 15% Member club code has been sent!`);
       newsletterEmail.value = '';
     });
   }
@@ -832,10 +1171,13 @@ function closeSearch() {
 
 function resetAllFilters() {
   activeFilters = {
-    category: activeFilters.category, // keep current active category tab
+    category: activeFilters.category,
+    subcategory: activeFilters.subcategory,
     priceMax: 4999,
     colors: [],
     sizes: [],
+    fits: [],
+    patterns: [],
     searchQuery: '',
     sortBy: 'default'
   };
@@ -848,13 +1190,14 @@ function resetAllFilters() {
 
   document.querySelectorAll('.color-swatch-filter').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.size-btn-filter').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.fit-checkbox').forEach(box => box.checked = false);
+  document.querySelectorAll('.pattern-checkbox').forEach(box => box.checked = false);
   
   if (sortSelector) sortSelector.value = 'default';
   
   closeSearch();
   
-  // Collapse mobile menu if open
-  if (filterSidebar) filterSidebar.classList.remove('active-mobile');
+  if (sidebarAside) sidebarAside.classList.remove('active-mobile');
 
   renderProducts();
 }
@@ -862,7 +1205,6 @@ function resetAllFilters() {
 // Global init on DOM load
 document.addEventListener('DOMContentLoaded', init);
 
-// If DOM already loaded (Vite hot reloading support)
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
   init();
 }
