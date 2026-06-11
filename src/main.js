@@ -4,57 +4,295 @@ import heroBannerImg from './assets/hero_banner.png'
 // Curated High-Resolution Unsplash Fashion & Apparel Images (Ditto H&M Visuals)
 const UNSPLASH_IMAGES = {
   't-shirts': [
-    'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&h=533&q=80', // White Tee Men
-    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&h=533&q=80', // Black Graphic Tee Women
-    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=400&h=533&q=80', // Black Tee Men
-    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=400&h=533&q=80', // White Graphic Tee
-    'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=400&h=533&q=80', // Red Streetwear Tee
-    'https://images.unsplash.com/photo-1554568218-0f1715e72254?auto=format&fit=crop&w=400&h=533&q=80', // Graphic White Tee
-    'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=400&h=533&q=80', // Yellow folded tees
-    'https://images.unsplash.com/photo-1527719327859-c6ce80353573?auto=format&fit=crop&w=400&h=533&q=80', // Cream Graphic Tee
-    'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=400&h=533&q=80', // Black tee flatlay
-    'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=400&h=533&q=80'  // Summer Linen Top
+    'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1554568218-0f1715e72254?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1527719327859-c6ce80353573?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1503341455253-b264b287b2e7?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1622445262465-2481c457487f?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1503341509153-d872fa9900c7?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1574169208507-84376144848b?auto=format&fit=crop&w=400&h=533&q=80'
   ],
   'shirts': [
-    'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&h=533&q=80', // Checkered Shirt
-    'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=400&h=533&q=80', // Striped Linen Shirt
-    'https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=400&h=533&q=80', // Viscose Resort Shirt
-    'https://images.unsplash.com/photo-1620012253295-c05518e99309?auto=format&fit=crop&w=400&h=533&q=80', // White Casual Shirt
-    'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=400&h=533&q=80', // Black Classic Shirt
-    'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?auto=format&fit=crop&w=400&h=533&q=80', // Plaid Flannel Overshirt
-    'https://images.unsplash.com/photo-1496345875659-11f7dd282d1d?auto=format&fit=crop&w=400&h=533&q=80', // Short sleeve shirt
-    'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?auto=format&fit=crop&w=400&h=533&q=80'  // Linen blend shirt
+    'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1620012253295-c05518e99309?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1496345875659-11f7dd282d1d?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1598032895397-c24d0ab3a73f?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1601762600297-14efc217f2a4?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1621012466909-ca6cf47de8b1?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1563122810-8b0d087515f9?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1589310243389-96a5483213a8?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=400&h=533&q=80'
   ],
   'hoodies': [
-    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&h=533&q=80', // Light Grey Hoodie
-    'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=400&h=533&q=80', // Sweatshirt beige
-    'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=400&h=533&q=80', // Heavy knit pullover
-    'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=400&h=533&q=80', // Colorful Sweatshirt
-    'https://images.unsplash.com/photo-1609873814058-a8928924184a?auto=format&fit=crop&w=400&h=533&q=80', // Olive Green Hoodie
-    'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=400&h=533&q=80'  // Black oversize hoodie
+    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1609873814058-a8928924184a?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1609873814120-a8928924184b?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1618354691383-25b73747ab4e?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1564564295391-7f24f26f568b?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1548624149-f7b3be5a530e?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1620799140188-3b2a02fd9a55?auto=format&fit=crop&w=400&h=533&q=80'
   ],
   'pants': [
-    'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&h=533&q=80', // Sage Cargo Trousers
-    'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&h=533&q=80', // Beige Linen Pants
-    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=400&h=533&q=80', // Streetwear Cargo Pants
-    'https://images.unsplash.com/photo-1517423568366-8b83523034fd?auto=format&fit=crop&w=400&h=533&q=80', // Sweatpants flatlay
-    'https://images.unsplash.com/photo-1506629082925-6fc6b7ab2249?auto=format&fit=crop&w=400&h=533&q=80'  // Tailored trousers
+    'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1517423568366-8b83523034fd?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1506629082925-6fc6b7ab2249?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1551854838-212c50b4c184?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=400&h=533&q=80'
   ],
   'jeans': [
-    'https://images.unsplash.com/photo-1565084888279-aca607ecad0c?auto=format&fit=crop&w=400&h=533&q=80', // Premium Denim Jeans
-    'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&h=533&q=80', // Rolled Jeans
-    'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=400&h=533&q=80', // Light Blue Denim
-    'https://images.unsplash.com/photo-1475178626620-a4d074967452?auto=format&fit=crop&w=400&h=533&q=80'  // Relaxed Fit Denim
+    'https://images.unsplash.com/photo-1565084888279-aca607ecad0c?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1475178626620-a4d074967452?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1560243563-062bfc001d68?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=400&h=533&q=80'
   ],
   'jackets': [
-    'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=400&h=533&q=80', // Leather Biker Jacket
-    'https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=400&h=533&q=80', // Elegant Trench/Coat
-    'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=400&h=533&q=80', // Canvas Utility Overshirt
-    'https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?auto=format&fit=crop&w=400&h=533&q=80', // Denim Jacket
-    'https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=400&h=533&q=80', // Winter Parka
-    'https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?auto=format&fit=crop&w=400&h=533&q=80'  // Plaid zip jacket
+    'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=400&h=533&q=80'
   ]
 };
+
+const FLATLAY_PRODUCTS = [
+  {
+    id: 1,
+    name: "Ribbed One-Shoulder Drape Top",
+    category: "ladies",
+    subcategory: "t-shirts",
+    tag: "New Arrival",
+    price: 1299,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Brown", "Black"],
+    sizes: ["XS", "S", "M", "L"],
+    fit: "Slim Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_0.png",
+    hoverImage: "/flatlays/flatlay_0.png",
+    description: "A chic ribbed one-shoulder top featuring a elegant draped sleeve. Tailored in a comfortable slim fit, this top is perfect for pairing with trousers or denim."
+  },
+  {
+    id: 2,
+    name: "Satin Cowl-Neck Camisole",
+    category: "ladies",
+    subcategory: "t-shirts",
+    tag: "Conscious Choice",
+    price: 1499,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Cream", "White"],
+    sizes: ["S", "M", "L"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_1.png",
+    hoverImage: "/flatlays/flatlay_1.png",
+    description: "Elegant camisole top in soft, flowing satin with a cowl neck. Narrow, adjustable shoulder straps. Made with recycled polyester."
+  },
+  {
+    id: 3,
+    name: "Gathered Halter-Neck Top",
+    category: "ladies",
+    subcategory: "t-shirts",
+    tag: "Trending",
+    price: 2299,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Black"],
+    sizes: ["XS", "S", "M", "L"],
+    fit: "Oversized",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_2.png",
+    hoverImage: "/flatlays/flatlay_2.png",
+    description: "Sleeveless halter-neck top featuring gathered details around the neckline and a relaxed silhouette for a high-fashion look."
+  },
+  {
+    id: 4,
+    name: "Wide-Leg Linen Trousers",
+    category: "ladies",
+    subcategory: "pants",
+    tag: "Premium Quality",
+    price: 2699,
+    originalPrice: 3499,
+    isSale: true,
+    colors: ["Beige", "White"],
+    sizes: ["S", "M", "L", "XL"],
+    fit: "Relaxed Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_3.png",
+    hoverImage: "/flatlays/flatlay_3.png",
+    description: "Trousers in airy, woven linen-blend fabric. High waist with elastication, discreet side pockets, and wide, straight legs."
+  },
+  {
+    id: 5,
+    name: "Draped Cowl-Neck Satin Blouse",
+    category: "ladies",
+    subcategory: "shirts",
+    tag: "New Arrival",
+    price: 1299,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Cream", "Beige"],
+    sizes: ["S", "M", "L"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_4.png",
+    hoverImage: "/flatlays/flatlay_4.png",
+    description: "Sophisticated satin blouse with a draped cowl neck and sleeveless construction. Designed for a fluid, elegant silhouette."
+  },
+  {
+    id: 6,
+    name: "Ribbed Sleeveless Mock-Neck Top",
+    category: "ladies",
+    subcategory: "t-shirts",
+    tag: "Standard Fit",
+    price: 799,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Cream", "White"],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    fit: "Slim Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_5.png",
+    hoverImage: "/flatlays/flatlay_5.png",
+    description: "Sleeveless mock-neck top in soft, ribbed cotton jersey. Designed for a comfortable close fit."
+  },
+  {
+    id: 7,
+    name: "Draped One-Shoulder Maxi Dress",
+    category: "ladies",
+    subcategory: "shirts",
+    tag: "Premium Quality",
+    price: 2999,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Brown", "Black"],
+    sizes: ["S", "M", "L"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_6.png",
+    hoverImage: "/flatlays/flatlay_6.png",
+    description: "An elegant one-shoulder maxi dress in fluid, draped fabric. Perfect for special summer occasions."
+  },
+  {
+    id: 8,
+    name: "Sleeveless Cowl Draped Dress",
+    category: "ladies",
+    subcategory: "shirts",
+    tag: "Trending",
+    price: 2499,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Navy", "Grey"],
+    sizes: ["XS", "S", "M", "L"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_7.png",
+    hoverImage: "/flatlays/flatlay_7.png",
+    description: "Sleeveless dress featuring a sophisticated cowl drape on the side. Tailored in midweight flowy fabric."
+  },
+  {
+    id: 9,
+    name: "Linen-Blend Halter Top",
+    category: "ladies",
+    subcategory: "t-shirts",
+    tag: "Conscious Choice",
+    price: 999,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Cream", "White"],
+    sizes: ["XS", "S", "M", "L"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_8.png",
+    hoverImage: "/flatlays/flatlay_8.png",
+    description: "Halter neck top in an airy, woven linen and viscose blend. Ties at the back of the neck and features a clean hem."
+  },
+  {
+    id: 10,
+    name: "Heavyweight Cotton T-shirt",
+    category: "ladies",
+    subcategory: "t-shirts",
+    tag: "New Arrival",
+    price: 799,
+    originalPrice: 1199,
+    isSale: true,
+    colors: ["Black", "Grey"],
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    fit: "Oversized",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_9.png",
+    hoverImage: "/flatlays/flatlay_9.png",
+    description: "Oversized t-shirt in heavy cotton jersey (240 GSM) with a ribbed crew neck and dropped shoulders."
+  },
+  {
+    id: 11,
+    name: "High-Waist Denim Shorts",
+    category: "ladies",
+    subcategory: "jeans",
+    tag: "Trending",
+    price: 1699,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Grey", "Black"],
+    sizes: ["26", "28", "30", "32"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_10.png",
+    hoverImage: "/flatlays/flatlay_10.png",
+    description: "5-pocket shorts in washed denim. High waist, zip fly with button, and raw, frayed hems."
+  },
+  {
+    id: 12,
+    name: "Ribbed Knit Tank Top",
+    category: "ladies",
+    subcategory: "t-shirts",
+    tag: "Standard Fit",
+    price: 699,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Grey", "White"],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    fit: "Slim Fit",
+    pattern: "Solid Color",
+    mainImage: "/flatlays/flatlay_11.png",
+    hoverImage: "/flatlays/flatlay_11.png",
+    description: "Fitted tank top in soft, ribbed cotton-blend knit with a deep round neck."
+  }
+];
 
 // Programmatic 1,200+ Products Seeder
 function generateProducts(count) {
@@ -87,7 +325,8 @@ function generateProducts(count) {
     'jackets': ['Structured Canvas Jacket', 'Denim Overshirt', 'Coach Jacket', 'Windbreaker Overshirt']
   };
 
-  for (let i = 1; i <= count; i++) {
+  // Start seeder loop from i = 13 to avoid overlapping IDs with Flatlay items
+  for (let i = 13; i <= count + 12; i++) {
     const category = categories[i % categories.length];
     const subCats = subcategories[category];
     const subcategory = subCats[i % subCats.length];
@@ -137,9 +376,8 @@ function generateProducts(count) {
   return products;
 }
 
-// Generate 1200 Products
-const PRODUCTS = generateProducts(1200);
-
+// Generate 1188 products dynamically, and combine them with the 12 flatlays (total 1200 products)
+const PRODUCTS = [...FLATLAY_PRODUCTS, ...generateProducts(1188)];
 // State variables
 let cart = JSON.parse(localStorage.getItem('threadzy_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('threadzy_wishlist')) || [];
