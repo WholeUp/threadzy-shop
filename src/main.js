@@ -36,15 +36,15 @@ const UNSPLASH_IMAGES = {
   'pants': [
     'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&h=533&q=80', // Sage Cargo Trousers
     'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&h=533&q=80', // Beige Linen Pants
-    'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&h=533&q=80', // Grey Joggers
+    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=400&h=533&q=80', // Streetwear Cargo Pants
     'https://images.unsplash.com/photo-1517423568366-8b83523034fd?auto=format&fit=crop&w=400&h=533&q=80', // Sweatpants flatlay
     'https://images.unsplash.com/photo-1506629082925-6fc6b7ab2249?auto=format&fit=crop&w=400&h=533&q=80'  // Tailored trousers
   ],
   'jeans': [
-    'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=400&h=533&q=80', // Blue Denim
+    'https://images.unsplash.com/photo-1565084888279-aca607ecad0c?auto=format&fit=crop&w=400&h=533&q=80', // Premium Denim Jeans
     'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&h=533&q=80', // Rolled Jeans
     'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=400&h=533&q=80', // Light Blue Denim
-    'https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&h=533&q=80'  // Dark wash denim
+    'https://images.unsplash.com/photo-1475178626620-a4d074967452?auto=format&fit=crop&w=400&h=533&q=80'  // Relaxed Fit Denim
   ],
   'jackets': [
     'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=400&h=533&q=80', // Leather Biker Jacket
