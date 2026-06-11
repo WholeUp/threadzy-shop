@@ -1,26 +1,62 @@
 import './style.css'
-
-// Import asset images
 import heroBannerImg from './assets/hero_banner.png'
-import sakuraLinenImg from './assets/sakura_linen.png'
-import signatureTeeImg from './assets/signature_tee.png'
-import cyberpunkTeeImg from './assets/cyberpunk_tee.png'
-import oasisShirtImg from './assets/oasis_shirt.png'
-import vintageTeeImg from './assets/vintage_tee.png'
-import utilityJacketImg from './assets/utility_jacket.png'
-import lineArtTeeImg from './assets/line_art_tee.png'
-import retroSunsetImg from './assets/retro_sunset.png'
 
-// Image mappings based on category/style
-const IMAGE_ASSETS = {
-  tshirts: [signatureTeeImg, cyberpunkTeeImg, vintageTeeImg, lineArtTeeImg],
-  shirts: [sakuraLinenImg, oasisShirtImg, retroSunsetImg],
-  jackets: [utilityJacketImg],
-  pants: [utilityJacketImg, signatureTeeImg], // fallback visuals
-  jeans: [utilityJacketImg, vintageTeeImg]
+// Curated High-Resolution Unsplash Fashion & Apparel Images (Ditto H&M Visuals)
+const UNSPLASH_IMAGES = {
+  't-shirts': [
+    'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&h=533&q=80', // White Tee Men
+    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&h=533&q=80', // Black Graphic Tee Women
+    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=400&h=533&q=80', // Black Tee Men
+    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=400&h=533&q=80', // White Graphic Tee
+    'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=400&h=533&q=80', // Red Streetwear Tee
+    'https://images.unsplash.com/photo-1554568218-0f1715e72254?auto=format&fit=crop&w=400&h=533&q=80', // Graphic White Tee
+    'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=400&h=533&q=80', // Yellow folded tees
+    'https://images.unsplash.com/photo-1527719327859-c6ce80353573?auto=format&fit=crop&w=400&h=533&q=80', // Cream Graphic Tee
+    'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=400&h=533&q=80', // Black tee flatlay
+    'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=400&h=533&q=80'  // Summer Linen Top
+  ],
+  'shirts': [
+    'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&h=533&q=80', // Checkered Shirt
+    'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=400&h=533&q=80', // Striped Linen Shirt
+    'https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=400&h=533&q=80', // Viscose Resort Shirt
+    'https://images.unsplash.com/photo-1620012253295-c05518e99309?auto=format&fit=crop&w=400&h=533&q=80', // White Casual Shirt
+    'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=400&h=533&q=80', // Black Classic Shirt
+    'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?auto=format&fit=crop&w=400&h=533&q=80', // Plaid Flannel Overshirt
+    'https://images.unsplash.com/photo-1496345875659-11f7dd282d1d?auto=format&fit=crop&w=400&h=533&q=80', // Short sleeve shirt
+    'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?auto=format&fit=crop&w=400&h=533&q=80'  // Linen blend shirt
+  ],
+  'hoodies': [
+    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&h=533&q=80', // Light Grey Hoodie
+    'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=400&h=533&q=80', // Sweatshirt beige
+    'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=400&h=533&q=80', // Heavy knit pullover
+    'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=400&h=533&q=80', // Colorful Sweatshirt
+    'https://images.unsplash.com/photo-1609873814058-a8928924184a?auto=format&fit=crop&w=400&h=533&q=80', // Olive Green Hoodie
+    'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=400&h=533&q=80'  // Black oversize hoodie
+  ],
+  'pants': [
+    'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&h=533&q=80', // Sage Cargo Trousers
+    'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&h=533&q=80', // Beige Linen Pants
+    'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&h=533&q=80', // Grey Joggers
+    'https://images.unsplash.com/photo-1517423568366-8b83523034fd?auto=format&fit=crop&w=400&h=533&q=80', // Sweatpants flatlay
+    'https://images.unsplash.com/photo-1506629082925-6fc6b7ab2249?auto=format&fit=crop&w=400&h=533&q=80'  // Tailored trousers
+  ],
+  'jeans': [
+    'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=400&h=533&q=80', // Blue Denim
+    'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&h=533&q=80', // Rolled Jeans
+    'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=400&h=533&q=80', // Light Blue Denim
+    'https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&h=533&q=80'  // Dark wash denim
+  ],
+  'jackets': [
+    'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=400&h=533&q=80', // Leather Biker Jacket
+    'https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=400&h=533&q=80', // Elegant Trench/Coat
+    'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=400&h=533&q=80', // Canvas Utility Overshirt
+    'https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?auto=format&fit=crop&w=400&h=533&q=80', // Denim Jacket
+    'https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=400&h=533&q=80', // Winter Parka
+    'https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?auto=format&fit=crop&w=400&h=533&q=80'  // Plaid zip jacket
+  ]
 };
 
-// 1,200+ Products Generator
+// Programmatic 1,200+ Products Seeder
 function generateProducts(count) {
   const products = [];
   const categories = ['ladies', 'men', 'divided', 'kids', 'home', 'beauty', 'sport'];
@@ -41,7 +77,6 @@ function generateProducts(count) {
   
   const tags = ['New Arrival', 'Premium Quality', 'Conscious Choice', 'Sale', 'Trending', 'Standard Fit'];
 
-  // Seed data generators
   const adjectives = ['Retro', 'Aesthetic', 'Urban', 'Minimalist', 'Vintage', 'Cyberpunk', 'Classic', 'Street', 'Signature', 'Casual', 'Utility'];
   const nouns = {
     't-shirts': ['Graphic Tee', 'Heavyweight T-shirt', 'Crewneck Top', 'Ribbed Tee', 'Boxy Tank'],
@@ -57,7 +92,6 @@ function generateProducts(count) {
     const subCats = subcategories[category];
     const subcategory = subCats[i % subCats.length];
     
-    // Choose appropriate name parts
     const adj = adjectives[(i + 3) % adjectives.length];
     const subNouns = nouns[subcategory] || nouns['t-shirts'];
     const noun = subNouns[i % subNouns.length];
@@ -65,7 +99,6 @@ function generateProducts(count) {
     const color = colors[i % colors.length];
     const name = `${adj} ${color} ${noun}`;
     
-    // Generate pricing
     const isSale = (i % 5 === 0);
     const originalPrice = isSale ? (1200 + (i % 25) * 150) : null;
     const price = isSale ? Math.floor(originalPrice * 0.7) : (799 + (i % 35) * 120);
@@ -74,25 +107,13 @@ function generateProducts(count) {
     const pattern = patterns[i % patterns.length];
     const tag = tags[i % tags.length];
 
-    // Pick dynamic images
-    let mainImage = signatureTeeImg;
-    let hoverImage = signatureTeeImg;
-
-    if (subcategory === 't-shirts') {
-      const arr = IMAGE_ASSETS.tshirts;
-      mainImage = arr[i % arr.length];
-      hoverImage = arr[(i + 1) % arr.length];
-    } else if (subcategory === 'shirts') {
-      const arr = IMAGE_ASSETS.shirts;
-      mainImage = arr[i % arr.length];
-      hoverImage = arr[(i + 1) % arr.length];
-    } else if (subcategory === 'jackets') {
-      mainImage = utilityJacketImg;
-      hoverImage = utilityJacketImg;
-    } else {
-      mainImage = (i % 2 === 0) ? utilityJacketImg : signatureTeeImg;
-      hoverImage = mainImage;
-    }
+    // Pick unique image URLs to prevent repeats in identical grids
+    const imagesList = UNSPLASH_IMAGES[subcategory] || UNSPLASH_IMAGES['t-shirts'];
+    const imageIndex = i % imagesList.length;
+    const mainImage = imagesList[imageIndex];
+    
+    // Choose a secondary image for hover, shift index by 1 to make it different
+    const hoverImage = imagesList[(imageIndex + 1) % imagesList.length];
 
     products.push({
       id: i,
@@ -116,7 +137,7 @@ function generateProducts(count) {
   return products;
 }
 
-// Populate 1200 Products
+// Generate 1200 Products
 const PRODUCTS = generateProducts(1200);
 
 // State variables
@@ -142,7 +163,6 @@ const heroBanner = document.getElementById('hero-banner');
 
 // Navigation elements
 const activeCategoryTitle = document.getElementById('active-category-title');
-const subcategoryLinksContainer = document.getElementById('subcategory-links');
 
 // Cart Elements
 const cartBtn = document.getElementById('cart-btn');
@@ -212,9 +232,7 @@ function initHero() {
 
 /* --- PRODUCT RENDERING & QUERY ENGINE --- */
 function renderProducts() {
-  // Filter products based on active filters
   let filtered = PRODUCTS.filter(product => {
-    // Category check
     if (activeFilters.category !== 'all') {
       if (activeFilters.category === 'sale') {
         if (!product.isSale) return false;
@@ -223,14 +241,12 @@ function renderProducts() {
       }
     }
 
-    // Subcategory check
     if (activeFilters.subcategory !== 'all') {
       if (product.subcategory !== activeFilters.subcategory) {
         return false;
       }
     }
 
-    // Search Query check
     if (activeFilters.searchQuery.trim() !== '') {
       const query = activeFilters.searchQuery.toLowerCase();
       const matchName = product.name.toLowerCase().includes(query);
@@ -240,27 +256,22 @@ function renderProducts() {
       if (!matchName && !matchDesc && !matchTag && !matchSub) return false;
     }
 
-    // Price check
     if (product.price > activeFilters.priceMax) return false;
 
-    // Colors check (multi-select)
     if (activeFilters.colors.length > 0) {
       const hasColor = product.colors.some(c => activeFilters.colors.includes(c));
       if (!hasColor) return false;
     }
 
-    // Sizes check (multi-select)
     if (activeFilters.sizes.length > 0) {
       const hasSize = product.sizes.some(s => activeFilters.sizes.includes(s));
       if (!hasSize) return false;
     }
 
-    // Fits check (multi-select)
     if (activeFilters.fits.length > 0) {
       if (!activeFilters.fits.includes(product.fit)) return false;
     }
 
-    // Patterns check (multi-select)
     if (activeFilters.patterns.length > 0) {
       if (!activeFilters.patterns.includes(product.pattern)) return false;
     }
@@ -268,19 +279,16 @@ function renderProducts() {
     return true;
   });
 
-  // Sort products
   if (activeFilters.sortBy === 'price-asc') {
     filtered.sort((a, b) => a.price - b.price);
   } else if (activeFilters.sortBy === 'price-desc') {
     filtered.sort((a, b) => b.price - a.price);
   } else if (activeFilters.sortBy === 'newest') {
-    filtered.sort((a, b) => b.id - a.id); // higher IDs are simulated newest
+    filtered.sort((a, b) => b.id - a.id);
   }
 
-  // Update count label
   resultsCount.textContent = `Showing ${filtered.length} product${filtered.length === 1 ? '' : 's'}`;
 
-  // Toggle empty state
   if (filtered.length === 0) {
     productGrid.innerHTML = '';
     emptyState.classList.remove('hidden');
@@ -289,14 +297,11 @@ function renderProducts() {
     emptyState.classList.add('hidden');
   }
 
-  // Slice to render the first 120 items initially for browser performance, infinite-scroll mock
   const displayProducts = filtered.slice(0, 120);
 
-  // Generate cards HTML
   productGrid.innerHTML = displayProducts.map(product => {
     const isWishlisted = wishlist.includes(product.id);
     
-    // Choose appropriate badge styling
     let badgeHTML = '';
     if (product.isSale) {
       badgeHTML = `<span class="card-badge sale">Sale</span>`;
@@ -505,7 +510,6 @@ function updateCartUI() {
   cartShippingEl.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
   cartTotalEl.textContent = `₹${total}`;
 
-  // Re-attach listeners
   document.querySelectorAll('.cart-item-remove').forEach(btn => {
     btn.addEventListener('click', () => removeFromCart(parseInt(btn.dataset.index)));
   });
@@ -584,7 +588,6 @@ function openProductDetail(id) {
     </div>
   `;
 
-  // Attach gallery listeners
   const thumbImgs = detailModalBody.querySelectorAll('.thumb-img');
   const mainDetailImg = detailModalBody.querySelector('#main-detail-img');
   thumbImgs.forEach(thumb => {
@@ -635,7 +638,7 @@ function toggleProductModal(open) {
   }
 }
 
-/* --- INTERACTIVE FOOTER PAGES ROUTER (SAME TO SAME H&M CLONE) --- */
+/* --- INTERACTIVE FOOTER PAGES ROUTER --- */
 const INFO_PAGES_CONTENT = {
   'careers': `
     <h2 class="info-page-title">Career at Threadzy</h2>
@@ -775,7 +778,6 @@ const INFO_PAGES_CONTENT = {
   `
 };
 
-// Open Info Modal
 function openInfoPage(pageKey) {
   const content = INFO_PAGES_CONTENT[pageKey] || `
     <h2 class="info-page-title">Information Page</h2>
@@ -788,8 +790,6 @@ function openInfoPage(pageKey) {
   infoModalBody.innerHTML = content;
   toggleInfoModal(true);
 
-  // Attach dynamic handlers inside loaded pages
-  // Apply Job Simulator
   const applyBtns = infoModalBody.querySelectorAll('.apply-btn');
   applyBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -798,7 +798,6 @@ function openInfoPage(pageKey) {
     });
   });
 
-  // Support Ticket Form
   const supportForm = infoModalBody.querySelector('#support-sim-form');
   if (supportForm) {
     supportForm.addEventListener('submit', (e) => {
@@ -808,7 +807,6 @@ function openInfoPage(pageKey) {
     });
   }
 
-  // Member Form
   const memberForm = infoModalBody.querySelector('#member-sim-form');
   if (memberForm) {
     memberForm.addEventListener('submit', (e) => {
@@ -819,7 +817,6 @@ function openInfoPage(pageKey) {
     });
   }
 
-  // Store Locator Search
   const storeSearchBtn = infoModalBody.querySelector('#store-search-btn');
   const storeCityInput = infoModalBody.querySelector('#store-city-input');
   const storeResultsBox = infoModalBody.querySelector('#store-results-box');
@@ -870,19 +867,15 @@ function toggleInfoModal(open) {
 
 /* --- EVENT LISTENERS CONFIG --- */
 function setupEventListeners() {
-  // Accordion Expand/Collapse Event
   const accordionTriggers = document.querySelectorAll('.accordion-trigger');
   accordionTriggers.forEach(trigger => {
     trigger.addEventListener('click', () => {
       const isActive = trigger.classList.contains('active');
-      
-      // Real H&M style accordion: can open multiple or collapse
       trigger.classList.toggle('active');
       trigger.setAttribute('aria-expanded', !isActive);
     });
   });
 
-  // Brand logo click clears filters and shows all
   const brandLogo = document.getElementById('brand-logo');
   if (brandLogo) {
     brandLogo.addEventListener('click', (e) => {
@@ -892,18 +885,15 @@ function setupEventListeners() {
     });
   }
 
-  // Category switches (Ladies, Men, Divided, Kids, HOME, Beauty, Sport, Sale)
   const navLinks = document.querySelectorAll('.nav-link, .mobile-link');
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const cat = link.dataset.category;
       
-      // Update filter state
       activeFilters.category = cat;
-      activeFilters.subcategory = 'all'; // reset subcategory on category change
+      activeFilters.subcategory = 'all';
       
-      // Update UI active category styling
       document.querySelectorAll('.nav-link, .mobile-link').forEach(l => {
         if (l.dataset.category === cat) {
           l.classList.add('active');
@@ -912,14 +902,12 @@ function setupEventListeners() {
         }
       });
 
-      // Update sidebar subcategory header title
       if (cat === 'all') {
         activeCategoryTitle.textContent = 'Shop All';
       } else {
         activeCategoryTitle.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
       }
 
-      // Sync active state in subcategory menu (set "View All" active)
       document.querySelectorAll('.subcategory-btn').forEach(btn => {
         if (btn.dataset.subcategory === 'all') {
           btn.classList.add('active');
@@ -928,10 +916,7 @@ function setupEventListeners() {
         }
       });
 
-      // Collapse search if active
       closeSearch();
-
-      // Rerender products & scroll up
       renderProducts();
       
       if (heroBanner) {
@@ -944,19 +929,16 @@ function setupEventListeners() {
     });
   });
 
-  // Subcategory click filters
   document.querySelectorAll('.subcategory-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const sub = btn.dataset.subcategory;
       activeFilters.subcategory = sub;
 
-      // Update active class
       document.querySelectorAll('.subcategory-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
       renderProducts();
       
-      // Smooth scroll to catalog
       const storeLayout = document.querySelector('.store-layout-container');
       if (storeLayout) {
         storeLayout.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -964,7 +946,6 @@ function setupEventListeners() {
     });
   });
 
-  // Info trigger links for Careers, About, Sustainability, Help, etc.
   document.querySelectorAll('.info-trigger-link').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -973,7 +954,6 @@ function setupEventListeners() {
     });
   });
 
-  // Hero banner buttons
   document.querySelectorAll('.hero-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const cat = btn.dataset.targetCategory;
@@ -987,20 +967,16 @@ function setupEventListeners() {
     });
   });
 
-  // Cart Drawer open/close
   if (cartBtn) cartBtn.addEventListener('click', () => toggleCartDrawer(true));
   if (closeCartBtn) closeCartBtn.addEventListener('click', () => toggleCartDrawer(false));
   if (cartDrawerOverlay) cartDrawerOverlay.addEventListener('click', () => toggleCartDrawer(false));
 
-  // Product Modal Close
   if (closeDetailBtn) closeDetailBtn.addEventListener('click', () => toggleProductModal(false));
   if (detailModalOverlay) detailModalOverlay.addEventListener('click', () => toggleProductModal(false));
 
-  // Info Modal Close
   if (closeInfoBtn) closeInfoBtn.addEventListener('click', () => toggleInfoModal(false));
   if (infoModalOverlay) infoModalOverlay.addEventListener('click', () => toggleInfoModal(false));
 
-  // Search Toggle Expand
   if (searchToggleBtn) {
     searchToggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1033,7 +1009,6 @@ function setupEventListeners() {
     });
   }
 
-  // Price Slider filter
   if (priceSlider) {
     priceSlider.addEventListener('input', (e) => {
       const val = parseInt(e.target.value);
@@ -1043,7 +1018,6 @@ function setupEventListeners() {
     });
   }
 
-  // Color Swatches filters (multi-select)
   document.querySelectorAll('.color-swatch-filter').forEach(swatch => {
     swatch.addEventListener('click', () => {
       const color = swatch.dataset.color;
@@ -1059,7 +1033,6 @@ function setupEventListeners() {
     });
   });
 
-  // Size Button filters (multi-select)
   document.querySelectorAll('.size-btn-filter').forEach(btn => {
     btn.addEventListener('click', () => {
       const size = btn.dataset.size;
@@ -1075,7 +1048,6 @@ function setupEventListeners() {
     });
   });
 
-  // Fit Checkboxes filters (multi-select)
   document.querySelectorAll('.fit-checkbox').forEach(box => {
     box.addEventListener('change', () => {
       const fit = box.value;
@@ -1089,7 +1061,6 @@ function setupEventListeners() {
     });
   });
 
-  // Pattern Checkboxes filters (multi-select)
   document.querySelectorAll('.pattern-checkbox').forEach(box => {
     box.addEventListener('change', () => {
       const pattern = box.value;
@@ -1103,7 +1074,6 @@ function setupEventListeners() {
     });
   });
 
-  // Sort Selector
   if (sortSelector) {
     sortSelector.addEventListener('change', (e) => {
       activeFilters.sortBy = e.target.value;
@@ -1111,18 +1081,15 @@ function setupEventListeners() {
     });
   }
 
-  // Clear Filters
   if (clearAllFiltersBtn) clearAllFiltersBtn.addEventListener('click', resetAllFilters);
   if (resetFiltersBtn) resetFiltersBtn.addEventListener('click', resetAllFilters);
 
-  // Mobile Filters drawer toggle
   if (filterMobileToggleBtn) {
     filterMobileToggleBtn.addEventListener('click', () => {
       sidebarAside.classList.toggle('active-mobile');
     });
   }
 
-  // Checkout Action simulation
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', () => {
       toggleCartDrawer(false);
@@ -1149,7 +1116,6 @@ function setupEventListeners() {
     });
   }
 
-  // Newsletter Submit simulation
   if (newsletterForm) {
     newsletterForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -1182,7 +1148,6 @@ function resetAllFilters() {
     sortBy: 'default'
   };
 
-  // Reset UI elements
   if (priceSlider) {
     priceSlider.value = 4999;
     priceValEl.textContent = '₹4999';
@@ -1202,7 +1167,6 @@ function resetAllFilters() {
   renderProducts();
 }
 
-// Global init on DOM load
 document.addEventListener('DOMContentLoaded', init);
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
