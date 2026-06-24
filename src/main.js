@@ -805,6 +805,7 @@ function init() {
   initHero();
   initThreeJS();
   setupEventListeners();
+  initAshwiniChatbot();
   renderSubcategorySidebar(activeFilters.category);
   renderProducts();
   updateCartUI();
