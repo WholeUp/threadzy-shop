@@ -1,6 +1,5 @@
 import './style.css'
 import heroBannerImg from './assets/hero_banner.png'
-import * as THREE from 'three'
 import gsap from 'gsap'
 
 const PRODUCTS = [
@@ -707,103 +706,9 @@ function renderSubcategorySidebar(cat) {
   });
 }
 
-function initThreeJS() {
-  const container = document.getElementById('hero-3d-canvas-container');
-  if (!container) return;
-
-  // Clear container
-  container.innerHTML = '';
-
-  const width = container.clientWidth || window.innerWidth;
-  const height = container.clientHeight || 500;
-
-  // Scene
-  const scene = new THREE.Scene();
-
-  // Camera
-  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-  camera.position.z = 8;
-
-  // Renderer
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-  renderer.setSize(width, height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  container.appendChild(renderer.domElement);
-
-  // Geometry: Create a beautiful abstract Torus Knot (symbolizing fabric threads)
-  const geometry = new THREE.TorusKnotGeometry(1.6, 0.4, 120, 16);
-
-  // Material: Glossy bronze-gold that matches butter yellow theme
-  const material = new THREE.MeshStandardMaterial({
-    color: 0xD4B03C,      // Golden Bronze
-    roughness: 0.15,
-    metalness: 0.85
-  });
-
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
-
-  // Lights
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-  scene.add(ambientLight);
-
-  const dirLight1 = new THREE.DirectionalLight(0xfff7d6, 1.5);
-  dirLight1.position.set(5, 5, 5);
-  scene.add(dirLight1);
-
-  const dirLight2 = new THREE.DirectionalLight(0xb5a450, 0.8);
-  dirLight2.position.set(-5, -5, 2);
-  scene.add(dirLight2);
-
-  // Mouse response inertia
-  let mouseX = 0;
-  let mouseY = 0;
-  let targetX = 0;
-  let targetY = 0;
-
-  const windowHalfX = window.innerWidth / 2;
-  const windowHalfY = window.innerHeight / 2;
-
-  window.addEventListener('mousemove', (event) => {
-    mouseX = (event.clientX - windowHalfX) / 180;
-    mouseY = (event.clientY - windowHalfY) / 180;
-  });
-
-  // Handle Resize
-  window.addEventListener('resize', () => {
-    const w = container.clientWidth || window.innerWidth;
-    const h = container.clientHeight || 500;
-    
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
-  });
-
-  // Animation Loop
-  function animate() {
-    requestAnimationFrame(animate);
-
-    // Auto rotate
-    mesh.rotation.y += 0.005;
-    mesh.rotation.x += 0.003;
-
-    // Smooth lerp mouse orientation
-    targetX += (mouseX - targetX) * 0.05;
-    targetY += (mouseY - targetY) * 0.05;
-
-    mesh.rotation.y += targetX * 0.08;
-    mesh.rotation.x += targetY * 0.08;
-
-    renderer.render(scene, camera);
-  }
-
-  animate();
-}
-
 /* --- INITIALIZATION --- */
 function init() {
   initHero();
-  initThreeJS();
   setupEventListeners();
   initAshwiniChatbot();
   renderSubcategorySidebar(activeFilters.category);
@@ -1752,7 +1657,8 @@ function initAshwiniChatbot() {
   if (!toggleBtn || !chatWindow) return;
 
   // Toggle Chat Window
-  toggleBtn.addEventListener('click', () => {
+  toggleBtn.addEventListener('click', (e) => {
+    e.preventDefault();
     chatWindow.classList.toggle('hidden');
     // Hide ping badge once clicked
     const ping = toggleBtn.querySelector('.chat-ping');
@@ -1760,17 +1666,17 @@ function initAshwiniChatbot() {
 
     if (!chatWindow.classList.contains('hidden')) {
       chatInput.focus();
-      // Scroll to bottom
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
   });
 
-  closeBtn.addEventListener('click', () => {
+  closeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
     chatWindow.classList.add('hidden');
   });
 
   // Welcome message from Ashwini
-  appendAgentMessage("Hi! I'm **Ashwini**, your Threadzy Personal Shopping Assistant. 🌸 I can help you find products, apply filters on-screen, check your cart, or add items directly to your shopping bag! How can I help you today?");
+  appendAgentMessage("Hello! 👋 Main hoon **Ashwini**, aapki Threadzy Personal Shopping Expert. 🌟\n\nMain yahan aapki shopping ko super easy banane ke liye hoon! Aap mujhse:\n- **Ladies, Men, Kids, Beauty, ya Sports** ki items dekhne ke liye keh sakte hain,\n- Apne bag/cart ko view karne ke liye bol sakte hain,\n- Sizing aur shipping details pooch sakte hain,\n- Ya fir seedhe product ko cart me add karwa sakte hain!\n\nAaj aapko kya purchase karna hai? Mujhe bataiye! 👇");
 
   // Handle Form Submit
   chatForm.addEventListener('submit', (e) => {
@@ -1789,7 +1695,8 @@ function initAshwiniChatbot() {
   // Handle Suggestion Chips click
   if (suggestionsContainer) {
     suggestionsContainer.querySelectorAll('.chat-suggest-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
         const query = btn.dataset.query;
         appendUserMessage(query);
         handleChatbotReply(query);
@@ -1798,16 +1705,18 @@ function initAshwiniChatbot() {
   }
 
   function appendUserMessage(text) {
-    const el = document.createElement('div');
-    el.className = 'chat-msg user';
-    el.textContent = text;
-    messagesContainer.appendChild(el);
+    const row = document.createElement('div');
+    row.className = 'chat-msg-row user';
+    row.innerHTML = `
+      <div class="chat-msg-bubble">${text}</div>
+    `;
+    messagesContainer.appendChild(row);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
   function appendAgentMessage(text) {
-    const el = document.createElement('div');
-    el.className = 'chat-msg agent';
+    const row = document.createElement('div');
+    row.className = 'chat-msg-row agent';
     
     // Parse bold text and markdown links
     let formattedText = text
@@ -1815,13 +1724,17 @@ function initAshwiniChatbot() {
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
       .replace(/\[(.*?)\]\((.*?)\)/g, '<a class="chat-link" data-action="$2">$1</a>');
 
-    el.innerHTML = formattedText;
-    messagesContainer.appendChild(el);
+    row.innerHTML = `
+      <div class="chat-msg-avatar">AI</div>
+      <div class="chat-msg-bubble">${formattedText}</div>
+    `;
+    messagesContainer.appendChild(row);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
     // Attach click listeners to any links inside the reply
-    el.querySelectorAll('.chat-link').forEach(link => {
-      link.addEventListener('click', () => {
+    row.querySelectorAll('.chat-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
         const action = link.dataset.action;
         handleLinkAction(action);
       });
@@ -1829,16 +1742,17 @@ function initAshwiniChatbot() {
   }
 
   function showTypingIndicator() {
-    const el = document.createElement('div');
-    el.className = 'chat-msg agent typing-indicator';
-    el.innerHTML = '<span></span><span></span><span></span>';
-    el.style.display = 'flex';
-    el.style.gap = '4px';
-    el.style.alignItems = 'center';
-    el.style.padding = '12px';
-    messagesContainer.appendChild(el);
+    const row = document.createElement('div');
+    row.className = 'chat-msg-row agent typing-indicator-row';
+    row.innerHTML = `
+      <div class="chat-msg-avatar">AI</div>
+      <div class="chat-msg-bubble typing-indicator" style="display: flex; gap: 4px; align-items: center; padding: 12px;">
+        <span></span><span></span><span></span>
+      </div>
+    `;
+    messagesContainer.appendChild(row);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    return el;
+    return row;
   }
 
   function handleChatbotReply(userInput) {
@@ -1853,41 +1767,41 @@ function initAshwiniChatbot() {
       
       // 1. Check intent for showing categories (Agentic control)
       if (query.includes('ladies') || query.includes('women') || query.includes('female') || query.includes('girl')) {
-        reply = "Sure! I have filtered the catalog to the **Ladies** section. You can browse all ladies dresses, fancy tops, pants, and denim on your screen now! 👗";
+        reply = "Ji bilkul! Maine catalog ko **Ladies** section par filter kar diya hai. Aap elegant dresses, fancy tops, and jeans screen par dekh sakte hain! 👗";
         triggerCategoryChange('ladies');
       } 
       else if (query.includes('men') || query.includes('male') || query.includes('boy') || query.includes('gent')) {
-        reply = "Absolutely! I have loaded the **Men's** collection for you. You'll find camp collar shirts, trousers, graphic tees, and jackets on the screen. 👔";
+        reply = "Sure! Maine **Men's** collection load kar di hai. Screen par aapko cool shirts, jogger pants, and jackets mil jayenge. 👔";
         triggerCategoryChange('men');
       } 
       else if (query.includes('kids') || query.includes('child') || query.includes('toy')) {
-        reply = "I've loaded the **Kids** section for you, including cute clothes and wooden/puzzle toys! 🧸 Check them out on the screen.";
+        reply = "Done! **Kids** section open ho gaya hai. Yahan cute kapde aur toys dono hain! 🧸 Aap screen par browse kar sakte hain.";
         triggerCategoryChange('kids');
       } 
-      else if (query.includes('beauty') || query.includes('makeup') || query.includes('lipstick') || query.includes('brush') || query.includes('kajal') || query.includes('liner') || query.includes('mascara')) {
-        reply = "Loading the **Beauty** section! 💄 You can now see branded cosmetic products like MAC, Dior, and NARS lipsticks, blush, facewashes, and liners.";
+      else if (query.includes('beauty') || query.includes('makeup') || query.includes('lipstick') || query.includes('brush') || query.includes('kajal') || query.includes('liner') || query.includes('mascara') || query.includes('facewash') || query.includes('blush')) {
+        reply = "Yes! **Beauty** cosmetics load ho chuke hain. 💄 Branded lipsticks, facewash, makeup kits, blush, and liners ab screen par hain.";
         triggerCategoryChange('beauty');
       } 
       else if (query.includes('sport') || query.includes('gym') || query.includes('activewear') || query.includes('racket') || query.includes('yoga') || query.includes('equipment')) {
-        reply = "Opening **Sports**! 👟 On your screen, you can see high-performance activewear for both men & women, plus equipment like yoga mats and tennis rackets.";
+        reply = "Opening **Sports**! 👟 Men & Women dono ke liye activewear aur high-quality sports equipment (jaise tennis racket aur yoga mats) screen par visible hain.";
         triggerCategoryChange('sport');
       } 
       else if (query.includes('sale') || query.includes('discount') || query.includes('offer') || query.includes('promo')) {
-        reply = "Here is the **Season Sale**! 🏷️ I have filtered all items that have a discount tag active. You can save up to 30% on these products!";
+        reply = "Lijiye, **Season Sale** active ho gayi hai! 🏷️ Maine discounted items screen par load kar diye hain. Aap up to 30% save kar sakte hain!";
         triggerCategoryChange('sale');
       } 
-      else if (query.includes('show all') || query.includes('all products') || query.includes('view all') || query.includes('reset')) {
-        reply = "Resetting filters. I have loaded the complete catalog on the screen for you! 🌟";
+      else if (query.includes('show all') || query.includes('all products') || query.includes('view all') || query.includes('reset') || query.includes('sab') || query.includes('poora')) {
+        reply = "Saare filters reset kar diye hain! Ab aap **Threadzy** ki poori boutique collection (all 30 premium designs) screen par dekh sakte hain. 🌟";
         resetAllFilters();
       }
       
       // 2. Check intent for Cart control
-      else if (query.includes('view cart') || query.includes('show cart') || query.includes('my cart') || query.includes('what\'s in my cart')) {
+      else if (query.includes('view cart') || query.includes('show cart') || query.includes('my cart') || query.includes('bag') || query.includes('checkout')) {
         if (cart.length === 0) {
-          reply = "Your shopping bag is currently empty! Add some cool items first. You can ask me to show you the **Best Sellers**.";
+          reply = "Aapka shopping bag abhi empty hai! Kuch cool items add kijiye pehle. Aap mujhe **Best Sellers** dikhane ke liye keh sakte hain!";
         } else {
           const itemsList = cart.map(item => `- ${item.name} (${item.size}, ${item.color}) x${item.quantity}`).join('\n');
-          reply = `Here are the items in your shopping bag:\n${itemsList}\n\nWould you like to [Proceed to Checkout](checkout)?`;
+          reply = `Aapke shopping bag me ye items hain:\n${itemsList}\n\nKya aap checkout karna chahte hain? Click kijiye: [Proceed to Checkout](checkout) 🛒`;
         }
         toggleCartDrawer(true);
       }
@@ -1914,35 +1828,35 @@ function initAshwiniChatbot() {
           const size = match.sizes.includes('M') ? 'M' : match.sizes[0];
           const color = match.colors[0];
           addToCart(match, size, color);
-          reply = `Awesome! I have added **${match.name}** (Size: ${size}, Color: ${color}) to your shopping bag! 🛒`;
+          reply = `Awesome choice! Maine **${match.name}** (Size: ${size}, Color: ${color}) aapke shopping bag me add kar diya hai! 🛒`;
         } else {
           // If no product is matched, offer to add a recommended popular item
           const rec = PRODUCTS[0]; // Ribbed Top
-          reply = `I couldn't quite find the exact product you meant. Would you like me to add our best-selling **${rec.name}** instead? [Yes, add it!](add_rec)`;
+          reply = `Mujhe woh product nahi mila. Kya main humare best-selling **${rec.name}** ko aapke cart me add ko doon? [Haan, add kar do!](add_rec)`;
         }
       }
       
       // 3. FAQs & General knowledge
       else if (query.includes('shipping') || query.includes('delivery')) {
-        reply = "We offer **Free Standard Shipping** across India on all orders above ₹1999! For orders below ₹1999, shipping is ₹149. Delivery takes **3 to 5 business days**.";
+        reply = "Threadzy par ₹1999 se upar ke orders par **Free Delivery** milti hai! Usse kam ke orders par shipping ₹149 hai. Delivery me **3 to 5 business days** lagte hain. 🚚";
       }
       else if (query.includes('return') || query.includes('exchange')) {
-        reply = "Threadzy offers a **15-day easy return policy**! The items must be unused and have their original tags attached. Returns are completely free for Members!";
+        reply = "Humari **15-day easy return policy** hai! Tags attached hone chahiye aur product unused hona chahiye. Returns ekdum free hain! 🔄";
       }
       else if (query.includes('size') || query.includes('sizing') || query.includes('fit')) {
-        reply = "Our clothing sizes range from **XS to XXL**. Our fits vary from *Slim Fit* (fitted), *Regular Fit* (standard), to *Oversized* (loose/boxy, perfect for streetwear layering). What size do you usually wear?";
+        reply = "Humare sizes **XS se XXL** tak aate hain. Fits me *Slim Fit* (fitted), *Regular Fit* (standard), aur *Oversized* (loose/boxy, perfect for streetwear) options hain. Aapka standard size kya hai? 📏";
       }
       else if (query.includes('coupon') || query.includes('code') || query.includes('discount') || query.includes('promo')) {
-        reply = "Here is a secret discount code just for you! Use coupon code **ASHWINI15** at checkout to get an extra **15% OFF** on your order! 🎫";
+        reply = "Aapke liye ek special coupon code hai! Checkout par **ASHWINI15** coupon code use kijiye aur paiye flat **15% OFF**! 🎫";
       }
       else if (query.includes('best seller') || query.includes('popular') || query.includes('trend')) {
-        reply = "Our top trending items right now are:\n1. **Ribbed One-Shoulder Drape Top** (Ladies)\n2. **Chanel Matte Lip Crayon** (Beauty)\n3. **Wilson Professional Tennis Racket** (Sport)\n4. **Oversized Graphic Tees** (Men)\n\nWhich one would you like to explore?";
+        reply = "Humare top trending items ye hain:\n1. **Ribbed One-Shoulder Drape Top** (Ladies)\n2. **Chanel Matte Lip Crayon** (Beauty)\n3. **Wilson Professional Tennis Racket** (Sport)\n4. **Oversized Graphic Tees** (Men)\n\nAap inme se kya explore karna chahenge? 🌟";
       }
-      else if (query.includes('hello') || query.includes('hi') || query.includes('hey') || query.includes('help')) {
-        reply = "Hello! 😊 I am Ashwini. I can help you filter products, check sizes, apply discount coupons, or even add products to the cart for you. What are you looking to buy today?";
+      else if (query.includes('hello') || query.includes('hi') || query.includes('hey') || query.includes('help') || query.includes('hola') || query.includes('namaste')) {
+        reply = "Hello! 😊 Main Ashwini hoon. Main aapke liye products filter kar sakti hoon, sizes check kar sakti hoon, discount coupon de sakti hoon, ya product ko cart me add kar sakti hoon. Aap aaj kya dhoondh rahe hain?";
       }
       else {
-        reply = "I'm not sure I understood that, but I'm learning! 🧠 I can apply filters on the site (e.g. try typing *'Show me kids section'* or *'Show me beauty products'*), answer shipping queries, list your cart, or give you discount coupons!";
+        reply = "Mujhe thoda samajh nahi aaya, par main seekh rahi hoon! 🧠 Aap mujhse *'Ladies section dikhao'*, *'Beauty products dikhao'*, *'Cart dikhao'* ya *'Shipping rules kya hain'* pooch sakte hain!";
       }
 
       appendAgentMessage(reply);
@@ -1950,7 +1864,6 @@ function initAshwiniChatbot() {
   }
 
   function triggerCategoryChange(category) {
-    // Find nav link for category and trigger click event
     const link = document.querySelector(`.nav-link[data-category="${category}"], .mobile-link[data-category="${category}"]`);
     if (link) {
       link.click();
