@@ -1,5 +1,7 @@
 import './style.css'
 import heroBannerImg from './assets/hero_banner.png'
+import * as THREE from 'three'
+import gsap from 'gsap'
 
 // Curated High-Resolution Unsplash Fashion & Apparel Images (Ditto H&M Visuals)
 const UNSPLASH_IMAGES = {
@@ -294,45 +296,125 @@ const FLATLAY_PRODUCTS = [
   }
 ];
 
+// Curated Unsplash Fashion & Apparel Images updated with Kids, Beauty, and Sports
+const MORE_IMAGES = {
+  'kids-clothes': [
+    'https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1622290319146-7b63df48a635?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=400&h=533&q=80'
+  ],
+  'kids-toys': [
+    'https://images.unsplash.com/photo-1537758061216-0499eaec4bc2?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1558060370-d644479cb6f7?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=400&h=533&q=80'
+  ],
+  'beauty': [
+    'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1608248597481-496100c80836?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1627384113743-6bd5a479fffd?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1590156546746-c2370f8c371b?auto=format&fit=crop&w=400&h=533&q=80'
+  ],
+  'sport-clothes': [
+    'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&h=533&q=80'
+  ],
+  'sport-equipment': [
+    'https://images.unsplash.com/photo-1606244864456-8bee63fdb47e?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=400&h=533&q=80',
+    'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=400&h=533&q=80'
+  ]
+};
+
 // Programmatic 1,200+ Products Seeder
 function generateProducts(count) {
   const products = [];
-  const categories = ['ladies', 'men', 'divided', 'kids', 'home', 'beauty', 'sport'];
-  const subcategories = {
-    ladies: ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets'],
-    men: ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets'],
-    divided: ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets'],
-    kids: ['t-shirts', 'shirts', 'pants', 'jeans'],
-    home: ['t-shirts', 'shirts'], // towels, linens
-    beauty: ['t-shirts'], // canvas bags
-    sport: ['t-shirts', 'pants', 'jackets']
-  };
-
+  const categories = ['ladies', 'men', 'kids', 'beauty', 'sport'];
+  
   const colors = ['Black', 'White', 'Cream', 'Navy', 'Sage', 'Beige', 'Grey', 'Olive', 'Brown'];
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const fits = ['Regular Fit', 'Slim Fit', 'Oversized', 'Relaxed Fit'];
   const patterns = ['Solid Color', 'Graphic Print', 'Striped', 'Embroidered', 'Patterned'];
-  
   const tags = ['New Arrival', 'Premium Quality', 'Conscious Choice', 'Sale', 'Trending', 'Standard Fit'];
-
   const adjectives = ['Retro', 'Aesthetic', 'Urban', 'Minimalist', 'Vintage', 'Cyberpunk', 'Classic', 'Street', 'Signature', 'Casual', 'Utility'];
+  
   const nouns = {
-    't-shirts': ['Graphic Tee', 'Heavyweight T-shirt', 'Crewneck Top', 'Ribbed Tee', 'Boxy Tank'],
-    'shirts': ['Camp Collar Resort Shirt', 'Flannel Overshirt', 'Linen Blend Shirt', 'Cotton Oxford Shirt', 'Utility Pocket Shirt'],
-    'hoodies': ['Oversized Hoodie', 'Heavy Sweatshirt', 'Zip-Up Hoodie', 'Fleece Pullover'],
-    'pants': ['Cargo Trousers', 'Relaxed Joggers', 'Chino Pants', 'Utility Pants', 'Pleated Pants'],
-    'jeans': ['Loose Fit Jeans', 'Straight Leg Denim', 'Baggy Jeans', 'Slim Fit Jeans'],
-    'jackets': ['Structured Canvas Jacket', 'Denim Overshirt', 'Coach Jacket', 'Windbreaker Overshirt']
+    // Ladies fancy tops, shirts, activewear
+    'ladies-t-shirts': ['Chiffon Ruffle Blouse', 'Lace Corset Top', 'Asymmetric One-Shoulder Top', 'Ruched Mesh Bodysuit', 'Ribbed Crop Tank'],
+    'ladies-shirts': ['Silk Halter Blouse', 'Puff Sleeve Crop Shirt', 'Linen Overshirt', 'Wrap Front Blouse'],
+    'ladies-pants': ['Wide Leg Satin Pants', 'High Waist Cargo Trousers', 'Pleated Palazzo Pants'],
+    'ladies-jeans': ['Oversized Baggy Jeans', 'Straight Leg Denim', 'High Waist Mom Jeans'],
+    'ladies-jackets': ['Cropped Denim Jacket', 'Structured Canvas Blazer', 'Leather Bomber Jacket'],
+    'ladies-hoodies': ['Velour Crop Hoodie', 'Oversized Pastel Sweatshirt'],
+    
+    // Men street style (Suits and Skinny Jeans are omitted here)
+    'men-t-shirts': ['Oversized Graphic Tee', 'Heavyweight Drop-Shoulder Tee', 'Ribbed Muscle Tank', 'Boxy Fit Pocket Tee'],
+    'men-shirts': ['Camp Collar Resort Shirt', 'Heavy Flannel Overshirt', 'Linen Blend Beach Shirt', 'Oxford Button-Down'],
+    'men-pants': ['Relaxed Fit Joggers', 'Straight Fit Cargo Pants', 'Chino Trousers', 'Utility Carpenter Pants'],
+    'men-jeans': ['Loose Baggy Denim', 'Straight Leg Classic Jeans', 'Relaxed Fit Jeans'],
+    'men-jackets': ['Structured Canvas Jacket', 'Coach Windbreaker Jacket', 'Denim Trucker Jacket'],
+    'men-hoodies': ['Heavyweight Pullover Hoodie', 'Acid Wash Sweatshirt', 'Full-Zip Fleece Hoodie'],
+
+    // Kids Clothes and Toys
+    'kids-clothes': ['Cotton Play Suit', 'Denim Dungarees', 'Cozy Fleece Hoodie', 'Striped Crewneck Tee', 'Floral Summer Dress'],
+    'kids-toys': ['Wooden Train Set', 'Plush Teddy Bear', 'Interactive Toy Blocks', 'Colorful Puzzle Set', 'Retro Toy Car'],
+
+    // Beauty Products (Branded & Real cosmetics)
+    'beauty-lipstick': ['Chanel Matte Lip Crayon', 'Dior Hydrating Lip Glow', 'MAC Velvet Liquid Lipstick', 'NARS Satin Lip Stick'],
+    'beauty-facewash': ['Estée Lauder Foam Wash', 'Clinique Gentle Cleansing Gel', 'Kiehl\'s Ultra Facial Cleanser'],
+    'beauty-makeup-kit': ['Dior Backstage Makeup Kit', 'Fenty Beauty Glow Palette', 'Huda Beauty Eyeshadow Palette'],
+    'beauty-blush': ['NARS Powder Cheek Blush', 'Rare Beauty Liquid Blush Tint', 'Charlotte Tilbury Cream Blush'],
+    'beauty-brushes': ['Sigma Pro Blending Brush Set', 'Real Techniques Powder Brush'],
+    'beauty-eyeliner': ['L\'Oreal Waterproof Eyeliner', 'Maybelline Intense Matte Kajal', 'KVD Tattoo Liquid Liner'],
+    'beauty-mascara': ['Lancôme Volumizing Mascara', 'Benefit Lengthening Lash Wand', 'Too Faced Lash Mascara'],
+
+    // Sports activewear & equipment
+    'sport-clothes': ['Dry-Fit Athletic Training Tee', 'High-Rise Gym Leggings', 'Lightweight Trail Shorts', 'Premium Sports Compression Top'],
+    'sport-equipment': ['Wilson Professional Tennis Racket', 'Everlast Heavy Grip Boxing Gloves', 'Adidas Training Yoga Mat', 'Spalding Indoor Basketball', 'Babolat Badminton Racket']
   };
 
   // Start seeder loop from i = 13 to avoid overlapping IDs with Flatlay items
   for (let i = 13; i <= count + 12; i++) {
     const category = categories[i % categories.length];
-    const subCats = subcategories[category];
-    const subcategory = subCats[i % subCats.length];
     
+    // Choose appropriate subcategory based on category
+    let subcategory = 't-shirts';
+    let nounListKey = 'men-t-shirts';
+    let imagesList = [];
+
+    if (category === 'ladies') {
+      const subcategoriesList = ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets', 'hoodies'];
+      subcategory = subcategoriesList[i % subcategoriesList.length];
+      nounListKey = `ladies-${subcategory}`;
+      imagesList = UNSPLASH_IMAGES[subcategory] || UNSPLASH_IMAGES['t-shirts'];
+    } else if (category === 'men') {
+      const subcategoriesList = ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets', 'hoodies'];
+      subcategory = subcategoriesList[i % subcategoriesList.length];
+      nounListKey = `men-${subcategory}`;
+      imagesList = UNSPLASH_IMAGES[subcategory] || UNSPLASH_IMAGES['t-shirts'];
+    } else if (category === 'kids') {
+      subcategory = i % 2 === 0 ? 'clothes' : 'toys';
+      nounListKey = `kids-${subcategory}`;
+      imagesList = subcategory === 'clothes' ? MORE_IMAGES['kids-clothes'] : MORE_IMAGES['kids-toys'];
+    } else if (category === 'beauty') {
+      const beautySubs = ['lipstick', 'facewash', 'makeup-kit', 'blush', 'brushes', 'eyeliner', 'mascara'];
+      subcategory = beautySubs[i % beautySubs.length];
+      nounListKey = `beauty-${subcategory}`;
+      imagesList = MORE_IMAGES['beauty'];
+    } else if (category === 'sport') {
+      subcategory = i % 2 === 0 ? 'clothes' : 'equipment';
+      nounListKey = `sport-${subcategory}`;
+      imagesList = subcategory === 'clothes' ? MORE_IMAGES['sport-clothes'] : MORE_IMAGES['sport-equipment'];
+    }
+
     const adj = adjectives[(i + 3) % adjectives.length];
-    const subNouns = nouns[subcategory] || nouns['t-shirts'];
+    const subNouns = nouns[nounListKey] || nouns['men-t-shirts'];
     const noun = subNouns[i % subNouns.length];
     
     const color = colors[i % colors.length];
@@ -346,13 +428,20 @@ function generateProducts(count) {
     const pattern = patterns[i % patterns.length];
     const tag = tags[i % tags.length];
 
-    // Pick unique image URLs to prevent repeats in identical grids
-    const imagesList = UNSPLASH_IMAGES[subcategory] || UNSPLASH_IMAGES['t-shirts'];
+    // Pick image URLs
     const imageIndex = i % imagesList.length;
     const mainImage = imagesList[imageIndex];
-    
-    // Choose a secondary image for hover, shift index by 1 to make it different
     const hoverImage = imagesList[(imageIndex + 1) % imagesList.length];
+
+    // Build custom description
+    let description = `Upgrade your collection with this premium ${name}. Made with high-quality materials and designed for ultimate style. Ideal for premium wardrobe layering.`;
+    if (category === 'beauty') {
+      description = `Enhance your beauty routine with ${name}. Formulated with top-tier premium ingredients for long-lasting wear and a luxurious finish.`;
+    } else if (category === 'sport' && subcategory === 'equipment') {
+      description = `Boost your performance with ${name}. Built to professional specifications using highly durable materials.`;
+    } else if (category === 'kids' && subcategory === 'toys') {
+      description = `Keep the little ones entertained and creative with ${name}. Made with child-safe, non-toxic, eco-friendly materials.`;
+    }
 
     products.push({
       id: i,
@@ -369,7 +458,7 @@ function generateProducts(count) {
       pattern: pattern,
       mainImage: mainImage,
       hoverImage: hoverImage,
-      description: `Upgrade your collection with this premium ${name}. Made with high-quality materials and tailored in a comfortable ${fit}. Features a clean ${pattern} finish. Ideal for premium wardrobe layering.`
+      description: description
     });
   }
 
@@ -453,10 +542,213 @@ const wishlistCountEl = document.getElementById('wishlist-count');
 const newsletterForm = document.getElementById('newsletter-form');
 const newsletterEmail = document.getElementById('newsletter-email');
 
+const CATEGORY_SUBCATEGORIES = {
+  all: [
+    { id: 'all', label: 'View All' },
+    { id: 't-shirts', label: 'T-shirts & Tanks' },
+    { id: 'shirts', label: 'Shirts' },
+    { id: 'hoodies', label: 'Hoodies & Sweatshirts' },
+    { id: 'pants', label: 'Trousers & Joggers' },
+    { id: 'jeans', label: 'Jeans' },
+    { id: 'jackets', label: 'Jackets & Coats' },
+    { id: 'clothes', label: 'Activewear & Kids Clothes' },
+    { id: 'toys', label: 'Toys' },
+    { id: 'lipstick', label: 'Lipstick' },
+    { id: 'facewash', label: 'Facewash' },
+    { id: 'makeup-kit', label: 'Makeup Kit' },
+    { id: 'blush', label: 'Blush' },
+    { id: 'brushes', label: 'Brushes' },
+    { id: 'eyeliner', label: 'Eyeliner & Kajal' },
+    { id: 'mascara', label: 'Mascara' },
+    { id: 'equipment', label: 'Sports Equipment' }
+  ],
+  ladies: [
+    { id: 'all', label: 'View All' },
+    { id: 't-shirts', label: 'T-shirts & Tanks' },
+    { id: 'shirts', label: 'Shirts' },
+    { id: 'hoodies', label: 'Hoodies & Sweatshirts' },
+    { id: 'pants', label: 'Trousers & Joggers' },
+    { id: 'jeans', label: 'Jeans' },
+    { id: 'jackets', label: 'Jackets & Coats' }
+  ],
+  men: [
+    { id: 'all', label: 'View All' },
+    { id: 't-shirts', label: 'T-shirts & Tanks' },
+    { id: 'shirts', label: 'Shirts' },
+    { id: 'hoodies', label: 'Hoodies & Sweatshirts' },
+    { id: 'pants', label: 'Trousers & Joggers' },
+    { id: 'jeans', label: 'Jeans' },
+    { id: 'jackets', label: 'Jackets & Coats' }
+  ],
+  kids: [
+    { id: 'all', label: 'View All' },
+    { id: 'clothes', label: 'Clothing' },
+    { id: 'toys', label: 'Toys' }
+  ],
+  beauty: [
+    { id: 'all', label: 'View All' },
+    { id: 'lipstick', label: 'Lipstick' },
+    { id: 'facewash', label: 'Facewash' },
+    { id: 'makeup-kit', label: 'Makeup Kit' },
+    { id: 'blush', label: 'Blush' },
+    { id: 'brushes', label: 'Brushes' },
+    { id: 'eyeliner', label: 'Eyeliner & Kajal' },
+    { id: 'mascara', label: 'Mascara' }
+  ],
+  sport: [
+    { id: 'all', label: 'View All' },
+    { id: 'clothes', label: 'Activewear' },
+    { id: 'equipment', label: 'Sports Equipment' }
+  ],
+  sale: [
+    { id: 'all', label: 'View All' },
+    { id: 't-shirts', label: 'T-shirts & Tanks' },
+    { id: 'shirts', label: 'Shirts' },
+    { id: 'hoodies', label: 'Hoodies & Sweatshirts' },
+    { id: 'pants', label: 'Trousers & Joggers' },
+    { id: 'jeans', label: 'Jeans' },
+    { id: 'jackets', label: 'Jackets & Coats' },
+    { id: 'clothes', label: 'Clothing' },
+    { id: 'toys', label: 'Toys' },
+    { id: 'lipstick', label: 'Lipstick' },
+    { id: 'facewash', label: 'Facewash' },
+    { id: 'makeup-kit', label: 'Makeup Kit' },
+    { id: 'blush', label: 'Blush' },
+    { id: 'brushes', label: 'Brushes' },
+    { id: 'eyeliner', label: 'Eyeliner & Kajal' },
+    { id: 'mascara', label: 'Mascara' },
+    { id: 'equipment', label: 'Sports Equipment' }
+  ]
+};
+
+function renderSubcategorySidebar(cat) {
+  const container = document.getElementById('subcategory-links');
+  if (!container) return;
+  
+  const subs = CATEGORY_SUBCATEGORIES[cat] || CATEGORY_SUBCATEGORIES.all;
+  container.innerHTML = subs.map(sub => {
+    const activeClass = sub.id === activeFilters.subcategory ? 'active' : '';
+    return `<li><button class="subcategory-btn ${activeClass}" data-subcategory="${sub.id}">${sub.label}</button></li>`;
+  }).join('');
+
+  // Re-attach listeners to the new buttons
+  container.querySelectorAll('.subcategory-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sub = btn.dataset.subcategory;
+      activeFilters.subcategory = sub;
+
+      container.querySelectorAll('.subcategory-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      renderProducts();
+      
+      const storeLayout = document.querySelector('.store-layout-container');
+      if (storeLayout) {
+        storeLayout.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+}
+
+function initThreeJS() {
+  const container = document.getElementById('hero-3d-canvas-container');
+  if (!container) return;
+
+  // Clear container
+  container.innerHTML = '';
+
+  const width = container.clientWidth || window.innerWidth;
+  const height = container.clientHeight || 500;
+
+  // Scene
+  const scene = new THREE.Scene();
+
+  // Camera
+  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+  camera.position.z = 8;
+
+  // Renderer
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  // Geometry: Create a beautiful abstract Torus Knot (symbolizing fabric threads)
+  const geometry = new THREE.TorusKnotGeometry(1.6, 0.4, 120, 16);
+
+  // Material: Glossy bronze-gold that matches butter yellow theme
+  const material = new THREE.MeshStandardMaterial({
+    color: 0xD4B03C,      // Golden Bronze
+    roughness: 0.15,
+    metalness: 0.85
+  });
+
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+
+  // Lights
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
+
+  const dirLight1 = new THREE.DirectionalLight(0xfff7d6, 1.5);
+  dirLight1.position.set(5, 5, 5);
+  scene.add(dirLight1);
+
+  const dirLight2 = new THREE.DirectionalLight(0xb5a450, 0.8);
+  dirLight2.position.set(-5, -5, 2);
+  scene.add(dirLight2);
+
+  // Mouse response inertia
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetX = 0;
+  let targetY = 0;
+
+  const windowHalfX = window.innerWidth / 2;
+  const windowHalfY = window.innerHeight / 2;
+
+  window.addEventListener('mousemove', (event) => {
+    mouseX = (event.clientX - windowHalfX) / 180;
+    mouseY = (event.clientY - windowHalfY) / 180;
+  });
+
+  // Handle Resize
+  window.addEventListener('resize', () => {
+    const w = container.clientWidth || window.innerWidth;
+    const h = container.clientHeight || 500;
+    
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+
+  // Animation Loop
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Auto rotate
+    mesh.rotation.y += 0.005;
+    mesh.rotation.x += 0.003;
+
+    // Smooth lerp mouse orientation
+    targetX += (mouseX - targetX) * 0.05;
+    targetY += (mouseY - targetY) * 0.05;
+
+    mesh.rotation.y += targetX * 0.08;
+    mesh.rotation.x += targetY * 0.08;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+}
+
 /* --- INITIALIZATION --- */
 function init() {
   initHero();
+  initThreeJS();
   setupEventListeners();
+  renderSubcategorySidebar(activeFilters.category);
   renderProducts();
   updateCartUI();
   updateWishlistUI();
@@ -584,8 +876,17 @@ function renderProducts() {
       </div>
     `;
   }).join('');
-
   attachCardListeners();
+  
+  // GSAP stagger card entry animation
+  gsap.from('.product-card', {
+    duration: 0.5,
+    y: 20,
+    opacity: 0,
+    stagger: 0.03,
+    ease: 'power1.out',
+    overwrite: 'auto'
+  });
 }
 
 function attachCardListeners() {
@@ -1146,14 +1447,7 @@ function setupEventListeners() {
         activeCategoryTitle.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
       }
 
-      document.querySelectorAll('.subcategory-btn').forEach(btn => {
-        if (btn.dataset.subcategory === 'all') {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
-
+      renderSubcategorySidebar(cat);
       closeSearch();
       renderProducts();
       
@@ -1163,23 +1457,6 @@ function setupEventListeners() {
         } else {
           heroBanner.style.display = 'none';
         }
-      }
-    });
-  });
-
-  document.querySelectorAll('.subcategory-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const sub = btn.dataset.subcategory;
-      activeFilters.subcategory = sub;
-
-      document.querySelectorAll('.subcategory-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      renderProducts();
-      
-      const storeLayout = document.querySelector('.store-layout-container');
-      if (storeLayout) {
-        storeLayout.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
   });
@@ -1403,6 +1680,240 @@ function resetAllFilters() {
   if (sidebarAside) sidebarAside.classList.remove('active-mobile');
 
   renderProducts();
+}
+
+function initAshwiniChatbot() {
+  const toggleBtn = document.getElementById('ashwini-chat-toggle');
+  const chatWindow = document.getElementById('ashwini-chat-window');
+  const closeBtn = document.getElementById('close-ashwini-chat');
+  const chatForm = document.getElementById('ashwini-chat-form');
+  const chatInput = document.getElementById('ashwini-chat-input');
+  const messagesContainer = document.getElementById('ashwini-chat-messages');
+  const suggestionsContainer = document.getElementById('chat-suggestions');
+
+  if (!toggleBtn || !chatWindow) return;
+
+  // Toggle Chat Window
+  toggleBtn.addEventListener('click', () => {
+    chatWindow.classList.toggle('hidden');
+    // Hide ping badge once clicked
+    const ping = toggleBtn.querySelector('.chat-ping');
+    if (ping) ping.style.display = 'none';
+
+    if (!chatWindow.classList.contains('hidden')) {
+      chatInput.focus();
+      // Scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  });
+
+  closeBtn.addEventListener('click', () => {
+    chatWindow.classList.add('hidden');
+  });
+
+  // Welcome message from Ashwini
+  appendAgentMessage("Hi! I'm **Ashwini**, your Threadzy Personal Shopping Assistant. 🌸 I can help you find products, apply filters on-screen, check your cart, or add items directly to your shopping bag! How can I help you today?");
+
+  // Handle Form Submit
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = chatInput.value.trim();
+    if (!text) return;
+
+    // Append User Message
+    appendUserMessage(text);
+    chatInput.value = '';
+
+    // Handle Reply
+    handleChatbotReply(text);
+  });
+
+  // Handle Suggestion Chips click
+  if (suggestionsContainer) {
+    suggestionsContainer.querySelectorAll('.chat-suggest-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const query = btn.dataset.query;
+        appendUserMessage(query);
+        handleChatbotReply(query);
+      });
+    });
+  }
+
+  function appendUserMessage(text) {
+    const el = document.createElement('div');
+    el.className = 'chat-msg user';
+    el.textContent = text;
+    messagesContainer.appendChild(el);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  function appendAgentMessage(text) {
+    const el = document.createElement('div');
+    el.className = 'chat-msg agent';
+    
+    // Parse bold text and markdown links
+    let formattedText = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a class="chat-link" data-action="$2">$1</a>');
+
+    el.innerHTML = formattedText;
+    messagesContainer.appendChild(el);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    // Attach click listeners to any links inside the reply
+    el.querySelectorAll('.chat-link').forEach(link => {
+      link.addEventListener('click', () => {
+        const action = link.dataset.action;
+        handleLinkAction(action);
+      });
+    });
+  }
+
+  function showTypingIndicator() {
+    const el = document.createElement('div');
+    el.className = 'chat-msg agent typing-indicator';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    el.style.display = 'flex';
+    el.style.gap = '4px';
+    el.style.alignItems = 'center';
+    el.style.padding = '12px';
+    messagesContainer.appendChild(el);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    return el;
+  }
+
+  function handleChatbotReply(userInput) {
+    const indicator = showTypingIndicator();
+    const query = userInput.toLowerCase().trim();
+
+    setTimeout(() => {
+      // Remove typing indicator
+      indicator.remove();
+
+      let reply = "";
+      
+      // 1. Check intent for showing categories (Agentic control)
+      if (query.includes('ladies') || query.includes('women') || query.includes('female') || query.includes('girl')) {
+        reply = "Sure! I have filtered the catalog to the **Ladies** section. You can browse all ladies dresses, fancy tops, pants, and denim on your screen now! 👗";
+        triggerCategoryChange('ladies');
+      } 
+      else if (query.includes('men') || query.includes('male') || query.includes('boy') || query.includes('gent')) {
+        reply = "Absolutely! I have loaded the **Men's** collection for you. You'll find camp collar shirts, trousers, graphic tees, and jackets on the screen. 👔";
+        triggerCategoryChange('men');
+      } 
+      else if (query.includes('kids') || query.includes('child') || query.includes('toy')) {
+        reply = "I've loaded the **Kids** section for you, including cute clothes and wooden/puzzle toys! 🧸 Check them out on the screen.";
+        triggerCategoryChange('kids');
+      } 
+      else if (query.includes('beauty') || query.includes('makeup') || query.includes('lipstick') || query.includes('brush') || query.includes('kajal') || query.includes('liner') || query.includes('mascara')) {
+        reply = "Loading the **Beauty** section! 💄 You can now see branded cosmetic products like MAC, Dior, and NARS lipsticks, blush, facewashes, and liners.";
+        triggerCategoryChange('beauty');
+      } 
+      else if (query.includes('sport') || query.includes('gym') || query.includes('activewear') || query.includes('racket') || query.includes('yoga') || query.includes('equipment')) {
+        reply = "Opening **Sports**! 👟 On your screen, you can see high-performance activewear for both men & women, plus equipment like yoga mats and tennis rackets.";
+        triggerCategoryChange('sport');
+      } 
+      else if (query.includes('sale') || query.includes('discount') || query.includes('offer') || query.includes('promo')) {
+        reply = "Here is the **Season Sale**! 🏷️ I have filtered all items that have a discount tag active. You can save up to 30% on these products!";
+        triggerCategoryChange('sale');
+      } 
+      else if (query.includes('show all') || query.includes('all products') || query.includes('view all') || query.includes('reset')) {
+        reply = "Resetting filters. I have loaded the complete catalog on the screen for you! 🌟";
+        resetAllFilters();
+      }
+      
+      // 2. Check intent for Cart control
+      else if (query.includes('view cart') || query.includes('show cart') || query.includes('my cart') || query.includes('what\'s in my cart')) {
+        if (cart.length === 0) {
+          reply = "Your shopping bag is currently empty! Add some cool items first. You can ask me to show you the **Best Sellers**.";
+        } else {
+          const itemsList = cart.map(item => `- ${item.name} (${item.size}, ${item.color}) x${item.quantity}`).join('\n');
+          reply = `Here are the items in your shopping bag:\n${itemsList}\n\nWould you like to [Proceed to Checkout](checkout)?`;
+        }
+        toggleCartDrawer(true);
+      }
+      else if (query.includes('add') && (query.includes('cart') || query.includes('bag'))) {
+        // Try to find a matching product from visible ones
+        let match = null;
+        
+        // Check if there is an ID specified (e.g. "product 5" or "id 5" or "item 5")
+        const idMatch = query.match(/(?:id|product|item)\s*(\d+)/i);
+        if (idMatch) {
+          const id = parseInt(idMatch[1]);
+          match = PRODUCTS.find(p => p.id === id);
+        } else {
+          // Find first product whose name is a substring of query
+          match = PRODUCTS.find(p => query.includes(p.name.toLowerCase()));
+          if (!match) {
+            // Find by keywords in product name
+            const keywords = query.replace('add', '').replace('to', '').replace('cart', '').replace('bag', '').split(' ');
+            match = PRODUCTS.find(p => keywords.some(k => k.length > 3 && p.name.toLowerCase().includes(k)));
+          }
+        }
+
+        if (match) {
+          const size = match.sizes.includes('M') ? 'M' : match.sizes[0];
+          const color = match.colors[0];
+          addToCart(match, size, color);
+          reply = `Awesome! I have added **${match.name}** (Size: ${size}, Color: ${color}) to your shopping bag! 🛒`;
+        } else {
+          // If no product is matched, offer to add a recommended popular item
+          const rec = PRODUCTS[0]; // Ribbed Top
+          reply = `I couldn't quite find the exact product you meant. Would you like me to add our best-selling **${rec.name}** instead? [Yes, add it!](add_rec)`;
+        }
+      }
+      
+      // 3. FAQs & General knowledge
+      else if (query.includes('shipping') || query.includes('delivery')) {
+        reply = "We offer **Free Standard Shipping** across India on all orders above ₹1999! For orders below ₹1999, shipping is ₹149. Delivery takes **3 to 5 business days**.";
+      }
+      else if (query.includes('return') || query.includes('exchange')) {
+        reply = "Threadzy offers a **15-day easy return policy**! The items must be unused and have their original tags attached. Returns are completely free for Members!";
+      }
+      else if (query.includes('size') || query.includes('sizing') || query.includes('fit')) {
+        reply = "Our clothing sizes range from **XS to XXL**. Our fits vary from *Slim Fit* (fitted), *Regular Fit* (standard), to *Oversized* (loose/boxy, perfect for streetwear layering). What size do you usually wear?";
+      }
+      else if (query.includes('coupon') || query.includes('code') || query.includes('discount') || query.includes('promo')) {
+        reply = "Here is a secret discount code just for you! Use coupon code **ASHWINI15** at checkout to get an extra **15% OFF** on your order! 🎫";
+      }
+      else if (query.includes('best seller') || query.includes('popular') || query.includes('trend')) {
+        reply = "Our top trending items right now are:\n1. **Ribbed One-Shoulder Drape Top** (Ladies)\n2. **Chanel Matte Lip Crayon** (Beauty)\n3. **Wilson Professional Tennis Racket** (Sport)\n4. **Oversized Graphic Tees** (Men)\n\nWhich one would you like to explore?";
+      }
+      else if (query.includes('hello') || query.includes('hi') || query.includes('hey') || query.includes('help')) {
+        reply = "Hello! 😊 I am Ashwini. I can help you filter products, check sizes, apply discount coupons, or even add products to the cart for you. What are you looking to buy today?";
+      }
+      else {
+        reply = "I'm not sure I understood that, but I'm learning! 🧠 I can apply filters on the site (e.g. try typing *'Show me kids section'* or *'Show me beauty products'*), answer shipping queries, list your cart, or give you discount coupons!";
+      }
+
+      appendAgentMessage(reply);
+    }, 800 + Math.random() * 600); // Realistic simulated typing speed
+  }
+
+  function triggerCategoryChange(category) {
+    // Find nav link for category and trigger click event
+    const link = document.querySelector(`.nav-link[data-category="${category}"], .mobile-link[data-category="${category}"]`);
+    if (link) {
+      link.click();
+    } else if (category === 'sale') {
+      const saleLink = document.querySelector(`.nav-link[data-category="sale"], .mobile-link[data-category="sale"]`);
+      if (saleLink) saleLink.click();
+    }
+  }
+
+  function handleLinkAction(action) {
+    if (action === 'checkout') {
+      const checkoutBtn = document.getElementById('checkout-btn');
+      if (checkoutBtn) checkoutBtn.click();
+    } else if (action === 'add_rec') {
+      const rec = PRODUCTS[0];
+      const size = rec.sizes.includes('M') ? 'M' : rec.sizes[0];
+      const color = rec.colors[0];
+      addToCart(rec, size, color);
+      appendAgentMessage(`Added **${rec.name}** to your cart! 🛍️`);
+    }
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
