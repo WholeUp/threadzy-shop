@@ -3,93 +3,8 @@ import heroBannerImg from './assets/hero_banner.png'
 import * as THREE from 'three'
 import gsap from 'gsap'
 
-// Curated High-Resolution Unsplash Fashion & Apparel Images (Ditto H&M Visuals)
-const UNSPLASH_IMAGES = {
-  't-shirts': [
-    'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1554568218-0f1715e72254?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1527719327859-c6ce80353573?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1503341455253-b264b287b2e7?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1622445262465-2481c457487f?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1503341509153-d872fa9900c7?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1574169208507-84376144848b?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'shirts': [
-    'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1620012253295-c05518e99309?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1496345875659-11f7dd282d1d?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1598032895397-c24d0ab3a73f?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1601762600297-14efc217f2a4?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1621012466909-ca6cf47de8b1?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1563122810-8b0d087515f9?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1589310243389-96a5483213a8?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'hoodies': [
-    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1609873814058-a8928924184a?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1609873814120-a8928924184b?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1618354691383-25b73747ab4e?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1564564295391-7f24f26f568b?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1548624149-f7b3be5a530e?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1620799140188-3b2a02fd9a55?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'pants': [
-    'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1517423568366-8b83523034fd?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1506629082925-6fc6b7ab2249?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1551854838-212c50b4c184?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'jeans': [
-    'https://images.unsplash.com/photo-1565084888279-aca607ecad0c?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1475178626620-a4d074967452?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1560243563-062bfc001d68?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'jackets': [
-    'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=400&h=533&q=80'
-  ]
-};
-
-const FLATLAY_PRODUCTS = [
+const PRODUCTS = [
+  // --- LADIES (6 Products - strictly women's clothes) ---
   {
     id: 1,
     name: "Ribbed One-Shoulder Drape Top",
@@ -104,8 +19,8 @@ const FLATLAY_PRODUCTS = [
     fit: "Slim Fit",
     pattern: "Solid Color",
     mainImage: "/flatlays/flatlay_0.png",
-    hoverImage: "/flatlays/flatlay_0.png",
-    description: "A chic ribbed one-shoulder top featuring a elegant draped sleeve. Tailored in a comfortable slim fit, this top is perfect for pairing with trousers or denim."
+    hoverImage: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "A chic ribbed one-shoulder top featuring an elegant draped sleeve. Tailored in a comfortable slim fit, this top is perfect for pairing with trousers or denim."
   },
   {
     id: 2,
@@ -121,7 +36,7 @@ const FLATLAY_PRODUCTS = [
     fit: "Regular Fit",
     pattern: "Solid Color",
     mainImage: "/flatlays/flatlay_1.png",
-    hoverImage: "/flatlays/flatlay_1.png",
+    hoverImage: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&h=533&q=80",
     description: "Elegant camisole top in soft, flowing satin with a cowl neck. Narrow, adjustable shoulder straps. Made with recycled polyester."
   },
   {
@@ -138,7 +53,7 @@ const FLATLAY_PRODUCTS = [
     fit: "Oversized",
     pattern: "Solid Color",
     mainImage: "/flatlays/flatlay_2.png",
-    hoverImage: "/flatlays/flatlay_2.png",
+    hoverImage: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=400&h=533&q=80",
     description: "Sleeveless halter-neck top featuring gathered details around the neckline and a relaxed silhouette for a high-fashion look."
   },
   {
@@ -155,7 +70,7 @@ const FLATLAY_PRODUCTS = [
     fit: "Relaxed Fit",
     pattern: "Solid Color",
     mainImage: "/flatlays/flatlay_3.png",
-    hoverImage: "/flatlays/flatlay_3.png",
+    hoverImage: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&h=533&q=80",
     description: "Trousers in airy, woven linen-blend fabric. High waist with elastication, discreet side pockets, and wide, straight legs."
   },
   {
@@ -172,28 +87,11 @@ const FLATLAY_PRODUCTS = [
     fit: "Regular Fit",
     pattern: "Solid Color",
     mainImage: "/flatlays/flatlay_4.png",
-    hoverImage: "/flatlays/flatlay_4.png",
+    hoverImage: "https://images.unsplash.com/photo-1620012253295-c05518e99309?auto=format&fit=crop&w=400&h=533&q=80",
     description: "Sophisticated satin blouse with a draped cowl neck and sleeveless construction. Designed for a fluid, elegant silhouette."
   },
   {
     id: 6,
-    name: "Ribbed Sleeveless Mock-Neck Top",
-    category: "ladies",
-    subcategory: "t-shirts",
-    tag: "Standard Fit",
-    price: 799,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Cream", "White"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    fit: "Slim Fit",
-    pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_5.png",
-    hoverImage: "/flatlays/flatlay_5.png",
-    description: "Sleeveless mock-neck top in soft, ribbed cotton jersey. Designed for a comfortable close fit."
-  },
-  {
-    id: 7,
     name: "Draped One-Shoulder Maxi Dress",
     category: "ladies",
     subcategory: "shirts",
@@ -206,267 +104,426 @@ const FLATLAY_PRODUCTS = [
     fit: "Regular Fit",
     pattern: "Solid Color",
     mainImage: "/flatlays/flatlay_6.png",
-    hoverImage: "/flatlays/flatlay_6.png",
+    hoverImage: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=400&h=533&q=80",
     description: "An elegant one-shoulder maxi dress in fluid, draped fabric. Perfect for special summer occasions."
+  },
+
+  // --- MEN (6 Products - strictly men's clothes, no suits, no skinny jeans) ---
+  {
+    id: 7,
+    name: "Vintage Corduroy Overshirt",
+    category: "men",
+    subcategory: "shirts",
+    tag: "New Arrival",
+    price: 2499,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Brown", "Olive", "Black"],
+    sizes: ["S", "M", "L", "XL"],
+    fit: "Relaxed Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1598032895397-c24d0ab3a73f?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "A retro-style corduroy overshirt in midweight cotton. Features double chest button pockets and a relaxed silhouette, ideal for layering."
   },
   {
     id: 8,
-    name: "Sleeveless Cowl Draped Dress",
-    category: "ladies",
-    subcategory: "shirts",
+    name: "Heavyweight Drop-Shoulder Graphic Tee",
+    category: "men",
+    subcategory: "t-shirts",
     tag: "Trending",
+    price: 1199,
+    originalPrice: 1599,
+    isSale: true,
+    colors: ["Black", "Grey"],
+    sizes: ["M", "L", "XL", "XXL"],
+    fit: "Oversized",
+    pattern: "Graphic Print",
+    mainImage: "https://images.unsplash.com/photo-1503341455253-b264b287b2e7?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1527719327859-c6ce80353573?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "High-quality 240 GSM heavy cotton jersey t-shirt. Features a custom vintage graphic print on the back and dropped shoulders."
+  },
+  {
+    id: 9,
+    name: "Relaxed Canvas Cargo Pants",
+    category: "men",
+    subcategory: "pants",
+    tag: "Premium Quality",
+    price: 2799,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Sage", "Black", "Beige"],
+    sizes: ["30", "32", "34", "36"],
+    fit: "Relaxed Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1506629082925-6fc6b7ab2249?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Durable cotton canvas cargo pants featuring classic utility side pockets, reinforced knees, and an adjustable waistband."
+  },
+  {
+    id: 10,
+    name: "Classic Straight Selvedge Denim",
+    category: "men",
+    subcategory: "jeans",
+    tag: "Conscious Choice",
+    price: 3299,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Navy", "Grey"],
+    sizes: ["30", "32", "34", "36"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Premium straight-leg jeans crafted from organic selvedge denim. Rigid feel that softens beautifully with wear. Indigo wash."
+  },
+  {
+    id: 11,
+    name: "Structured Canvas Coach Jacket",
+    category: "men",
+    subcategory: "jackets",
+    tag: "Trending",
+    price: 3499,
+    originalPrice: 4499,
+    isSale: true,
+    colors: ["Olive", "Black"],
+    sizes: ["S", "M", "L", "XL"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Street-ready coach jacket made in heavy canvas. Features a snap-button front, drawstring hem, and inner lining for extra comfort."
+  },
+  {
+    id: 12,
+    name: "Acid-Wash Oversized Hooded Sweatshirt",
+    category: "men",
+    subcategory: "hoodies",
+    tag: "New Arrival",
+    price: 2199,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Grey", "Navy"],
+    sizes: ["M", "L", "XL", "XXL"],
+    fit: "Oversized",
+    pattern: "Patterned",
+    mainImage: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Oversized hoodie in heavy French terry fabric featuring an individual acid-wash finish. Double-layered hood without drawstrings."
+  },
+
+  // --- KIDS (6 Products - Kids clothes & toys, non-repeating) ---
+  {
+    id: 13,
+    name: "Organic Cotton Dungaree Set",
+    category: "kids",
+    subcategory: "clothes",
+    tag: "Conscious Choice",
+    price: 1299,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Sage", "Beige"],
+    sizes: ["2Y", "3Y", "4Y", "5Y"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "A comfortable kids outfit made from 100% organic cotton canvas. Features adjustable button straps and a soft matching inner tee."
+  },
+  {
+    id: 14,
+    name: "Cozy Fleece Hooded Romper",
+    category: "kids",
+    subcategory: "clothes",
+    tag: "New Arrival",
+    price: 999,
+    originalPrice: 1399,
+    isSale: true,
+    colors: ["Cream", "Grey"],
+    sizes: ["1Y", "2Y", "3Y"],
+    fit: "Relaxed Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1622290319146-7b63df48a635?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Extra soft, warm fleece romper with cute animal ear details on the hood. Zip front for quick changes."
+  },
+  {
+    id: 15,
+    name: "Striped Linen Summer Dress",
+    category: "kids",
+    subcategory: "clothes",
+    tag: "Trending",
+    price: 1499,
+    originalPrice: null,
+    isSale: false,
+    colors: ["White", "Beige"],
+    sizes: ["3Y", "4Y", "5Y", "6Y"],
+    fit: "Regular Fit",
+    pattern: "Striped",
+    mainImage: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Airy summer dress made of a soft linen-viscose blend. Gathered waist and sweet tie-shoulder straps."
+  },
+  {
+    id: 16,
+    name: "Handcrafted Wooden Train Set",
+    category: "kids",
+    subcategory: "toys",
+    tag: "Premium Quality",
+    price: 1899,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Cream"],
+    sizes: ["One Size"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1537758061216-0499eaec4bc2?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Classic 15-piece wooden toy train and tracks. Crafted from sustainably sourced, non-toxic, child-safe beech wood."
+  },
+  {
+    id: 17,
+    name: "Premium Organic Cotton Teddy Bear",
+    category: "kids",
+    subcategory: "toys",
+    tag: "Trending",
+    price: 799,
+    originalPrice: 1199,
+    isSale: true,
+    colors: ["Brown", "Cream"],
+    sizes: ["One Size"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1537758061216-0499eaec4bc2?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Extra soft, cuddly teddy bear stuffed with 100% hypoallergenic organic cotton. Features custom stitched details."
+  },
+  {
+    id: 18,
+    name: "Creative Wooden Building Blocks",
+    category: "kids",
+    subcategory: "toys",
+    tag: "New Arrival",
+    price: 1599,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Cream"],
+    sizes: ["One Size"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "A set of 40 wooden building blocks in geometric shapes. Encourages fine motor skills, spatial reasoning, and creative play."
+  },
+
+  // --- BEAUTY (6 Products - branded cosmetics, non-repeating) ---
+  {
+    id: 19,
+    name: "Chanel Rouge Allure Matte Lipstick",
+    category: "beauty",
+    subcategory: "lipstick",
+    tag: "Premium Quality",
+    price: 3699,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Red", "Pink"],
+    sizes: ["Standard"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "A luxury matte lipstick with intense pigmentation and a velvety second-skin finish. Infused with sweet almond oil for absolute comfort."
+  },
+  {
+    id: 20,
+    name: "Estée Lauder Night Cleansing Gel",
+    category: "beauty",
+    subcategory: "facewash",
+    tag: "Trending",
+    price: 2499,
+    originalPrice: 2999,
+    isSale: true,
+    colors: ["White"],
+    sizes: ["150ml"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1608248597481-496100c80836?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Advanced micro-cleansing foam wash. Removes makeup and impurities deep within the skin's surface, leaving skin refreshed."
+  },
+  {
+    id: 21,
+    name: "Dior Backstage Glow Face Palette",
+    category: "beauty",
+    subcategory: "makeup-kit",
+    tag: "Premium Quality",
+    price: 4899,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Cream", "Pink"],
+    sizes: ["Standard"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1590156546746-c2370f8c371b?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "The secret palette of Dior makeup artists. Features four gorgeous shimmering shades that blend seamlessly to illuminate all skin tones."
+  },
+  {
+    id: 22,
+    name: "NARS Liquid Blush Tint (Orgasm)",
+    category: "beauty",
+    subcategory: "blush",
+    tag: "Trending",
+    price: 2899,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Pink"],
+    sizes: ["15ml"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Iconic liquid blush that glides on smoothly for a healthy, natural-looking glow. Infused with Monoi and Tamanu oils for moisture."
+  },
+  {
+    id: 23,
+    name: "Real Techniques Powder Brush Set",
+    category: "beauty",
+    subcategory: "brushes",
+    tag: "Standard Fit",
+    price: 1299,
+    originalPrice: 1799,
+    isSale: true,
+    colors: ["Orange"],
+    sizes: ["5 Brushes"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1627384113743-6bd5a479fffd?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Set of 5 professional cosmetic brushes featuring ultra-plush synthetic bristles for blending, contouring, and flawless finish."
+  },
+  {
+    id: 24,
+    name: "Maybelline Tattoo Liquid Liner & Kajal",
+    category: "beauty",
+    subcategory: "eyeliner",
+    tag: "New Arrival",
+    price: 699,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Black"],
+    sizes: ["Standard"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1590156546746-c2370f8c371b?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "High-intensity waterproof liquid eyeliner and matte black kajal set. Smudge-proof and lasts up to 36 hours."
+  },
+
+  // --- SPORTS (6 Products - Sports clothes & equipment, non-repeating) ---
+  {
+    id: 25,
+    name: "Men's Dry-Fit Athletic Gym Tee",
+    category: "sport",
+    subcategory: "clothes",
+    tag: "Trending",
+    price: 999,
+    originalPrice: 1299,
+    isSale: true,
+    colors: ["Grey", "Navy", "Black"],
+    sizes: ["S", "M", "L", "XL"],
+    fit: "Regular Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "High-performance dry-fit sports tee. Engineered with breathable, moisture-wicking mesh fabrics to keep you dry and cool."
+  },
+  {
+    id: 26,
+    name: "Women's High-Rise Seamless Leggings",
+    category: "sport",
+    subcategory: "clothes",
+    tag: "Premium Quality",
+    price: 1899,
+    originalPrice: null,
+    isSale: false,
+    colors: ["Black", "Sage"],
+    sizes: ["XS", "S", "M", "L"],
+    fit: "Slim Fit",
+    pattern: "Solid Color",
+    mainImage: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Squat-proof seamless activewear leggings with a supportive high waistband. Offers maximum flexibility and compression."
+  },
+  {
+    id: 27,
+    name: "Unisex Trail Runner Windbreaker",
+    category: "sport",
+    subcategory: "clothes",
+    tag: "New Arrival",
     price: 2499,
     originalPrice: null,
     isSale: false,
     colors: ["Navy", "Grey"],
-    sizes: ["XS", "S", "M", "L"],
-    fit: "Regular Fit",
+    sizes: ["S", "M", "L", "XL"],
+    fit: "Relaxed Fit",
     pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_7.png",
-    hoverImage: "/flatlays/flatlay_7.png",
-    description: "Sleeveless dress featuring a sophisticated cowl drape on the side. Tailored in midweight flowy fabric."
+    mainImage: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Ultralight water-repellent windbreaker jacket. Packable design featuring zip pockets and adjustable hoods."
   },
   {
-    id: 9,
-    name: "Linen-Blend Halter Top",
-    category: "ladies",
-    subcategory: "t-shirts",
-    tag: "Conscious Choice",
-    price: 999,
+    id: 28,
+    name: "Wilson Pro Staff Tennis Racket",
+    category: "sport",
+    subcategory: "equipment",
+    tag: "Premium Quality",
+    price: 4999,
     originalPrice: null,
     isSale: false,
-    colors: ["Cream", "White"],
-    sizes: ["XS", "S", "M", "L"],
+    colors: ["Black"],
+    sizes: ["Standard"],
     fit: "Regular Fit",
     pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_8.png",
-    hoverImage: "/flatlays/flatlay_8.png",
-    description: "Halter neck top in an airy, woven linen and viscose blend. Ties at the back of the neck and features a clean hem."
+    mainImage: "https://images.unsplash.com/photo-1606244864456-8bee63fdb47e?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Professional graphite tennis racket offering supreme control and classic crisp feel. Pre-strung with high-tension strings."
   },
   {
-    id: 10,
-    name: "Heavyweight Cotton T-shirt",
-    category: "ladies",
-    subcategory: "t-shirts",
-    tag: "New Arrival",
-    price: 799,
-    originalPrice: 1199,
-    isSale: true,
-    colors: ["Black", "Grey"],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
-    fit: "Oversized",
-    pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_9.png",
-    hoverImage: "/flatlays/flatlay_9.png",
-    description: "Oversized t-shirt in heavy cotton jersey (240 GSM) with a ribbed crew neck and dropped shoulders."
-  },
-  {
-    id: 11,
-    name: "High-Waist Denim Shorts",
-    category: "ladies",
-    subcategory: "jeans",
+    id: 29,
+    name: "Adidas Premium Non-Slip Yoga Mat",
+    category: "sport",
+    subcategory: "equipment",
     tag: "Trending",
-    price: 1699,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Grey", "Black"],
-    sizes: ["26", "28", "30", "32"],
+    price: 1499,
+    originalPrice: 1999,
+    isSale: true,
+    colors: ["Sage"],
+    sizes: ["One Size"],
     fit: "Regular Fit",
     pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_10.png",
-    hoverImage: "/flatlays/flatlay_10.png",
-    description: "5-pocket shorts in washed denim. High waist, zip fly with button, and raw, frayed hems."
+    mainImage: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Eco-friendly TPE yoga mat (6mm thickness). Non-slip textured surface provides excellent traction and joint cushioning."
   },
   {
-    id: 12,
-    name: "Ribbed Knit Tank Top",
-    category: "ladies",
-    subcategory: "t-shirts",
-    tag: "Standard Fit",
-    price: 699,
+    id: 30,
+    name: "Spalding TF-1000 Indoor Basketball",
+    category: "sport",
+    subcategory: "equipment",
+    tag: "New Arrival",
+    price: 2999,
     originalPrice: null,
     isSale: false,
-    colors: ["Grey", "White"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    fit: "Slim Fit",
+    colors: ["Brown"],
+    sizes: ["Size 7"],
+    fit: "Regular Fit",
     pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_11.png",
-    hoverImage: "/flatlays/flatlay_11.png",
-    description: "Fitted tank top in soft, ribbed cotton-blend knit with a deep round neck."
+    mainImage: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&h=533&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=400&h=533&q=80",
+    description: "Premium composite leather basketball designed for indoor competitive games. Features moisture-wicking deep channels."
   }
 ];
-
-// Curated Unsplash Fashion & Apparel Images updated with Kids, Beauty, and Sports
-const MORE_IMAGES = {
-  'kids-clothes': [
-    'https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1622290319146-7b63df48a635?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'kids-toys': [
-    'https://images.unsplash.com/photo-1537758061216-0499eaec4bc2?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1558060370-d644479cb6f7?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'beauty': [
-    'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1608248597481-496100c80836?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1627384113743-6bd5a479fffd?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1590156546746-c2370f8c371b?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'sport-clothes': [
-    'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&h=533&q=80'
-  ],
-  'sport-equipment': [
-    'https://images.unsplash.com/photo-1606244864456-8bee63fdb47e?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=400&h=533&q=80',
-    'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=400&h=533&q=80'
-  ]
-};
-
-// Programmatic 1,200+ Products Seeder
-function generateProducts(count) {
-  const products = [];
-  const categories = ['ladies', 'men', 'kids', 'beauty', 'sport'];
-  
-  const colors = ['Black', 'White', 'Cream', 'Navy', 'Sage', 'Beige', 'Grey', 'Olive', 'Brown'];
-  const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-  const fits = ['Regular Fit', 'Slim Fit', 'Oversized', 'Relaxed Fit'];
-  const patterns = ['Solid Color', 'Graphic Print', 'Striped', 'Embroidered', 'Patterned'];
-  const tags = ['New Arrival', 'Premium Quality', 'Conscious Choice', 'Sale', 'Trending', 'Standard Fit'];
-  const adjectives = ['Retro', 'Aesthetic', 'Urban', 'Minimalist', 'Vintage', 'Cyberpunk', 'Classic', 'Street', 'Signature', 'Casual', 'Utility'];
-  
-  const nouns = {
-    // Ladies fancy tops, shirts, activewear
-    'ladies-t-shirts': ['Chiffon Ruffle Blouse', 'Lace Corset Top', 'Asymmetric One-Shoulder Top', 'Ruched Mesh Bodysuit', 'Ribbed Crop Tank'],
-    'ladies-shirts': ['Silk Halter Blouse', 'Puff Sleeve Crop Shirt', 'Linen Overshirt', 'Wrap Front Blouse'],
-    'ladies-pants': ['Wide Leg Satin Pants', 'High Waist Cargo Trousers', 'Pleated Palazzo Pants'],
-    'ladies-jeans': ['Oversized Baggy Jeans', 'Straight Leg Denim', 'High Waist Mom Jeans'],
-    'ladies-jackets': ['Cropped Denim Jacket', 'Structured Canvas Blazer', 'Leather Bomber Jacket'],
-    'ladies-hoodies': ['Velour Crop Hoodie', 'Oversized Pastel Sweatshirt'],
-    
-    // Men street style (Suits and Skinny Jeans are omitted here)
-    'men-t-shirts': ['Oversized Graphic Tee', 'Heavyweight Drop-Shoulder Tee', 'Ribbed Muscle Tank', 'Boxy Fit Pocket Tee'],
-    'men-shirts': ['Camp Collar Resort Shirt', 'Heavy Flannel Overshirt', 'Linen Blend Beach Shirt', 'Oxford Button-Down'],
-    'men-pants': ['Relaxed Fit Joggers', 'Straight Fit Cargo Pants', 'Chino Trousers', 'Utility Carpenter Pants'],
-    'men-jeans': ['Loose Baggy Denim', 'Straight Leg Classic Jeans', 'Relaxed Fit Jeans'],
-    'men-jackets': ['Structured Canvas Jacket', 'Coach Windbreaker Jacket', 'Denim Trucker Jacket'],
-    'men-hoodies': ['Heavyweight Pullover Hoodie', 'Acid Wash Sweatshirt', 'Full-Zip Fleece Hoodie'],
-
-    // Kids Clothes and Toys
-    'kids-clothes': ['Cotton Play Suit', 'Denim Dungarees', 'Cozy Fleece Hoodie', 'Striped Crewneck Tee', 'Floral Summer Dress'],
-    'kids-toys': ['Wooden Train Set', 'Plush Teddy Bear', 'Interactive Toy Blocks', 'Colorful Puzzle Set', 'Retro Toy Car'],
-
-    // Beauty Products (Branded & Real cosmetics)
-    'beauty-lipstick': ['Chanel Matte Lip Crayon', 'Dior Hydrating Lip Glow', 'MAC Velvet Liquid Lipstick', 'NARS Satin Lip Stick'],
-    'beauty-facewash': ['Estée Lauder Foam Wash', 'Clinique Gentle Cleansing Gel', 'Kiehl\'s Ultra Facial Cleanser'],
-    'beauty-makeup-kit': ['Dior Backstage Makeup Kit', 'Fenty Beauty Glow Palette', 'Huda Beauty Eyeshadow Palette'],
-    'beauty-blush': ['NARS Powder Cheek Blush', 'Rare Beauty Liquid Blush Tint', 'Charlotte Tilbury Cream Blush'],
-    'beauty-brushes': ['Sigma Pro Blending Brush Set', 'Real Techniques Powder Brush'],
-    'beauty-eyeliner': ['L\'Oreal Waterproof Eyeliner', 'Maybelline Intense Matte Kajal', 'KVD Tattoo Liquid Liner'],
-    'beauty-mascara': ['Lancôme Volumizing Mascara', 'Benefit Lengthening Lash Wand', 'Too Faced Lash Mascara'],
-
-    // Sports activewear & equipment
-    'sport-clothes': ['Dry-Fit Athletic Training Tee', 'High-Rise Gym Leggings', 'Lightweight Trail Shorts', 'Premium Sports Compression Top'],
-    'sport-equipment': ['Wilson Professional Tennis Racket', 'Everlast Heavy Grip Boxing Gloves', 'Adidas Training Yoga Mat', 'Spalding Indoor Basketball', 'Babolat Badminton Racket']
-  };
-
-  // Start seeder loop from i = 13 to avoid overlapping IDs with Flatlay items
-  for (let i = 13; i <= count + 12; i++) {
-    const category = categories[i % categories.length];
-    
-    // Choose appropriate subcategory based on category
-    let subcategory = 't-shirts';
-    let nounListKey = 'men-t-shirts';
-    let imagesList = [];
-
-    if (category === 'ladies') {
-      const subcategoriesList = ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets', 'hoodies'];
-      subcategory = subcategoriesList[i % subcategoriesList.length];
-      nounListKey = `ladies-${subcategory}`;
-      imagesList = UNSPLASH_IMAGES[subcategory] || UNSPLASH_IMAGES['t-shirts'];
-    } else if (category === 'men') {
-      const subcategoriesList = ['t-shirts', 'shirts', 'pants', 'jeans', 'jackets', 'hoodies'];
-      subcategory = subcategoriesList[i % subcategoriesList.length];
-      nounListKey = `men-${subcategory}`;
-      imagesList = UNSPLASH_IMAGES[subcategory] || UNSPLASH_IMAGES['t-shirts'];
-    } else if (category === 'kids') {
-      subcategory = i % 2 === 0 ? 'clothes' : 'toys';
-      nounListKey = `kids-${subcategory}`;
-      imagesList = subcategory === 'clothes' ? MORE_IMAGES['kids-clothes'] : MORE_IMAGES['kids-toys'];
-    } else if (category === 'beauty') {
-      const beautySubs = ['lipstick', 'facewash', 'makeup-kit', 'blush', 'brushes', 'eyeliner', 'mascara'];
-      subcategory = beautySubs[i % beautySubs.length];
-      nounListKey = `beauty-${subcategory}`;
-      imagesList = MORE_IMAGES['beauty'];
-    } else if (category === 'sport') {
-      subcategory = i % 2 === 0 ? 'clothes' : 'equipment';
-      nounListKey = `sport-${subcategory}`;
-      imagesList = subcategory === 'clothes' ? MORE_IMAGES['sport-clothes'] : MORE_IMAGES['sport-equipment'];
-    }
-
-    const adj = adjectives[(i + 3) % adjectives.length];
-    const subNouns = nouns[nounListKey] || nouns['men-t-shirts'];
-    const noun = subNouns[i % subNouns.length];
-    
-    const color = colors[i % colors.length];
-    const name = `${adj} ${color} ${noun}`;
-    
-    const isSale = (i % 5 === 0);
-    const originalPrice = isSale ? (1200 + (i % 25) * 150) : null;
-    const price = isSale ? Math.floor(originalPrice * 0.7) : (799 + (i % 35) * 120);
-
-    const fit = fits[i % fits.length];
-    const pattern = patterns[i % patterns.length];
-    const tag = tags[i % tags.length];
-
-    // Pick image URLs
-    const imageIndex = i % imagesList.length;
-    const mainImage = imagesList[imageIndex];
-    const hoverImage = imagesList[(imageIndex + 1) % imagesList.length];
-
-    // Build custom description
-    let description = `Upgrade your collection with this premium ${name}. Made with high-quality materials and designed for ultimate style. Ideal for premium wardrobe layering.`;
-    if (category === 'beauty') {
-      description = `Enhance your beauty routine with ${name}. Formulated with top-tier premium ingredients for long-lasting wear and a luxurious finish.`;
-    } else if (category === 'sport' && subcategory === 'equipment') {
-      description = `Boost your performance with ${name}. Built to professional specifications using highly durable materials.`;
-    } else if (category === 'kids' && subcategory === 'toys') {
-      description = `Keep the little ones entertained and creative with ${name}. Made with child-safe, non-toxic, eco-friendly materials.`;
-    }
-
-    products.push({
-      id: i,
-      name: name,
-      category: category,
-      subcategory: subcategory,
-      tag: tag,
-      price: price,
-      originalPrice: originalPrice,
-      isSale: isSale,
-      colors: [color, colors[(i + 1) % colors.length]],
-      sizes: sizes.slice(i % 3, 4 + (i % 3)),
-      fit: fit,
-      pattern: pattern,
-      mainImage: mainImage,
-      hoverImage: hoverImage,
-      description: description
-    });
-  }
-
-  return products;
-}
-
-// Generate 1188 products dynamically, and combine them with the 12 flatlays (total 1200 products)
-const PRODUCTS = [...FLATLAY_PRODUCTS, ...generateProducts(1188)];
 // State variables
 let cart = JSON.parse(localStorage.getItem('threadzy_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('threadzy_wishlist')) || [];
