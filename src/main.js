@@ -706,8 +706,11 @@ function renderSubcategorySidebar(cat) {
   });
 }
 
+let hasInit = false;
 /* --- INITIALIZATION --- */
 function init() {
+  if (hasInit) return;
+  hasInit = true;
   initHero();
   setupEventListeners();
   initAshwiniChatbot();
