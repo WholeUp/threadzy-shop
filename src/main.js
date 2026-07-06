@@ -1,1897 +1,1085 @@
-import './style.css'
-import heroBannerImg from './assets/hero_banner.png'
-import gsap from 'gsap'
+import './style.css';
 
-const PRODUCTS = [
-  // --- LADIES (6 Products - strictly women's clothes) ---
-  {
-    id: 1,
-    name: "Ribbed One-Shoulder Drape Top",
-    category: "ladies",
-    subcategory: "t-shirts",
-    tag: "New Arrival",
-    price: 1299,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Brown", "Black"],
-    sizes: ["XS", "S", "M", "L"],
-    fit: "Slim Fit",
-    pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_0.png",
-    hoverImage: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "A chic ribbed one-shoulder top featuring an elegant draped sleeve. Tailored in a comfortable slim fit, this top is perfect for pairing with trousers or denim."
-  },
-  {
-    id: 2,
-    name: "Satin Cowl-Neck Camisole",
-    category: "ladies",
-    subcategory: "t-shirts",
-    tag: "Conscious Choice",
-    price: 1499,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Cream", "White"],
-    sizes: ["S", "M", "L"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_1.png",
-    hoverImage: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Elegant camisole top in soft, flowing satin with a cowl neck. Narrow, adjustable shoulder straps. Made with recycled polyester."
-  },
-  {
-    id: 3,
-    name: "Gathered Halter-Neck Top",
-    category: "ladies",
-    subcategory: "t-shirts",
-    tag: "Trending",
-    price: 2299,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Black"],
-    sizes: ["XS", "S", "M", "L"],
-    fit: "Oversized",
-    pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_2.png",
-    hoverImage: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Sleeveless halter-neck top featuring gathered details around the neckline and a relaxed silhouette for a high-fashion look."
-  },
-  {
-    id: 4,
-    name: "Wide-Leg Linen Trousers",
-    category: "ladies",
-    subcategory: "pants",
-    tag: "Premium Quality",
-    price: 2699,
-    originalPrice: 3499,
-    isSale: true,
-    colors: ["Beige", "White"],
-    sizes: ["S", "M", "L", "XL"],
-    fit: "Relaxed Fit",
-    pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_3.png",
-    hoverImage: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Trousers in airy, woven linen-blend fabric. High waist with elastication, discreet side pockets, and wide, straight legs."
-  },
-  {
-    id: 5,
-    name: "Draped Cowl-Neck Satin Blouse",
-    category: "ladies",
-    subcategory: "shirts",
-    tag: "New Arrival",
-    price: 1299,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Cream", "Beige"],
-    sizes: ["S", "M", "L"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_4.png",
-    hoverImage: "https://images.unsplash.com/photo-1620012253295-c05518e99309?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Sophisticated satin blouse with a draped cowl neck and sleeveless construction. Designed for a fluid, elegant silhouette."
-  },
-  {
-    id: 6,
-    name: "Draped One-Shoulder Maxi Dress",
-    category: "ladies",
-    subcategory: "shirts",
-    tag: "Premium Quality",
-    price: 2999,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Brown", "Black"],
-    sizes: ["S", "M", "L"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "/flatlays/flatlay_6.png",
-    hoverImage: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "An elegant one-shoulder maxi dress in fluid, draped fabric. Perfect for special summer occasions."
-  },
-
-  // --- MEN (6 Products - strictly men's clothes, no suits, no skinny jeans) ---
-  {
-    id: 7,
-    name: "Vintage Corduroy Overshirt",
-    category: "men",
-    subcategory: "shirts",
-    tag: "New Arrival",
-    price: 2499,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Brown", "Olive", "Black"],
-    sizes: ["S", "M", "L", "XL"],
-    fit: "Relaxed Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1598032895397-c24d0ab3a73f?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "A retro-style corduroy overshirt in midweight cotton. Features double chest button pockets and a relaxed silhouette, ideal for layering."
-  },
-  {
-    id: 8,
-    name: "Heavyweight Drop-Shoulder Graphic Tee",
-    category: "men",
-    subcategory: "t-shirts",
-    tag: "Trending",
-    price: 1199,
-    originalPrice: 1599,
-    isSale: true,
-    colors: ["Black", "Grey"],
-    sizes: ["M", "L", "XL", "XXL"],
-    fit: "Oversized",
-    pattern: "Graphic Print",
-    mainImage: "https://images.unsplash.com/photo-1503341455253-b264b287b2e7?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1527719327859-c6ce80353573?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "High-quality 240 GSM heavy cotton jersey t-shirt. Features a custom vintage graphic print on the back and dropped shoulders."
-  },
-  {
-    id: 9,
-    name: "Relaxed Canvas Cargo Pants",
-    category: "men",
-    subcategory: "pants",
-    tag: "Premium Quality",
-    price: 2799,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Sage", "Black", "Beige"],
-    sizes: ["30", "32", "34", "36"],
-    fit: "Relaxed Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1506629082925-6fc6b7ab2249?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Durable cotton canvas cargo pants featuring classic utility side pockets, reinforced knees, and an adjustable waistband."
-  },
-  {
-    id: 10,
-    name: "Classic Straight Selvedge Denim",
-    category: "men",
-    subcategory: "jeans",
-    tag: "Conscious Choice",
-    price: 3299,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Navy", "Grey"],
-    sizes: ["30", "32", "34", "36"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Premium straight-leg jeans crafted from organic selvedge denim. Rigid feel that softens beautifully with wear. Indigo wash."
-  },
-  {
-    id: 11,
-    name: "Structured Canvas Coach Jacket",
-    category: "men",
-    subcategory: "jackets",
-    tag: "Trending",
-    price: 3499,
-    originalPrice: 4499,
-    isSale: true,
-    colors: ["Olive", "Black"],
-    sizes: ["S", "M", "L", "XL"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Street-ready coach jacket made in heavy canvas. Features a snap-button front, drawstring hem, and inner lining for extra comfort."
-  },
-  {
-    id: 12,
-    name: "Acid-Wash Oversized Hooded Sweatshirt",
-    category: "men",
-    subcategory: "hoodies",
-    tag: "New Arrival",
-    price: 2199,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Grey", "Navy"],
-    sizes: ["M", "L", "XL", "XXL"],
-    fit: "Oversized",
-    pattern: "Patterned",
-    mainImage: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Oversized hoodie in heavy French terry fabric featuring an individual acid-wash finish. Double-layered hood without drawstrings."
-  },
-
-  // --- KIDS (6 Products - Kids clothes & toys, non-repeating) ---
-  {
-    id: 13,
-    name: "Organic Cotton Dungaree Set",
-    category: "kids",
-    subcategory: "clothes",
-    tag: "Conscious Choice",
-    price: 1299,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Sage", "Beige"],
-    sizes: ["2Y", "3Y", "4Y", "5Y"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "A comfortable kids outfit made from 100% organic cotton canvas. Features adjustable button straps and a soft matching inner tee."
-  },
-  {
-    id: 14,
-    name: "Cozy Fleece Hooded Romper",
-    category: "kids",
-    subcategory: "clothes",
-    tag: "New Arrival",
-    price: 999,
-    originalPrice: 1399,
-    isSale: true,
-    colors: ["Cream", "Grey"],
-    sizes: ["1Y", "2Y", "3Y"],
-    fit: "Relaxed Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1622290319146-7b63df48a635?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Extra soft, warm fleece romper with cute animal ear details on the hood. Zip front for quick changes."
-  },
-  {
-    id: 15,
-    name: "Striped Linen Summer Dress",
-    category: "kids",
-    subcategory: "clothes",
-    tag: "Trending",
-    price: 1499,
-    originalPrice: null,
-    isSale: false,
-    colors: ["White", "Beige"],
-    sizes: ["3Y", "4Y", "5Y", "6Y"],
-    fit: "Regular Fit",
-    pattern: "Striped",
-    mainImage: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Airy summer dress made of a soft linen-viscose blend. Gathered waist and sweet tie-shoulder straps."
-  },
-  {
-    id: 16,
-    name: "Handcrafted Wooden Train Set",
-    category: "kids",
-    subcategory: "toys",
-    tag: "Premium Quality",
-    price: 1899,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Cream"],
-    sizes: ["One Size"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1537758061216-0499eaec4bc2?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Classic 15-piece wooden toy train and tracks. Crafted from sustainably sourced, non-toxic, child-safe beech wood."
-  },
-  {
-    id: 17,
-    name: "Premium Organic Cotton Teddy Bear",
-    category: "kids",
-    subcategory: "toys",
-    tag: "Trending",
-    price: 799,
-    originalPrice: 1199,
-    isSale: true,
-    colors: ["Brown", "Cream"],
-    sizes: ["One Size"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1537758061216-0499eaec4bc2?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Extra soft, cuddly teddy bear stuffed with 100% hypoallergenic organic cotton. Features custom stitched details."
-  },
-  {
-    id: 18,
-    name: "Creative Wooden Building Blocks",
-    category: "kids",
-    subcategory: "toys",
-    tag: "New Arrival",
-    price: 1599,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Cream"],
-    sizes: ["One Size"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "A set of 40 wooden building blocks in geometric shapes. Encourages fine motor skills, spatial reasoning, and creative play."
-  },
-
-  // --- BEAUTY (6 Products - branded cosmetics, non-repeating) ---
-  {
-    id: 19,
-    name: "Chanel Rouge Allure Matte Lipstick",
-    category: "beauty",
-    subcategory: "lipstick",
-    tag: "Premium Quality",
-    price: 3699,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Red", "Pink"],
-    sizes: ["Standard"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "A luxury matte lipstick with intense pigmentation and a velvety second-skin finish. Infused with sweet almond oil for absolute comfort."
-  },
-  {
-    id: 20,
-    name: "Estée Lauder Night Cleansing Gel",
-    category: "beauty",
-    subcategory: "facewash",
-    tag: "Trending",
-    price: 2499,
-    originalPrice: 2999,
-    isSale: true,
-    colors: ["White"],
-    sizes: ["150ml"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1608248597481-496100c80836?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Advanced micro-cleansing foam wash. Removes makeup and impurities deep within the skin's surface, leaving skin refreshed."
-  },
-  {
-    id: 21,
-    name: "Dior Backstage Glow Face Palette",
-    category: "beauty",
-    subcategory: "makeup-kit",
-    tag: "Premium Quality",
-    price: 4899,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Cream", "Pink"],
-    sizes: ["Standard"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1590156546746-c2370f8c371b?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "The secret palette of Dior makeup artists. Features four gorgeous shimmering shades that blend seamlessly to illuminate all skin tones."
-  },
-  {
-    id: 22,
-    name: "NARS Liquid Blush Tint (Orgasm)",
-    category: "beauty",
-    subcategory: "blush",
-    tag: "Trending",
-    price: 2899,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Pink"],
-    sizes: ["15ml"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Iconic liquid blush that glides on smoothly for a healthy, natural-looking glow. Infused with Monoi and Tamanu oils for moisture."
-  },
-  {
-    id: 23,
-    name: "Real Techniques Powder Brush Set",
-    category: "beauty",
-    subcategory: "brushes",
-    tag: "Standard Fit",
-    price: 1299,
-    originalPrice: 1799,
-    isSale: true,
-    colors: ["Orange"],
-    sizes: ["5 Brushes"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1627384113743-6bd5a479fffd?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Set of 5 professional cosmetic brushes featuring ultra-plush synthetic bristles for blending, contouring, and flawless finish."
-  },
-  {
-    id: 24,
-    name: "Maybelline Tattoo Liquid Liner & Kajal",
-    category: "beauty",
-    subcategory: "eyeliner",
-    tag: "New Arrival",
-    price: 699,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Black"],
-    sizes: ["Standard"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1590156546746-c2370f8c371b?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "High-intensity waterproof liquid eyeliner and matte black kajal set. Smudge-proof and lasts up to 36 hours."
-  },
-
-  // --- SPORTS (6 Products - Sports clothes & equipment, non-repeating) ---
-  {
-    id: 25,
-    name: "Men's Dry-Fit Athletic Gym Tee",
-    category: "sport",
-    subcategory: "clothes",
-    tag: "Trending",
-    price: 999,
-    originalPrice: 1299,
-    isSale: true,
-    colors: ["Grey", "Navy", "Black"],
-    sizes: ["S", "M", "L", "XL"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "High-performance dry-fit sports tee. Engineered with breathable, moisture-wicking mesh fabrics to keep you dry and cool."
-  },
-  {
-    id: 26,
-    name: "Women's High-Rise Seamless Leggings",
-    category: "sport",
-    subcategory: "clothes",
-    tag: "Premium Quality",
-    price: 1899,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Black", "Sage"],
-    sizes: ["XS", "S", "M", "L"],
-    fit: "Slim Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Squat-proof seamless activewear leggings with a supportive high waistband. Offers maximum flexibility and compression."
-  },
-  {
-    id: 27,
-    name: "Unisex Trail Runner Windbreaker",
-    category: "sport",
-    subcategory: "clothes",
-    tag: "New Arrival",
-    price: 2499,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Navy", "Grey"],
-    sizes: ["S", "M", "L", "XL"],
-    fit: "Relaxed Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Ultralight water-repellent windbreaker jacket. Packable design featuring zip pockets and adjustable hoods."
-  },
-  {
-    id: 28,
-    name: "Wilson Pro Staff Tennis Racket",
-    category: "sport",
-    subcategory: "equipment",
-    tag: "Premium Quality",
-    price: 4999,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Black"],
-    sizes: ["Standard"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1606244864456-8bee63fdb47e?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Professional graphite tennis racket offering supreme control and classic crisp feel. Pre-strung with high-tension strings."
-  },
-  {
-    id: 29,
-    name: "Adidas Premium Non-Slip Yoga Mat",
-    category: "sport",
-    subcategory: "equipment",
-    tag: "Trending",
-    price: 1499,
-    originalPrice: 1999,
-    isSale: true,
-    colors: ["Sage"],
-    sizes: ["One Size"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Eco-friendly TPE yoga mat (6mm thickness). Non-slip textured surface provides excellent traction and joint cushioning."
-  },
-  {
-    id: 30,
-    name: "Spalding TF-1000 Indoor Basketball",
-    category: "sport",
-    subcategory: "equipment",
-    tag: "New Arrival",
-    price: 2999,
-    originalPrice: null,
-    isSale: false,
-    colors: ["Brown"],
-    sizes: ["Size 7"],
-    fit: "Regular Fit",
-    pattern: "Solid Color",
-    mainImage: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&h=533&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=400&h=533&q=80",
-    description: "Premium composite leather basketball designed for indoor competitive games. Features moisture-wicking deep channels."
-  }
-];
-// State variables
-let cart = JSON.parse(localStorage.getItem('threadzy_cart')) || [];
-let wishlist = JSON.parse(localStorage.getItem('threadzy_wishlist')) || [];
-let activeFilters = {
-  category: 'all',
-  subcategory: 'all',
-  priceMax: 4999,
-  colors: [],
-  sizes: [],
-  fits: [],
-  patterns: [],
-  searchQuery: '',
-  sortBy: 'default'
+// Live Ticker pricing base configurations
+const BASE_PRICES = {
+  NIFTY50: 24350.80,
+  BANKNIFTY: 52300.20,
+  SENSEX: 79800.50
 };
+
+// Help to calculate IST Date/Time parameters in a timezone-independent way
+function getISTContext() {
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+    weekday: 'short'
+  });
+  
+  const parts = formatter.formatToParts(now);
+  const p = {};
+  parts.forEach(part => { p[part.type] = part.value; });
+  
+  const year = p.year;
+  const month = p.month;
+  const dayNum = p.day;
+  const hour = parseInt(p.hour, 10);
+  const minute = parseInt(p.minute, 10);
+  const weekdayStr = p.weekday;
+  
+  const daysMap = { 'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6 };
+  const day = daysMap[weekdayStr];
+  const dateStr = `${year}-${month}-${dayNum}`;
+  
+  return { day, hour, minute, dateStr };
+}
+
+// Seeded random number generator
+function seedRandom(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+  let t = h + 0x6D2B79F5 | 0;
+  t = Math.imul(t ^ t >>> 15, t | 1);
+  t ^= t + Math.imul(t ^ t >>> 7, t | 61) | 0;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296;
+}
+
+function selectRandom(arr, seed) {
+  const rand = seedRandom(seed);
+  return arr[Math.floor(rand * arr.length)];
+}
+
+// State variables
+let simTimeMode = localStorage.getItem('sim_time_mode') || 'real';
+let apiKey = localStorage.getItem('gemini_api_key') || '';
+let isDark = localStorage.getItem('theme') !== 'light';
+let loading = false;
+
+let outlook = JSON.parse(localStorage.getItem('market_outlook_cache')) || {
+  NIFTY50: { trend: 'BULLISH', reason: 'Global cues positive hain aur IT sector break-out de raha hai.' },
+  BANKNIFTY: { trend: 'BEARISH', reason: 'RBI ke regulation tightening se banking sector support cross kar raha hai.' },
+  SENSEX: { trend: 'BULLISH', reason: 'Large-cap buying support visible hai and volume structure standard hai.' }
+};
+
+let prices = {
+  NIFTY50: { current: BASE_PRICES.NIFTY50, change: 0.28 },
+  BANKNIFTY: { current: BASE_PRICES.BANKNIFTY, change: -0.42 },
+  SENSEX: { current: BASE_PRICES.SENSEX, change: 0.19 }
+};
+
+let capital = localStorage.getItem('capital') || '500000';
+let riskPercent = localStorage.getItem('risk_percent') || '1';
+
+// Timing Context calculation
+function getTimeContext() {
+  const ist = getISTContext();
+  let day = ist.day;
+  let hour = ist.hour;
+  let minute = ist.minute;
+  let dateStr = ist.dateStr;
+
+  if (simTimeMode === 'weekend') {
+    day = 6; // Saturday
+    hour = 10;
+    minute = 0;
+    dateStr = '2026-07-04';
+  } else if (simTimeMode === '930am') {
+    day = 1; // Monday
+    hour = 9;
+    minute = 30;
+    dateStr = (ist.day === 0 || ist.day === 6) ? '2026-07-06' : ist.dateStr;
+  } else if (simTimeMode === '1115am') {
+    day = 1;
+    hour = 11;
+    minute = 15;
+    dateStr = (ist.day === 0 || ist.day === 6) ? '2026-07-06' : ist.dateStr;
+  } else if (simTimeMode === '200pm') {
+    day = 1;
+    hour = 14;
+    minute = 0;
+    dateStr = (ist.day === 0 || ist.day === 6) ? '2026-07-06' : ist.dateStr;
+  } else if (simTimeMode === '400pm') {
+    day = 1;
+    hour = 16;
+    minute = 0;
+    dateStr = (ist.day === 0 || ist.day === 6) ? '2026-07-06' : ist.dateStr;
+  }
+
+  return { day, hour, minute, dateStr };
+}
+
+// Market Status derivation
+function getMarketStatus() {
+  const tc = getTimeContext();
+  if (tc.day === 0 || tc.day === 6) return 'WEEKEND_CLOSED';
+  
+  if (tc.hour < 9) return 'CLOSED_BEFORE_OPEN';
+  if (tc.hour >= 9 && tc.hour < 11) return 'SCANNING_ACTIVE';
+  if (tc.hour >= 11 && tc.hour < 13) return 'TRADE_11AM_UNLOCKED';
+  if (tc.hour >= 13 && tc.hour < 15 || (tc.hour === 15 && tc.minute < 30)) return 'ALL_TRADES_UNLOCKED';
+  return 'CLOSED_AFTER_CLOSE';
+}
+
+// Upward/Downward Trend SVG markup
+const UP_SVG = `<svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m19 12-7-7-7 7"/><path d="M12 5v14"/></svg>`;
+const DOWN_SVG = `<svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>`;
+const TREND_UP_TINY = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;"><path d="m19 12-7-7-7 7"/><path d="M12 5v14"/></svg>`;
+const TREND_DOWN_TINY = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>`;
 
 // DOM Elements
-const productGrid = document.getElementById('product-grid');
-const resultsCount = document.getElementById('results-count');
-const emptyState = document.getElementById('empty-state');
-const heroBanner = document.getElementById('hero-banner');
+const priceNifty = document.getElementById('price-nifty');
+const changeNifty = document.getElementById('change-nifty');
+const badgeNifty = document.getElementById('badge-nifty');
+const textNifty = document.getElementById('text-nifty');
+const reasonNifty = document.getElementById('reason-nifty');
+const cardNifty = document.getElementById('card-nifty');
 
-// Navigation elements
-const activeCategoryTitle = document.getElementById('active-category-title');
+const priceBanknifty = document.getElementById('price-banknifty');
+const changeBanknifty = document.getElementById('change-banknifty');
+const badgeBanknifty = document.getElementById('badge-banknifty');
+const textBanknifty = document.getElementById('text-banknifty');
+const reasonBanknifty = document.getElementById('reason-banknifty');
+const cardBanknifty = document.getElementById('card-banknifty');
 
-// Cart Elements
-const cartBtn = document.getElementById('cart-btn');
-const closeCartBtn = document.getElementById('close-cart-btn');
-const cartDrawer = document.getElementById('cart-drawer');
-const cartDrawerOverlay = document.getElementById('cart-drawer-overlay');
-const cartItemsContainer = document.getElementById('cart-items-container');
-const cartSubtotalEl = document.getElementById('cart-subtotal');
-const cartShippingEl = document.getElementById('cart-shipping');
-const cartTotalEl = document.getElementById('cart-total');
-const cartCountBadges = document.querySelectorAll('#cart-count');
-const checkoutBtn = document.getElementById('checkout-btn');
+const priceSensex = document.getElementById('price-sensex');
+const changeSensex = document.getElementById('change-sensex');
+const badgeSensex = document.getElementById('badge-sensex');
+const textSensex = document.getElementById('text-sensex');
+const reasonSensex = document.getElementById('reason-sensex');
+const cardSensex = document.getElementById('card-sensex');
 
-// Detail Modal Elements
-const detailModal = document.getElementById('detail-modal');
-const detailModalOverlay = document.getElementById('detail-modal-overlay');
-const closeDetailBtn = document.getElementById('close-detail-btn');
-const detailModalBody = document.getElementById('detail-modal-body');
+const scanTriggerBtn = document.getElementById('scan-trigger-btn');
+const scanBtnText = document.getElementById('scan-btn-text');
+const scanRefreshIcon = document.getElementById('scan-refresh-icon');
 
-// Info Modals (Careers, About, Help)
-const infoModal = document.getElementById('info-modal');
-const infoModalOverlay = document.getElementById('info-modal-overlay');
-const closeInfoBtn = document.getElementById('close-info-btn');
-const infoModalBody = document.getElementById('info-modal-body');
+const apiStatusText = document.getElementById('api-status-text');
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+const sunIcon = document.getElementById('sun-icon');
+const moonIcon = document.getElementById('moon-icon');
 
-// Search Elements
-const searchToggleBtn = document.getElementById('search-toggle-btn');
-const searchContainer = document.getElementById('search-container');
-const searchInput = document.getElementById('search-input');
-const searchClearBtn = document.getElementById('search-clear-btn');
+const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+const settingsModalOverlay = document.getElementById('settings-modal-overlay');
+const apiKeyInput = document.getElementById('api-key-input');
+const simTimeSelect = document.getElementById('sim-time-select');
+const settingsCancelBtn = document.getElementById('settings-cancel-btn');
+const settingsSaveBtn = document.getElementById('settings-save-btn');
 
-// Filter Elements
-const priceSlider = document.getElementById('price-slider');
-const priceValEl = document.getElementById('price-val');
-const sortSelector = document.getElementById('sort-selector');
-const clearAllFiltersBtn = document.getElementById('clear-all-filters-btn');
-const resetFiltersBtn = document.getElementById('reset-filters-btn');
-const sidebarAside = document.getElementById('sidebar-aside');
-const filterMobileToggleBtn = document.getElementById('filter-mobile-toggle-btn');
+const simBanner = document.getElementById('simulation-banner');
+const simBannerText = document.getElementById('simulation-banner-text');
 
-// Success Overlay
-const successOverlay = document.getElementById('success-overlay');
-const successCloseBtn = document.getElementById('success-close-btn');
-const successOrderId = document.getElementById('success-order-id');
+const indicatorsPanel = document.getElementById('indicators-panel');
+const signalsBar = document.getElementById('signals-bar');
+const tradingMainDesk = document.getElementById('trading-main-desk');
+const fiiDiiSidebar = document.getElementById('fii-dii-sidebar-section');
+const capitalInput = document.getElementById('capital-input');
+const riskPercentInput = document.getElementById('risk-percent-input');
+const posCalcResults = document.getElementById('pos-calc-results');
+const journalStatsHeader = document.getElementById('journal-stats-header');
+const journalTableBody = document.getElementById('journal-table-body');
 
-// Wishlist Badge
-const wishlistCountEl = document.getElementById('wishlist-count');
-
-// Newsletter Form
-const newsletterForm = document.getElementById('newsletter-form');
-const newsletterEmail = document.getElementById('newsletter-email');
-
-const CATEGORY_SUBCATEGORIES = {
-  all: [
-    { id: 'all', label: 'View All' },
-    { id: 't-shirts', label: 'T-shirts & Tanks' },
-    { id: 'shirts', label: 'Shirts' },
-    { id: 'hoodies', label: 'Hoodies & Sweatshirts' },
-    { id: 'pants', label: 'Trousers & Joggers' },
-    { id: 'jeans', label: 'Jeans' },
-    { id: 'jackets', label: 'Jackets & Coats' },
-    { id: 'clothes', label: 'Activewear & Kids Clothes' },
-    { id: 'toys', label: 'Toys' },
-    { id: 'lipstick', label: 'Lipstick' },
-    { id: 'facewash', label: 'Facewash' },
-    { id: 'makeup-kit', label: 'Makeup Kit' },
-    { id: 'blush', label: 'Blush' },
-    { id: 'brushes', label: 'Brushes' },
-    { id: 'eyeliner', label: 'Eyeliner & Kajal' },
-    { id: 'mascara', label: 'Mascara' },
-    { id: 'equipment', label: 'Sports Equipment' }
-  ],
-  ladies: [
-    { id: 'all', label: 'View All' },
-    { id: 't-shirts', label: 'T-shirts & Tanks' },
-    { id: 'shirts', label: 'Shirts' },
-    { id: 'hoodies', label: 'Hoodies & Sweatshirts' },
-    { id: 'pants', label: 'Trousers & Joggers' },
-    { id: 'jeans', label: 'Jeans' },
-    { id: 'jackets', label: 'Jackets & Coats' }
-  ],
-  men: [
-    { id: 'all', label: 'View All' },
-    { id: 't-shirts', label: 'T-shirts & Tanks' },
-    { id: 'shirts', label: 'Shirts' },
-    { id: 'hoodies', label: 'Hoodies & Sweatshirts' },
-    { id: 'pants', label: 'Trousers & Joggers' },
-    { id: 'jeans', label: 'Jeans' },
-    { id: 'jackets', label: 'Jackets & Coats' }
-  ],
-  kids: [
-    { id: 'all', label: 'View All' },
-    { id: 'clothes', label: 'Clothing' },
-    { id: 'toys', label: 'Toys' }
-  ],
-  beauty: [
-    { id: 'all', label: 'View All' },
-    { id: 'lipstick', label: 'Lipstick' },
-    { id: 'facewash', label: 'Facewash' },
-    { id: 'makeup-kit', label: 'Makeup Kit' },
-    { id: 'blush', label: 'Blush' },
-    { id: 'brushes', label: 'Brushes' },
-    { id: 'eyeliner', label: 'Eyeliner & Kajal' },
-    { id: 'mascara', label: 'Mascara' }
-  ],
-  sport: [
-    { id: 'all', label: 'View All' },
-    { id: 'clothes', label: 'Activewear' },
-    { id: 'equipment', label: 'Sports Equipment' }
-  ],
-  sale: [
-    { id: 'all', label: 'View All' },
-    { id: 't-shirts', label: 'T-shirts & Tanks' },
-    { id: 'shirts', label: 'Shirts' },
-    { id: 'hoodies', label: 'Hoodies & Sweatshirts' },
-    { id: 'pants', label: 'Trousers & Joggers' },
-    { id: 'jeans', label: 'Jeans' },
-    { id: 'jackets', label: 'Jackets & Coats' },
-    { id: 'clothes', label: 'Clothing' },
-    { id: 'toys', label: 'Toys' },
-    { id: 'lipstick', label: 'Lipstick' },
-    { id: 'facewash', label: 'Facewash' },
-    { id: 'makeup-kit', label: 'Makeup Kit' },
-    { id: 'blush', label: 'Blush' },
-    { id: 'brushes', label: 'Brushes' },
-    { id: 'eyeliner', label: 'Eyeliner & Kajal' },
-    { id: 'mascara', label: 'Mascara' },
-    { id: 'equipment', label: 'Sports Equipment' }
-  ]
-};
-
-function renderSubcategorySidebar(cat) {
-  const container = document.getElementById('subcategory-links');
-  if (!container) return;
+// Client-side calculations
+function getTrade(asset, isBullish, seed) {
+  const entryOffset = (seedRandom(seed + '-entry') * 20 - 10);
+  const basePrice = prices[asset]?.current || BASE_PRICES[asset];
+  const entry = parseFloat((basePrice + entryOffset).toFixed(2));
   
-  const subs = CATEGORY_SUBCATEGORIES[cat] || CATEGORY_SUBCATEGORIES.all;
-  container.innerHTML = subs.map(sub => {
-    const activeClass = sub.id === activeFilters.subcategory ? 'active' : '';
-    return `<li><button class="subcategory-btn ${activeClass}" data-subcategory="${sub.id}">${sub.label}</button></li>`;
-  }).join('');
-
-  // Re-attach listeners to the new buttons
-  container.querySelectorAll('.subcategory-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const sub = btn.dataset.subcategory;
-      activeFilters.subcategory = sub;
-
-      container.querySelectorAll('.subcategory-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      renderProducts();
-      
-      const storeLayout = document.querySelector('.store-layout-container');
-      if (storeLayout) {
-        storeLayout.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
-}
-
-let hasInit = false;
-/* --- INITIALIZATION --- */
-function init() {
-  if (hasInit) return;
-  hasInit = true;
-  initHero();
-  setupEventListeners();
-  initAshwiniChatbot();
-  renderSubcategorySidebar(activeFilters.category);
-  renderProducts();
-  updateCartUI();
-  updateWishlistUI();
-}
-
-function initHero() {
-  if (heroBanner) {
-    heroBanner.style.backgroundImage = `url(${heroBannerImg})`;
-  }
-}
-
-/* --- PRODUCT RENDERING & QUERY ENGINE --- */
-function renderProducts() {
-  let filtered = PRODUCTS.filter(product => {
-    if (activeFilters.category !== 'all') {
-      if (activeFilters.category === 'sale') {
-        if (!product.isSale) return false;
-      } else if (product.category !== activeFilters.category) {
-        return false;
-      }
-    }
-
-    if (activeFilters.subcategory !== 'all') {
-      if (product.subcategory !== activeFilters.subcategory) {
-        return false;
-      }
-    }
-
-    if (activeFilters.searchQuery.trim() !== '') {
-      const query = activeFilters.searchQuery.toLowerCase();
-      const matchName = product.name.toLowerCase().includes(query);
-      const matchDesc = product.description.toLowerCase().includes(query);
-      const matchTag = product.tag.toLowerCase().includes(query);
-      const matchSub = product.subcategory.toLowerCase().includes(query);
-      if (!matchName && !matchDesc && !matchTag && !matchSub) return false;
-    }
-
-    if (product.price > activeFilters.priceMax) return false;
-
-    if (activeFilters.colors.length > 0) {
-      const hasColor = product.colors.some(c => activeFilters.colors.includes(c));
-      if (!hasColor) return false;
-    }
-
-    if (activeFilters.sizes.length > 0) {
-      const hasSize = product.sizes.some(s => activeFilters.sizes.includes(s));
-      if (!hasSize) return false;
-    }
-
-    if (activeFilters.fits.length > 0) {
-      if (!activeFilters.fits.includes(product.fit)) return false;
-    }
-
-    if (activeFilters.patterns.length > 0) {
-      if (!activeFilters.patterns.includes(product.pattern)) return false;
-    }
-
-    return true;
-  });
-
-  if (activeFilters.sortBy === 'price-asc') {
-    filtered.sort((a, b) => a.price - b.price);
-  } else if (activeFilters.sortBy === 'price-desc') {
-    filtered.sort((a, b) => b.price - a.price);
-  } else if (activeFilters.sortBy === 'newest') {
-    filtered.sort((a, b) => b.id - a.id);
-  }
-
-  resultsCount.textContent = `Showing ${filtered.length} product${filtered.length === 1 ? '' : 's'}`;
-
-  if (filtered.length === 0) {
-    productGrid.innerHTML = '';
-    emptyState.classList.remove('hidden');
-    return;
-  } else {
-    emptyState.classList.add('hidden');
-  }
-
-  const displayProducts = filtered.slice(0, 120);
-
-  productGrid.innerHTML = displayProducts.map(product => {
-    const isWishlisted = wishlist.includes(product.id);
-    
-    let badgeHTML = '';
-    if (product.isSale) {
-      badgeHTML = `<span class="card-badge sale">Sale</span>`;
-    } else if (product.tag === 'Conscious Choice') {
-      badgeHTML = `<span class="card-badge conscious">Conscious</span>`;
-    } else if (product.tag === 'Premium Quality') {
-      badgeHTML = `<span class="card-badge premium">Premium</span>`;
-    } else if (product.tag === 'New Arrival') {
-      badgeHTML = `<span class="card-badge new">New</span>`;
-    } else if (product.tag) {
-      badgeHTML = `<span class="card-badge new">${product.tag}</span>`;
-    }
-
-    const priceHTML = product.isSale 
-      ? `<span class="sale-price">₹${product.price}</span><span class="original-price">₹${product.originalPrice}</span>`
-      : `<span>₹${product.price}</span>`;
-
-    const consciousClass = product.tag === 'Conscious Choice' ? 'tag-conscious' : '';
-    const premiumClass = product.tag === 'Premium Quality' ? 'tag-premium' : '';
-    const tagClass = consciousClass || premiumClass;
-
-    return `
-      <div class="product-card" data-id="${product.id}">
-        <div class="product-image-container">
-          ${badgeHTML}
-          <button class="card-wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}" aria-label="Add to Wishlist">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-            </svg>
-          </button>
-          <img src="${product.mainImage}" alt="${product.name}" class="product-card-img main-img" loading="lazy" />
-          <img src="${product.hoverImage}" alt="${product.name} alternate" class="product-card-img hover-img" loading="lazy" />
-          <button class="quick-add-btn" data-id="${product.id}">Quick Add</button>
-        </div>
-        <div class="product-info">
-          <span class="product-tag ${tagClass}">${product.tag || 'Standard Fit'}</span>
-          <h3 class="product-name">${product.name}</h3>
-          <div class="product-price-row">
-            ${priceHTML}
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-  attachCardListeners();
+  const target1 = parseFloat((entry * (isBullish ? 1.0075 : 0.9925)).toFixed(2));
+  const target2 = parseFloat((entry * (isBullish ? 1.0135 : 0.9865)).toFixed(2));
   
-  // GSAP stagger card entry animation
-  gsap.from('.product-card', {
-    duration: 0.5,
-    y: 20,
-    opacity: 0,
-    stagger: 0.03,
-    ease: 'power1.out',
-    overwrite: 'auto'
-  });
-}
-
-function attachCardListeners() {
-  document.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('.card-wishlist-btn') || e.target.closest('.quick-add-btn')) {
-        return;
-      }
-      const id = parseInt(card.dataset.id);
-      openProductDetail(id);
-    });
-  });
-
-  document.querySelectorAll('.card-wishlist-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const id = parseInt(btn.dataset.id);
-      toggleWishlist(id, btn);
-    });
-  });
-
-  document.querySelectorAll('.quick-add-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const id = parseInt(btn.dataset.id);
-      const product = PRODUCTS.find(p => p.id === id);
-      const defaultSize = product.sizes.includes('M') ? 'M' : product.sizes[0];
-      const defaultColor = product.colors[0];
-      addToCart(product, defaultSize, defaultColor);
-    });
-  });
-}
-
-/* --- WISHLIST MANAGEMENT --- */
-function toggleWishlist(id, btnEl) {
-  const index = wishlist.indexOf(id);
-  if (index === -1) {
-    wishlist.push(id);
-    if (btnEl) btnEl.classList.add('active');
-  } else {
-    wishlist.splice(index, 1);
-    if (btnEl) btnEl.classList.remove('active');
-  }
-  localStorage.setItem('threadzy_wishlist', JSON.stringify(wishlist));
-  updateWishlistUI();
-}
-
-function updateWishlistUI() {
-  if (wishlistCountEl) {
-    wishlistCountEl.textContent = wishlist.length;
-    wishlistCountEl.style.display = wishlist.length > 0 ? 'flex' : 'none';
-  }
-}
-
-/* --- CART DRAWER STATE --- */
-function toggleCartDrawer(open) {
-  if (open) {
-    cartDrawer.classList.add('active');
-    cartDrawerOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  } else {
-    cartDrawer.classList.remove('active');
-    cartDrawerOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-}
-
-function addToCart(product, size, color) {
-  const existingIndex = cart.findIndex(item => item.id === product.id && item.size === size && item.color === color);
-  
-  if (existingIndex > -1) {
-    cart[existingIndex].quantity += 1;
-  } else {
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      size: size,
-      color: color,
-      image: product.mainImage,
-      quantity: 1
-    });
-  }
-
-  localStorage.setItem('threadzy_cart', JSON.stringify(cart));
-  updateCartUI();
-  toggleCartDrawer(true);
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  localStorage.setItem('threadzy_cart', JSON.stringify(cart));
-  updateCartUI();
-}
-
-function updateCartQuantity(index, delta) {
-  cart[index].quantity += delta;
-  if (cart[index].quantity <= 0) {
-    cart.splice(index, 1);
-  }
-  localStorage.setItem('threadzy_cart', JSON.stringify(cart));
-  updateCartUI();
-}
-
-function updateCartUI() {
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-  cartCountBadges.forEach(badge => {
-    badge.textContent = totalItems;
-    badge.style.display = totalItems > 0 ? 'flex' : 'none';
-  });
-
-  if (cart.length === 0) {
-    cartItemsContainer.innerHTML = `
-      <div class="cart-empty-msg">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-        </svg>
-        <p>Your shopping bag is empty.</p>
-      </div>
-    `;
-    cartSubtotalEl.textContent = '₹0';
-    cartShippingEl.textContent = '₹0';
-    cartTotalEl.textContent = '₹0';
-    checkoutBtn.disabled = true;
-    return;
-  }
-
-  checkoutBtn.disabled = false;
-
-  cartItemsContainer.innerHTML = cart.map((item, index) => {
-    return `
-      <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
-        <div class="cart-item-details">
-          <div>
-            <div class="cart-item-header">
-              <h4 class="cart-item-name">${item.name}</h4>
-              <button class="cart-item-remove" data-index="${index}">&times;</button>
-            </div>
-            <p class="cart-item-meta">Color: ${item.color} | Size: ${item.size}</p>
-          </div>
-          <div class="cart-item-actions">
-            <div class="qty-selector">
-              <button class="qty-btn minus" data-index="${index}">-</button>
-              <span class="qty-val">${item.quantity}</span>
-              <button class="qty-btn plus" data-index="${index}">+</button>
-            </div>
-            <span class="cart-item-price">₹${item.price * item.quantity}</span>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const shipping = subtotal >= 1999 ? 0 : 149;
-  const total = subtotal + shipping;
-
-  cartSubtotalEl.textContent = `₹${subtotal}`;
-  cartShippingEl.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
-  cartTotalEl.textContent = `₹${total}`;
-
-  document.querySelectorAll('.cart-item-remove').forEach(btn => {
-    btn.addEventListener('click', () => removeFromCart(parseInt(btn.dataset.index)));
-  });
-  document.querySelectorAll('.qty-btn.minus').forEach(btn => {
-    btn.addEventListener('click', () => updateCartQuantity(parseInt(btn.dataset.index), -1));
-  });
-  document.querySelectorAll('.qty-btn.plus').forEach(btn => {
-    btn.addEventListener('click', () => updateCartQuantity(parseInt(btn.dataset.index), 1));
-  });
-}
-
-/* --- PRODUCT DETAIL MODAL --- */
-function openProductDetail(id) {
-  const product = PRODUCTS.find(p => p.id === id);
-  if (!product) return;
-
-  const priceHTML = product.isSale 
-    ? `<span class="sale-price">₹${product.price}</span><span class="original-price">₹${product.originalPrice}</span>`
-    : `<span>₹${product.price}</span>`;
-
-  let selectedSize = product.sizes.includes('M') ? 'M' : product.sizes[0];
-  let selectedColor = product.colors[0];
-
-  const consciousClass = product.tag === 'Conscious Choice' ? 'tag-conscious' : '';
-  const premiumClass = product.tag === 'Premium Quality' ? 'tag-premium' : '';
-  const tagClass = consciousClass || premiumClass;
-
-  detailModalBody.innerHTML = `
-    <div class="product-detail-layout">
-      <div class="detail-gallery">
-        <div class="main-detail-img-container">
-          <img src="${product.mainImage}" alt="${product.name}" class="main-detail-img" id="main-detail-img">
-        </div>
-        <div class="thumbnail-row">
-          <img src="${product.mainImage}" alt="Main View" class="thumb-img active" data-src="${product.mainImage}">
-          <img src="${product.hoverImage}" alt="Alt View" class="thumb-img" data-src="${product.hoverImage}">
-        </div>
-      </div>
-      
-      <div class="detail-info">
-        <span class="detail-tag ${tagClass}">${product.tag || 'Standard Fit'}</span>
-        <h2 class="detail-title">${product.name}</h2>
-        <div class="detail-price-row">${priceHTML}</div>
-        <p class="detail-desc">${product.description}</p>
-        
-        <div class="detail-option-group">
-          <span class="detail-option-label">Color: <strong id="selected-color-label">${selectedColor}</strong></span>
-          <div class="color-selector-grid">
-            ${product.colors.map((c, i) => {
-              const bgStyle = c === 'Black' ? '#1a1a1a' : 
-                              c === 'White' ? '#fafafa' : 
-                              c === 'Cream' ? '#f5f2eb' : 
-                              c === 'Navy' ? '#0b1f3f' : 
-                              c === 'Sage' ? '#8fa08c' : 
-                              c === 'Beige' ? '#dfd3c3' :
-                              c === 'Grey' ? '#a0a0a0' :
-                              c === 'Olive' ? '#556b2f' : '#6f4e37';
-              const borderStyle = c === 'White' ? '1px solid #ccc' : 'none';
-              return `<button class="color-selector-swatch ${i === 0 ? 'active' : ''}" data-color="${c}" style="background-color: ${bgStyle}; border: ${borderStyle};" title="${c}"></button>`;
-            }).join('')}
-          </div>
-        </div>
-
-        <div class="detail-option-group">
-          <span class="detail-option-label">Select Size</span>
-          <div class="size-selector-grid">
-            ${product.sizes.map(s => {
-              const activeClass = s === selectedSize ? 'active' : '';
-              return `<button class="size-selector-btn ${activeClass}" data-size="${s}">${s}</button>`;
-            }).join('')}
-          </div>
-        </div>
-
-        <button class="btn btn-primary add-to-bag-btn" id="modal-add-to-bag">ADD TO BAG</button>
-      </div>
-    </div>
-  `;
-
-  const thumbImgs = detailModalBody.querySelectorAll('.thumb-img');
-  const mainDetailImg = detailModalBody.querySelector('#main-detail-img');
-  thumbImgs.forEach(thumb => {
-    thumb.addEventListener('click', () => {
-      thumbImgs.forEach(t => t.classList.remove('active'));
-      thumb.classList.add('active');
-      mainDetailImg.src = thumb.dataset.src;
-    });
-  });
-
-  const sizeBtns = detailModalBody.querySelectorAll('.size-selector-btn');
-  sizeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      sizeBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedSize = btn.dataset.size;
-    });
-  });
-
-  const colorSwatches = detailModalBody.querySelectorAll('.color-selector-swatch');
-  const colorLabel = detailModalBody.querySelector('#selected-color-label');
-  colorSwatches.forEach(swatch => {
-    swatch.addEventListener('click', () => {
-      colorSwatches.forEach(s => s.classList.remove('active'));
-      swatch.classList.add('active');
-      selectedColor = swatch.dataset.color;
-      colorLabel.textContent = selectedColor;
-    });
-  });
-
-  detailModalBody.querySelector('#modal-add-to-bag').addEventListener('click', () => {
-    addToCart(product, selectedSize, selectedColor);
-    toggleProductModal(false);
-  });
-
-  toggleProductModal(true);
-}
-
-function toggleProductModal(open) {
-  if (open) {
-    detailModal.classList.add('active');
-    detailModalOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  } else {
-    detailModal.classList.remove('active');
-    detailModalOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-}
-
-/* --- INTERACTIVE FOOTER PAGES ROUTER --- */
-const INFO_PAGES_CONTENT = {
-  'careers': `
-    <h2 class="info-page-title">Career at Threadzy</h2>
-    <div class="info-page-section">
-      <h4>Join Our Creative Squad</h4>
-      <p>Threadzy is one of the fastest growing premium streetwear brands. We value creativity, diverse ideas, and self-expression. Our corporate headquarters are located in the heart of Mumbai, designing high-fashion trends for global release.</p>
-    </div>
-    <div class="info-page-section">
-      <h4>Open Positions (Mumbai HQ)</h4>
-      <div class="jobs-list">
-        <div class="job-card">
-          <div>
-            <div class="job-title">Senior Apparel & Streetwear Designer</div>
-            <div class="job-meta">Full Time | Design Department</div>
-          </div>
-          <button class="btn btn-secondary apply-btn" data-job="Senior Apparel Designer">Apply Now</button>
-        </div>
-        <div class="job-card">
-          <div>
-            <div class="job-title">E-commerce Frontend Developer (Vite/JS)</div>
-            <div class="job-meta">Full Time | Tech Department</div>
-          </div>
-          <button class="btn btn-secondary apply-btn" data-job="Frontend Developer">Apply Now</button>
-        </div>
-        <div class="job-card">
-          <div>
-            <div class="job-title">Social Media Marketer & Content Creator</div>
-            <div class="job-meta">Part Time | Marketing Squad</div>
-          </div>
-          <button class="btn btn-secondary apply-btn" data-job="Social Media Marketer">Apply Now</button>
-        </div>
-      </div>
-    </div>
-  `,
-  'about': `
-    <h2 class="info-page-title">About Threadzy Group</h2>
-    <div class="info-page-section">
-      <h4>The Story of Threadzy</h4>
-      <p>Founded in 2026, Threadzy was born out of a desire to build a premium streetwear brand that mimics the detailed editorial layout of luxury brands but offers affordable pricing. We believe clothing is an art form, which is why we specialize in custom embroidery, high-comfort oversized fit tees, and graphic concepts.</p>
-      <p>Today, our designs reach thousands of customers worldwide, running on high-performance infrastructure and delivering curated seasonal drops that define the next generation of streetwear.</p>
-    </div>
-    <div class="info-page-section">
-      <h4>Our Philosophy</h4>
-      <p><strong>Quality First:</strong> We utilize heavy cotton (240 GSM+) and organic flax linen in our shirts and tees.</p>
-      <p><strong>Aesthetic Curation:</strong> Every graphic, font choice, and line-art is generated and curated by our design studio to ensure visual harmony.</p>
-    </div>
-  `,
-  'sustainability': `
-    <h2 class="info-page-title">Sustainability (Conscious Choice)</h2>
-    <div class="info-page-section">
-      <h4>Our Green Commitment</h4>
-      <p>At Threadzy, we believe fashion should not cost the earth. Our <strong>"Conscious Choice"</strong> labels identify products that are made with at least 50% sustainable materials, such as organic cotton and recycled linen.</p>
-    </div>
-    <div class="info-page-section">
-      <h4>Key Actions we take</h4>
-      <p>🌿 <strong>Organic Materials:</strong> We have banned chemical pesticides in our cotton suppliers.</p>
-      <p>📦 <strong>Plastic-Free Packaging:</strong> All orders are shipped in 100% biodegradable corn-starch mailers and recycled cardboard boxes.</p>
-      <p>💧 <strong>Water Saving:</strong> Our factory in India utilizes zero-liquid-discharge water filtering, recycling 98% of industrial dye water.</p>
-    </div>
-  `,
-  'customer-service': `
-    <h2 class="info-page-title">Customer Service & FAQ</h2>
-    <div class="info-page-section">
-      <h4>Frequently Asked Questions</h4>
-      <div class="faq-list">
-        <div class="faq-item">
-          <div class="faq-question">What is the return policy?</div>
-          <div class="faq-answer">We offer a 15-day return policy for all unused products with original tags intact. Returns are completely free for Members.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">How long does shipping take?</div>
-          <div class="faq-answer">Standard shipping takes 3-5 business days across India. Express shipping options are available at checkout. Orders above ₹1999 qualify for Free Shipping.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">Can I cancel my order?</div>
-          <div class="faq-answer">Yes, you can cancel your order within 2 hours of booking by contacting our helpline or cancelling from your Threadzy Account.</div>
-        </div>
-      </div>
-    </div>
-    <div class="info-page-section">
-      <h4>Contact Support Simulator</h4>
-      <form id="support-sim-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
-        <input type="text" placeholder="Your Name" required class="custom-select" style="background-image: none; padding-right: 14px;">
-        <textarea placeholder="Describe your issue..." required class="custom-select" style="background-image: none; padding-right: 14px; height: 100px; font-family: inherit; resize: none;"></textarea>
-        <button type="submit" class="btn btn-primary">Submit Ticket</button>
-      </form>
-    </div>
-  `,
-  'member-club': `
-    <h2 class="info-page-title">Threadzy Member Club</h2>
-    <div class="info-page-section">
-      <h4>Unlock Exclusive Perks</h4>
-      <p>Join the Threadzy Member Club today and get an instant 15% discount on your first order. Membership is completely free.</p>
-    </div>
-    <div class="info-page-section" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-      <div class="job-card" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-        <strong>Silver Tier (0 - 5000 Points)</strong>
-        <p style="font-size: 12px; color: var(--text-muted);">Get free shipping on orders above ₹1999, 10% birthday discount vouchers, and early access to drops.</p>
-      </div>
-      <div class="job-card" style="flex-direction: column; align-items: flex-start; gap: 10px; border-color: var(--premium-color); background-color: #fbf2db;">
-        <strong>Gold Tier (5000+ Points)</strong>
-        <p style="font-size: 12px; color: var(--text-muted); color: var(--premium-color);">Get free shipping on ALL orders, 20% birthday discount vouchers, priority support, and exclusive designer collabs.</p>
-      </div>
-    </div>
-    <div class="info-page-section">
-      <h4>Join Now</h4>
-      <form id="member-sim-form" style="display: flex; gap: 10px; margin-top: 12px;">
-        <input type="text" placeholder="Enter mobile number" required class="custom-select" style="background-image: none; padding-right: 14px; flex: 1;">
-        <button type="submit" class="btn btn-primary">Register</button>
-      </form>
-    </div>
-  `,
-  'find-store': `
-    <h2 class="info-page-title">Find a Store</h2>
-    <div class="info-page-section">
-      <h4>Store Locator Simulator</h4>
-      <p>Search for Threadzy flagship physical stores near your location. We currently have physical branches in major metro cities.</p>
-      <div style="display: flex; gap: 10px; margin-top: 16px;">
-        <input type="text" id="store-city-input" placeholder="Enter City (e.g. Mumbai, Delhi, Bangalore)" class="custom-select" style="background-image: none; padding-right: 14px; flex: 1;">
-        <button id="store-search-btn" class="btn btn-primary">Search</button>
-      </div>
-      <div id="store-results-box" style="margin-top: 20px;">
-        <!-- Simulated results will appear here -->
-      </div>
-    </div>
-  `,
-  'newsletter': `
-    <h2 class="info-page-title">Squad Newsletter</h2>
-    <div class="info-page-section">
-      <h4>Stay Ahead of the Drops</h4>
-      <p>Sign up to get the latest streetwear information, exclusive launch codes, and designer notes sent directly to your email.</p>
-      <form id="newsletter-sim-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px; max-width: 400px;">
-        <input type="email" placeholder="Your Email Address" required class="custom-select" style="background-image: none; padding-right: 14px;">
-        <button type="submit" class="btn btn-primary">Subscribe</button>
-      </form>
-    </div>
-  `
-};
-
-function openInfoPage(pageKey) {
-  const content = INFO_PAGES_CONTENT[pageKey] || `
-    <h2 class="info-page-title">Information Page</h2>
-    <div class="info-page-section">
-      <h4>${pageKey.replace('-', ' ').toUpperCase()}</h4>
-      <p>Welcome to Threadzy's corporate information and help page. Threadzy is a simulated H&M clone store providing advanced catalog displays and e-commerce shopping workflows.</p>
-    </div>
-  `;
-
-  infoModalBody.innerHTML = content;
-  toggleInfoModal(true);
-
-  const applyBtns = infoModalBody.querySelectorAll('.apply-btn');
-  applyBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const job = btn.dataset.job;
-      alert(`Simulated Application Successful! Thank you for applying for the '${job}' role at Threadzy. We will review your simulated portfolio!`);
-    });
-  });
-
-  const supportForm = infoModalBody.querySelector('#support-sim-form');
-  if (supportForm) {
-    supportForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Simulated Success! Your support ticket has been logged. Our simulated agent will reply within 2 hours!');
-      supportForm.reset();
-    });
-  }
-
-  const memberForm = infoModalBody.querySelector('#member-sim-form');
-  if (memberForm) {
-    memberForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Simulated Success! Registration complete. Welcome to the squad! Your 15% discount code is: MEMBERSQUAD15');
-      memberForm.reset();
-      toggleInfoModal(false);
-    });
-  }
-
-  const storeSearchBtn = infoModalBody.querySelector('#store-search-btn');
-  const storeCityInput = infoModalBody.querySelector('#store-city-input');
-  const storeResultsBox = infoModalBody.querySelector('#store-results-box');
-  
-  if (storeSearchBtn && storeCityInput && storeResultsBox) {
-    storeSearchBtn.addEventListener('click', () => {
-      const city = storeCityInput.value.toLowerCase().trim();
-      if (city === 'mumbai') {
-        storeResultsBox.innerHTML = `
-          <div class="job-card" style="margin-bottom: 10px;">
-            <div>
-              <strong>Threadzy Colaba Flagship Store</strong>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Colaba Causeway, Near Gateway, Mumbai - 400001</div>
-            </div>
-            <span style="font-size: 12px; font-weight: 700; color: #2e7d32;">Open 10 AM - 10 PM</span>
-          </div>
-        `;
-      } else if (city === 'delhi') {
-        storeResultsBox.innerHTML = `
-          <div class="job-card" style="margin-bottom: 10px;">
-            <div>
-              <strong>Threadzy Connaught Place</strong>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Inner Circle, Block C, CP, New Delhi - 110001</div>
-            </div>
-            <span style="font-size: 12px; font-weight: 700; color: #2e7d32;">Open 11 AM - 9:30 PM</span>
-          </div>
-        `;
-      } else {
-        storeResultsBox.innerHTML = `
-          <p style="font-size: 13px; color: var(--text-muted);">No simulated flagship store found in '${storeCityInput.value}'. Try searching 'Mumbai' or 'Delhi' for our flagships, or shop 100% online!</p>
-        `;
-      }
-    });
-  }
-}
-
-function toggleInfoModal(open) {
-  if (open) {
-    infoModal.classList.add('active');
-    infoModalOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  } else {
-    infoModal.classList.remove('active');
-    infoModalOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-}
-
-/* --- EVENT LISTENERS CONFIG --- */
-function setupEventListeners() {
-  const accordionTriggers = document.querySelectorAll('.accordion-trigger');
-  accordionTriggers.forEach(trigger => {
-    trigger.addEventListener('click', () => {
-      const isActive = trigger.classList.contains('active');
-      trigger.classList.toggle('active');
-      trigger.setAttribute('aria-expanded', !isActive);
-    });
-  });
-
-  const brandLogo = document.getElementById('brand-logo');
-  if (brandLogo) {
-    brandLogo.addEventListener('click', (e) => {
-      e.preventDefault();
-      resetAllFilters();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-
-  const navLinks = document.querySelectorAll('.nav-link, .mobile-link');
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const cat = link.dataset.category;
-      
-      activeFilters.category = cat;
-      activeFilters.subcategory = 'all';
-      
-      document.querySelectorAll('.nav-link, .mobile-link').forEach(l => {
-        if (l.dataset.category === cat) {
-          l.classList.add('active');
-        } else {
-          l.classList.remove('active');
-        }
-      });
-
-      if (cat === 'all') {
-        activeCategoryTitle.textContent = 'Shop All';
-      } else {
-        activeCategoryTitle.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
-      }
-
-      renderSubcategorySidebar(cat);
-      closeSearch();
-      renderProducts();
-      
-      if (heroBanner) {
-        if (cat === 'all') {
-          heroBanner.style.display = 'flex';
-        } else {
-          heroBanner.style.display = 'none';
-        }
-      }
-    });
-  });
-
-  document.querySelectorAll('.info-trigger-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const pageKey = link.dataset.page;
-      openInfoPage(pageKey);
-    });
-  });
-
-  document.querySelectorAll('.hero-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const cat = btn.dataset.targetCategory;
-      const matchingLink = document.querySelector(`.nav-link[data-category="${cat}"]`);
-      if (matchingLink) matchingLink.click();
-      
-      const storeLayout = document.querySelector('.store-layout-container');
-      if (storeLayout) {
-        storeLayout.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
-
-  if (cartBtn) cartBtn.addEventListener('click', () => toggleCartDrawer(true));
-  if (closeCartBtn) closeCartBtn.addEventListener('click', () => toggleCartDrawer(false));
-  if (cartDrawerOverlay) cartDrawerOverlay.addEventListener('click', () => toggleCartDrawer(false));
-
-  if (closeDetailBtn) closeDetailBtn.addEventListener('click', () => toggleProductModal(false));
-  if (detailModalOverlay) detailModalOverlay.addEventListener('click', () => toggleProductModal(false));
-
-  if (closeInfoBtn) closeInfoBtn.addEventListener('click', () => toggleInfoModal(false));
-  if (infoModalOverlay) infoModalOverlay.addEventListener('click', () => toggleInfoModal(false));
-
-  if (searchToggleBtn) {
-    searchToggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      searchContainer.classList.toggle('active');
-      if (searchContainer.classList.contains('active')) {
-        searchInput.focus();
-      }
-    });
-  }
-
-  document.addEventListener('click', (e) => {
-    if (searchContainer && searchContainer.classList.contains('active') && !searchContainer.contains(e.target) && e.target !== searchToggleBtn) {
-      closeSearch();
-    }
-  });
-
-  if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      activeFilters.searchQuery = e.target.value;
-      renderProducts();
-    });
-  }
-
-  if (searchClearBtn) {
-    searchClearBtn.addEventListener('click', () => {
-      searchInput.value = '';
-      activeFilters.searchQuery = '';
-      renderProducts();
-      searchInput.focus();
-    });
-  }
-
-  if (priceSlider) {
-    priceSlider.addEventListener('input', (e) => {
-      const val = parseInt(e.target.value);
-      activeFilters.priceMax = val;
-      priceValEl.textContent = `₹${val}`;
-      renderProducts();
-    });
-  }
-
-  document.querySelectorAll('.color-swatch-filter').forEach(swatch => {
-    swatch.addEventListener('click', () => {
-      const color = swatch.dataset.color;
-      const idx = activeFilters.colors.indexOf(color);
-      if (idx === -1) {
-        activeFilters.colors.push(color);
-        swatch.classList.add('active');
-      } else {
-        activeFilters.colors.splice(idx, 1);
-        swatch.classList.remove('active');
-      }
-      renderProducts();
-    });
-  });
-
-  document.querySelectorAll('.size-btn-filter').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const size = btn.dataset.size;
-      const idx = activeFilters.sizes.indexOf(size);
-      if (idx === -1) {
-        activeFilters.sizes.push(size);
-        btn.classList.add('active');
-      } else {
-        activeFilters.sizes.splice(idx, 1);
-        btn.classList.remove('active');
-      }
-      renderProducts();
-    });
-  });
-
-  document.querySelectorAll('.fit-checkbox').forEach(box => {
-    box.addEventListener('change', () => {
-      const fit = box.value;
-      const idx = activeFilters.fits.indexOf(fit);
-      if (box.checked) {
-        if (idx === -1) activeFilters.fits.push(fit);
-      } else {
-        if (idx > -1) activeFilters.fits.splice(idx, 1);
-      }
-      renderProducts();
-    });
-  });
-
-  document.querySelectorAll('.pattern-checkbox').forEach(box => {
-    box.addEventListener('change', () => {
-      const pattern = box.value;
-      const idx = activeFilters.patterns.indexOf(pattern);
-      if (box.checked) {
-        if (idx === -1) activeFilters.patterns.push(pattern);
-      } else {
-        if (idx > -1) activeFilters.patterns.splice(idx, 1);
-      }
-      renderProducts();
-    });
-  });
-
-  if (sortSelector) {
-    sortSelector.addEventListener('change', (e) => {
-      activeFilters.sortBy = e.target.value;
-      renderProducts();
-    });
-  }
-
-  if (clearAllFiltersBtn) clearAllFiltersBtn.addEventListener('click', resetAllFilters);
-  if (resetFiltersBtn) resetFiltersBtn.addEventListener('click', resetAllFilters);
-
-  if (filterMobileToggleBtn) {
-    filterMobileToggleBtn.addEventListener('click', () => {
-      sidebarAside.classList.toggle('active-mobile');
-    });
-  }
-
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-      toggleCartDrawer(false);
-      const randOrder = 'TZ-' + Math.floor(10000 + Math.random() * 90000) + '-' + Math.floor(10 + Math.random() * 90);
-      if (successOrderId) successOrderId.textContent = randOrder;
-      
-      cart = [];
-      localStorage.removeItem('threadzy_cart');
-      updateCartUI();
-
-      if (successOverlay) {
-        successOverlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-    });
-  }
-
-  if (successCloseBtn) {
-    successCloseBtn.addEventListener('click', () => {
-      if (successOverlay) {
-        successOverlay.classList.add('hidden');
-        document.body.style.overflow = '';
-      }
-    });
-  }
-
-  if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = newsletterEmail.value;
-      alert(`Simulated Success! Thank you for subscribing with ${email}. A 15% Member club code has been sent!`);
-      newsletterEmail.value = '';
-    });
-  }
-}
-
-function closeSearch() {
-  if (searchContainer && searchContainer.classList.contains('active')) {
-    searchContainer.classList.remove('active');
-    searchInput.value = '';
-    activeFilters.searchQuery = '';
-    renderProducts();
-  }
-}
-
-function resetAllFilters() {
-  activeFilters = {
-    category: activeFilters.category,
-    subcategory: activeFilters.subcategory,
-    priceMax: 4999,
-    colors: [],
-    sizes: [],
-    fits: [],
-    patterns: [],
-    searchQuery: '',
-    sortBy: 'default'
+  // ATR Stop Loss
+  const atrBase = asset === 'BANKNIFTY' ? 0.0048 : asset === 'SENSEX' ? 0.0034 : 0.0030;
+  const atrVariance = seedRandom(seed + '-atr') * 0.0015;
+  const atrPct = atrBase + atrVariance;
+  const stopLoss = parseFloat((entry * (isBullish ? (1 - atrPct * 1.5) : (1 + atrPct * 1.5))).toFixed(2));
+  const atrPoints = parseFloat((entry * atrPct).toFixed(2));
+  const confidence = Math.floor(95 + seedRandom(seed + '-conf') * 4); // 95%-98%
+
+  const reasons = isBullish ? [
+    "Volume expansion at support confirm continuation trend aur sector breakout build up strong hai.",
+    "Derivatives long position addition, positive global sentiment and index heavyweight buying push targets higher.",
+    "Short term support level defend and RSI trending towards bullish trajectory confirm momentum expansion."
+  ] : [
+    "Critical support breakdowns on daily structure, global markets weak trend confirm downside expansion.",
+    "Derivatives long unwinding, institutional block selling pressure and sector index breakdown targets SL level.",
+    "Volume spike on downward structure, index heavyweights HDFC Bank and Reliance showing sell momentum."
+  ];
+
+  return {
+    asset,
+    action: isBullish ? 'BUY' : 'SELL',
+    entry,
+    target1,
+    target2,
+    stopLoss,
+    atrPoints,
+    confidence,
+    reason: selectRandom(reasons, seed + '-reason')
   };
-
-  if (priceSlider) {
-    priceSlider.value = 4999;
-    priceValEl.textContent = '₹4999';
-  }
-
-  document.querySelectorAll('.color-swatch-filter').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.size-btn-filter').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.fit-checkbox').forEach(box => box.checked = false);
-  document.querySelectorAll('.pattern-checkbox').forEach(box => box.checked = false);
-  
-  if (sortSelector) sortSelector.value = 'default';
-  
-  closeSearch();
-  
-  if (sidebarAside) sidebarAside.classList.remove('active-mobile');
-
-  renderProducts();
 }
 
-function initAshwiniChatbot() {
-  const toggleBtn = document.getElementById('ashwini-chat-toggle');
-  const chatWindow = document.getElementById('ashwini-chat-window');
-  const closeBtn = document.getElementById('close-ashwini-chat');
-  const chatForm = document.getElementById('ashwini-chat-form');
-  const chatInput = document.getElementById('ashwini-chat-input');
-  const messagesContainer = document.getElementById('ashwini-chat-messages');
-  const suggestionsContainer = document.getElementById('chat-suggestions');
+function calculateTradePnL(trade, currentPrice) {
+  if (!trade || !currentPrice) return null;
+  const isBuy = trade.action === 'BUY';
+  const diff = isBuy ? (currentPrice - trade.entry) : (trade.entry - currentPrice);
+  const percent = (diff / trade.entry) * 100;
+  
+  const slHit = isBuy ? (currentPrice <= trade.stopLoss) : (currentPrice >= trade.stopLoss);
+  const t2Hit = isBuy ? (currentPrice >= trade.target2) : (currentPrice <= trade.target2);
+  const t1Hit = isBuy ? (currentPrice >= trade.target1) : (currentPrice <= trade.target1);
 
-  if (!toggleBtn || !chatWindow) return;
+  let status = 'ACTIVE';
+  let message = 'Running Live';
+  if (slHit) {
+    status = 'SL_HIT';
+    message = 'Stop Loss Hit ⚠️';
+  } else if (t2Hit) {
+    status = 'T2_HIT';
+    message = 'Target 2 Met 🎉';
+  } else if (t1Hit) {
+    status = 'T1_HIT';
+    message = 'Target 1 Met 🚀';
+  }
 
-  // Toggle Chat Window
-  toggleBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    chatWindow.classList.toggle('hidden');
-    // Hide ping badge once clicked
-    const ping = toggleBtn.querySelector('.chat-ping');
-    if (ping) ping.style.display = 'none';
+  return {
+    diff: parseFloat(diff.toFixed(2)),
+    percent: parseFloat(percent.toFixed(2)),
+    status,
+    message
+  };
+}
 
-    if (!chatWindow.classList.contains('hidden')) {
-      chatInput.focus();
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+// Compute live technical indicators
+function getLiveIndicators(asset, seed) {
+  const rand = seedRandom(seed);
+  const rsi = Math.floor(40 + rand * 35); // 40-75
+  const isBullish = outlook[asset]?.trend === 'BULLISH';
+  const rsiSignal = rsi > 70 ? 'OVERBOUGHT' : rsi < 30 ? 'OVERSOLD' : 'NEUTRAL';
+  const emaCross = isBullish ? 'BULLISH' : 'BEARISH';
+  const macdDir = isBullish ? 'BULLISH' : 'BEARISH';
+  const bbPos = isBullish ? 'MIDDLE' : 'BELOW_LOWER';
+  
+  let score = 0;
+  if (rsi > 45 && rsi < 65) score += 20;
+  else if (rsi < 30) score += 12;
+  score += emaCross === 'BULLISH' ? 30 : 0;
+  score += macdDir === 'BULLISH' ? 25 : 0;
+  score += isBullish ? 25 : 5;
+  const confluenceScore = Math.min(100, Math.max(5, score));
+
+  return {
+    rsi,
+    rsiSignal,
+    emaCross,
+    macdDir,
+    bbPos,
+    confluenceScore,
+    signal: confluenceScore >= 60 ? 'BUY' : confluenceScore <= 35 ? 'SELL' : 'NEUTRAL'
+  };
+}
+
+// Calculate client side daily report logs
+function getHistoricalReports(dateStr) {
+  const baseDate = new Date(dateStr);
+  const reports = [];
+  let daysFound = 0;
+  let attempt = 1;
+  
+  while (daysFound < 5 && attempt < 15) {
+    const checkDate = new Date(baseDate.getTime() - attempt * 24 * 60 * 60 * 1000);
+    const day = checkDate.getDay();
+    if (day !== 0 && day !== 6) {
+      const year = checkDate.getFullYear();
+      const month = String(checkDate.getMonth() + 1).padStart(2, '0');
+      const dateNum = String(checkDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${dateNum}`;
+      
+      const seedVal = parseInt(dateNum, 10);
+      const isDay1Win = seedVal % 5 !== 0; 
+      const isDay2Win = (seedVal + 3) % 5 !== 0; 
+      
+      const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const dateLabel = `${dateNum} ${checkDate.toLocaleString('en-US', { month: 'short' })} (${dayNames[day]})`;
+      
+      const asset1 = seedVal % 2 === 0 ? 'NIFTY50' : 'SENSEX';
+      const action1 = seedVal % 3 === 0 ? 'SELL' : 'BUY';
+      const pts1 = isDay1Win ? Math.floor(80 + (seedVal * 3) % 120) : -Math.floor(35 + (seedVal * 2) % 15);
+      
+      const asset2 = 'BANKNIFTY';
+      const action2 = seedVal % 2 === 0 ? 'BUY' : 'SELL';
+      const pts2 = isDay2Win ? Math.floor(150 + (seedVal * 4) % 250) : -Math.floor(60 + (seedVal * 3) % 30);
+      
+      reports.push({
+        dateStr: formattedDate,
+        dateLabel,
+        trade11am: {
+          asset: asset1,
+          action: action1,
+          result: isDay1Win ? `Target 1 Met 🚀` : `Stop Loss Hit ⚠️`,
+          points: pts1,
+          win: isDay1Win
+        },
+        trade1pm: {
+          asset: asset2,
+          action: action2,
+          result: isDay2Win ? `Target 1 Met 🚀` : `Stop Loss Hit ⚠️`,
+          points: pts2,
+          win: isDay2Win
+        },
+        netPoints: pts1 + pts2,
+        winRate: (isDay1Win ? 1 : 0) + (isDay2Win ? 1 : 0) === 2 ? '100%' : '50%'
+      });
+      daysFound++;
     }
-  });
+    attempt++;
+  }
+  return reports;
+}
 
-  closeBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    chatWindow.classList.add('hidden');
-  });
+// App Initialization
+function init() {
+  updateStatusText();
+  initTheme();
+  renderAllComponents();
+  startTicking();
+  
+  // Event Listeners
+  themeToggleBtn.addEventListener('click', toggleTheme);
+  settingsToggleBtn.addEventListener('click', openSettings);
+  settingsCancelBtn.addEventListener('click', closeSettings);
+  settingsSaveBtn.addEventListener('click', saveSettings);
+  scanTriggerBtn.addEventListener('click', handleMarketScan);
+  
+  // Sizing inputs
+  capitalInput.value = capital;
+  riskPercentInput.value = riskPercent;
+  capitalInput.addEventListener('input', handlePositionCalcUpdate);
+  riskPercentInput.addEventListener('input', handlePositionCalcUpdate);
+}
 
-  // Welcome message from Ashwini
-  appendAgentMessage("Hello! 👋 Main hoon **Ashwini**, aapki Threadzy Personal Shopping Expert. 🌟\n\nMain yahan aapki shopping ko super easy banane ke liye hoon! Aap mujhse:\n- **Ladies, Men, Kids, Beauty, ya Sports** ki items dekhne ke liye keh sakte hain,\n- Apne bag/cart ko view karne ke liye bol sakte hain,\n- Sizing aur shipping details pooch sakte hain,\n- Ya fir seedhe product ko cart me add karwa sakte hain!\n\nAaj aapko kya purchase karna hai? Mujhe bataiye! 👇");
+function handlePositionCalcUpdate() {
+  capital = capitalInput.value.trim() || '500000';
+  riskPercent = riskPercentInput.value.trim() || '1';
+  localStorage.setItem('capital', capital);
+  localStorage.setItem('risk_percent', riskPercent);
+  renderPositionCalculator();
+}
 
-  // Handle Form Submit
-  chatForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const text = chatInput.value.trim();
-    if (!text) return;
+function updateStatusText() {
+  if (apiKey) {
+    apiStatusText.textContent = 'GEMINI AI ACTIVE';
+  } else {
+    apiStatusText.textContent = 'MOCK FALLBACK ACTIVE';
+  }
+}
 
-    // Append User Message
-    appendUserMessage(text);
-    chatInput.value = '';
+function initTheme() {
+  if (isDark) {
+    document.documentElement.classList.add('dark');
+    sunIcon.classList.remove('hidden');
+    moonIcon.classList.add('hidden');
+  } else {
+    document.documentElement.classList.remove('dark');
+    sunIcon.classList.add('hidden');
+    moonIcon.classList.remove('hidden');
+  }
+}
 
-    // Handle Reply
-    handleChatbotReply(text);
-  });
+function toggleTheme() {
+  isDark = !isDark;
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  initTheme();
+}
 
-  // Handle Suggestion Chips click
-  if (suggestionsContainer) {
-    suggestionsContainer.querySelectorAll('.chat-suggest-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const query = btn.dataset.query;
-        appendUserMessage(query);
-        handleChatbotReply(query);
-      });
-    });
+function openSettings() {
+  apiKeyInput.value = apiKey;
+  simTimeSelect.value = simTimeMode;
+  settingsModalOverlay.classList.remove('hidden');
+}
+
+function closeSettings() {
+  settingsModalOverlay.classList.add('hidden');
+}
+
+function saveSettings() {
+  apiKey = apiKeyInput.value.trim();
+  simTimeMode = simTimeSelect.value;
+  localStorage.setItem('gemini_api_key', apiKey);
+  localStorage.setItem('sim_time_mode', simTimeMode);
+  updateStatusText();
+  closeSettings();
+  renderAllComponents();
+}
+
+// Render out everything
+function renderAllComponents() {
+  const tc = getTimeContext();
+  const status = getMarketStatus();
+
+  // 1. Simulation Banner
+  if (simTimeMode !== 'real') {
+    simBanner.classList.remove('hidden');
+    simBannerText.innerHTML = `Time Simulation active: <strong>${simTimeMode.toUpperCase()} (${tc.dateStr} ${String(tc.hour).padStart(2, '0')}:${String(tc.minute).padStart(2, '0')})</strong>. Switch back to Real-Time in settings.`;
+  } else {
+    simBanner.classList.add('hidden');
   }
 
-  function appendUserMessage(text) {
-    const row = document.createElement('div');
-    row.className = 'chat-msg-row user';
-    row.innerHTML = `
-      <div class="chat-msg-bubble">${text}</div>
-    `;
-    messagesContainer.appendChild(row);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-  }
+  // 2. Outlook cards
+  renderOutlook();
 
-  function appendAgentMessage(text) {
-    const row = document.createElement('div');
-    row.className = 'chat-msg-row agent';
-    
-    // Parse bold text and markdown links
-    let formattedText = text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\[(.*?)\]\((.*?)\)/g, '<a class="chat-link" data-action="$2">$1</a>');
+  // 3. Indicators Panel
+  renderIndicatorsPanel(tc);
 
-    row.innerHTML = `
-      <div class="chat-msg-avatar">AI</div>
-      <div class="chat-msg-bubble">${formattedText}</div>
-    `;
-    messagesContainer.appendChild(row);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  // 4. Signals Bar
+  renderSignalsBar(tc);
 
-    // Attach click listeners to any links inside the reply
-    row.querySelectorAll('.chat-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const action = link.dataset.action;
-        handleLinkAction(action);
-      });
-    });
-  }
+  // 5. Intraday Desk / Terminal
+  renderIntradayDesk(tc, status);
 
-  function showTypingIndicator() {
-    const row = document.createElement('div');
-    row.className = 'chat-msg-row agent typing-indicator-row';
-    row.innerHTML = `
-      <div class="chat-msg-avatar">AI</div>
-      <div class="chat-msg-bubble typing-indicator" style="display: flex; gap: 4px; align-items: center; padding: 12px;">
-        <span></span><span></span><span></span>
+  // 6. Sidebar FII / DII
+  renderFIIDIIFlow(tc);
+
+  // 7. Position size calculator
+  renderPositionCalculator();
+
+  // 8. Daily Report Journal
+  renderDailyJournal(tc);
+}
+
+// Render three index cards
+function renderOutlook() {
+  const nifty = outlook.NIFTY50 || { trend: 'BULLISH', reason: 'Nifty reasons fallback' };
+  cardNifty.className = `outlook-card ${nifty.trend.toLowerCase()}`;
+  badgeNifty.className = `status-badge ${nifty.trend.toLowerCase()}`;
+  badgeNifty.innerHTML = `${nifty.trend === 'BULLISH' ? UP_SVG : DOWN_SVG} <span>${nifty.trend === 'BULLISH' ? 'Bullish / Market Up' : 'Bearish / Down'}</span>`;
+  reasonNifty.textContent = nifty.reason;
+
+  const bank = outlook.BANKNIFTY || { trend: 'BEARISH', reason: 'Bank reasons fallback' };
+  cardBanknifty.className = `outlook-card ${bank.trend.toLowerCase()}`;
+  badgeBanknifty.className = `status-badge ${bank.trend.toLowerCase()}`;
+  badgeBanknifty.innerHTML = `${bank.trend === 'BULLISH' ? UP_SVG : DOWN_SVG} <span>${bank.trend === 'BULLISH' ? 'Bullish / Market Up' : 'Bearish / Down'}</span>`;
+  reasonBanknifty.textContent = bank.reason;
+
+  const sensex = outlook.SENSEX || { trend: 'BULLISH', reason: 'Sensex reasons fallback' };
+  cardSensex.className = `outlook-card ${sensex.trend.toLowerCase()}`;
+  badgeSensex.className = `status-badge ${sensex.trend.toLowerCase()}`;
+  badgeSensex.innerHTML = `${sensex.trend === 'BULLISH' ? UP_SVG : DOWN_SVG} <span>${sensex.trend === 'BULLISH' ? 'Bullish / Market Up' : 'Bearish / Down'}</span>`;
+  reasonSensex.textContent = sensex.reason;
+}
+
+// Render indicators
+function renderIndicatorsPanel(tc) {
+  const assets = ['NIFTY50', 'BANKNIFTY', 'SENSEX'];
+  let cardsHtml = '';
+
+  assets.forEach(asset => {
+    const ind = getLiveIndicators(asset, tc.dateStr + asset);
+    const scoreColor = ind.confluenceScore >= 60 ? '#10b981' : ind.confluenceScore <= 35 ? '#ef4444' : '#f59e0b';
+    const rsiColor = ind.rsiSignal === 'OVERBOUGHT' ? '#ef4444' : ind.rsiSignal === 'OVERSOLD' ? '#10b981' : '#f59e0b';
+
+    cardsHtml += `
+      <div class="indicator-asset-card">
+        <div class="ind-asset-header">
+          <span class="ind-asset-name">${asset === 'NIFTY50' ? 'NIFTY 50' : asset === 'BANKNIFTY' ? 'BANK NIFTY' : 'SENSEX'}</span>
+          <span class="ind-signal-badge ${ind.signal.toLowerCase()}">
+            ${ind.signal === 'BUY' ? TREND_UP_TINY : ind.signal === 'SELL' ? TREND_DOWN_TINY : '⚡'} ${ind.signal}
+          </span>
+        </div>
+
+        <div class="confluence-display">
+          <div class="confluence-score-circle" style="border-color: ${scoreColor};">
+            <span class="confluence-big-num" style="color: ${scoreColor};">${ind.confluenceScore}</span>
+            <span class="confluence-sub-label">/ 100</span>
+          </div>
+          <div class="confluence-progress-track">
+            <div class="confluence-progress-fill" style="width: ${ind.confluenceScore}%; background-color: ${scoreColor};"></div>
+          </div>
+          <span class="confluence-grade" style="color: ${scoreColor};">
+            ${ind.confluenceScore >= 60 ? '🟢 Strong Buy Zone' : ind.confluenceScore <= 35 ? '🔴 Sell Pressure' : '🟡 Watch & Wait'}
+          </span>
+        </div>
+
+        <div class="ind-rows">
+          <div class="ind-row">
+            <span class="ind-row-label">RSI (14)</span>
+            <div class="ind-row-right">
+              <div class="rsi-bar-track">
+                <div class="rsi-bar-fill" style="width: ${ind.rsi}%; background-color: ${rsiColor};"></div>
+              </div>
+              <span class="ind-row-val" style="color: ${rsiColor};">${ind.rsi}</span>
+            </div>
+          </div>
+          <div class="ind-row">
+            <span class="ind-row-label">EMA Cross (9/21)</span>
+            <span class="ind-tag ${ind.emaCross === 'BULLISH' ? 'bullish' : 'bearish'}">
+              ${ind.emaCross === 'BULLISH' ? '↑ Bullish Cross' : '↓ Bearish Cross'}
+            </span>
+          </div>
+          <div class="ind-row">
+            <span class="ind-row-label">MACD</span>
+            <span class="ind-tag ${ind.macdDir === 'BULLISH' ? 'bullish' : 'bearish'}">
+              ${ind.macdDir === 'BULLISH' ? '↑ Above Signal' : '↓ Below Signal'}
+            </span>
+          </div>
+          <div class="ind-row">
+            <span class="ind-row-label">Bollinger Band</span>
+            <span class="ind-tag ${ind.bbPos === 'BELOW_LOWER' ? 'bullish' : ind.bbPos === 'ABOVE_UPPER' ? 'bearish' : 'neutral'}">
+              ${ind.bbPos === 'ABOVE_UPPER' ? '⚠ Above Upper' : ind.bbPos === 'BELOW_LOWER' ? '🎯 Below Lower' : '— Middle Zone'}
+            </span>
+          </div>
+        </div>
       </div>
     `;
-    messagesContainer.appendChild(row);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    return row;
+  });
+
+  indicatorsPanel.innerHTML = `
+    <div class="indicators-panel-header">
+      <div>
+        <span class="indicators-panel-tag">⚡ LIVE TECHNICAL ANALYSIS</span>
+        <h2 class="indicators-panel-title">AI Confluence Indicator Engine</h2>
+      </div>
+      <div class="indicators-panel-refresh">
+        <span class="pulse-dot"></span>
+        <span>Auto-refreshes every 60s</span>
+      </div>
+    </div>
+    <div class="indicators-grid">${cardsHtml}</div>
+  `;
+}
+
+// Render smart signals bar
+function renderSignalsBar(tc) {
+  const pcr = parseFloat((0.65 + seedRandom(tc.dateStr + '-pcr') * 0.95).toFixed(2));
+  const vix = parseFloat((10.5 + seedRandom(tc.dateStr + '-vix') * 17).toFixed(2));
+  const maxPainNifty = Math.round(prices.NIFTY50.current / 50) * 50;
+  const maxPainBankNifty = Math.round(prices.BANKNIFTY.current / 100) * 100;
+  
+  const pcrSignal = pcr > 1.2 ? 'BULLISH' : pcr < 0.8 ? 'BEARISH' : 'NEUTRAL';
+  const vixLevel = vix < 14 ? 'LOW' : vix < 20 ? 'MODERATE' : 'HIGH';
+
+  signalsBar.innerHTML = `
+    <div class="signal-item">
+      <span class="signal-label">📊 Put-Call Ratio</span>
+      <span class="signal-value pcr-${pcrSignal.toLowerCase()}">${pcr}</span>
+      <span class="signal-tag ${pcrSignal.toLowerCase()}">
+        ${pcrSignal === 'BULLISH' ? '🟢 Bullish' : pcrSignal === 'BEARISH' ? '🔴 Bearish' : '🟡 Neutral'}
+      </span>
+    </div>
+    <div class="signal-divider"></div>
+    <div class="signal-item">
+      <span class="signal-label">📈 India VIX</span>
+      <span class="signal-value vix-${vixLevel.toLowerCase()}">${vix}</span>
+      <span class="signal-tag ${vixLevel === 'LOW' ? 'bullish' : vixLevel === 'HIGH' ? 'bearish' : 'neutral'}">
+        ${vixLevel === 'LOW' ? '✅ Low Risk' : vixLevel === 'HIGH' ? '⚠ High Risk' : '⚡ Moderate'}
+      </span>
+    </div>
+    <div class="signal-divider"></div>
+    <div class="signal-item">
+      <span class="signal-label">⚡ Max Pain — Nifty</span>
+      <span class="signal-value neutral">₹${maxPainNifty.toLocaleString('en-IN')}</span>
+      <span class="signal-tag neutral">Weekly Expiry Level</span>
+    </div>
+    <div class="signal-divider"></div>
+    <div class="signal-item">
+      <span class="signal-label">⚡ Max Pain — BankNifty</span>
+      <span class="signal-value neutral">₹${maxPainBankNifty.toLocaleString('en-IN')}</span>
+      <span class="signal-tag neutral">Weekly Expiry Level</span>
+    </div>
+  `;
+}
+
+// Render active scanning or closed terminal
+function renderIntradayDesk(tc, status) {
+  if (status === 'WEEKEND_CLOSED') {
+    tradingMainDesk.innerHTML = `
+      <section class="market-closed-block">
+        <div class="closed-icon-box">🔒</div>
+        <h3 class="closed-title">Market is Closed for the Weekend</h3>
+        <p class="closed-desc">
+          Weekly scans operate Monday to Friday. High-confluence AI trades will unlock starting at 11:00 AM IST on Monday. Set a Simulated Time in settings to test the dashboard live.
+        </p>
+      </section>
+    `;
+    return;
+  }
+  if (status === 'CLOSED_BEFORE_OPEN') {
+    tradingMainDesk.innerHTML = `
+      <section class="market-closed-block">
+        <div class="closed-icon-box">⏳</div>
+        <h3 class="closed-title">Market Opens Soon</h3>
+        <p class="closed-desc">
+          Regular pre-market scan begins at 09:00 AM IST. Our AI models will scan indices for 2 hours and publish high-surety trade plans at 11:00 AM and 01:00 PM.
+        </p>
+      </section>
+    `;
+    return;
+  }
+  if (status === 'CLOSED_AFTER_CLOSE') {
+    tradingMainDesk.innerHTML = `
+      <section class="market-closed-block">
+        <div class="closed-icon-box" style="background: rgba(16, 185, 129, 0.08); color: #10b981;">✅</div>
+        <h3 class="closed-title">Market is Closed for Today</h3>
+        <p class="closed-desc">
+          Intraday trading desk is closed. Re-scanning will start at 09:00 AM IST tomorrow. Check out settings simulator to review the afternoon trades.
+        </p>
+      </section>
+    `;
+    return;
   }
 
-  function handleChatbotReply(userInput) {
-    const indicator = showTypingIndicator();
-    const query = userInput.toLowerCase().trim();
-
-    setTimeout(() => {
-      // Remove typing indicator
-      indicator.remove();
-
-      let reply = "";
-      
-      // 1. Check intent for showing categories (Agentic control)
-      if (query.includes('ladies') || query.includes('women') || query.includes('female') || query.includes('girl')) {
-        reply = "Ji bilkul! Maine catalog ko **Ladies** section par filter kar diya hai. Aap elegant dresses, fancy tops, and jeans screen par dekh sakte hain! 👗";
-        triggerCategoryChange('ladies');
-      } 
-      else if (query.includes('men') || query.includes('male') || query.includes('boy') || query.includes('gent')) {
-        reply = "Sure! Maine **Men's** collection load kar di hai. Screen par aapko cool shirts, jogger pants, and jackets mil jayenge. 👔";
-        triggerCategoryChange('men');
-      } 
-      else if (query.includes('kids') || query.includes('child') || query.includes('toy')) {
-        reply = "Done! **Kids** section open ho gaya hai. Yahan cute kapde aur toys dono hain! 🧸 Aap screen par browse kar sakte hain.";
-        triggerCategoryChange('kids');
-      } 
-      else if (query.includes('beauty') || query.includes('makeup') || query.includes('lipstick') || query.includes('brush') || query.includes('kajal') || query.includes('liner') || query.includes('mascara') || query.includes('facewash') || query.includes('blush')) {
-        reply = "Yes! **Beauty** cosmetics load ho chuke hain. 💄 Branded lipsticks, facewash, makeup kits, blush, and liners ab screen par hain.";
-        triggerCategoryChange('beauty');
-      } 
-      else if (query.includes('sport') || query.includes('gym') || query.includes('activewear') || query.includes('racket') || query.includes('yoga') || query.includes('equipment')) {
-        reply = "Opening **Sports**! 👟 Men & Women dono ke liye activewear aur high-quality sports equipment (jaise tennis racket aur yoga mats) screen par visible hain.";
-        triggerCategoryChange('sport');
-      } 
-      else if (query.includes('sale') || query.includes('discount') || query.includes('offer') || query.includes('promo')) {
-        reply = "Lijiye, **Season Sale** active ho gayi hai! 🏷️ Maine discounted items screen par load kar diye hain. Aap up to 30% save kar sakte hain!";
-        triggerCategoryChange('sale');
-      } 
-      else if (query.includes('show all') || query.includes('all products') || query.includes('view all') || query.includes('reset') || query.includes('sab') || query.includes('poora')) {
-        reply = "Saare filters reset kar diye hain! Ab aap **Threadzy** ki poori boutique collection (all 30 premium designs) screen par dekh sakte hain. 🌟";
-        resetAllFilters();
-      }
-      
-      // 2. Check intent for Cart control
-      else if (query.includes('view cart') || query.includes('show cart') || query.includes('my cart') || query.includes('bag') || query.includes('checkout')) {
-        if (cart.length === 0) {
-          reply = "Aapka shopping bag abhi empty hai! Kuch cool items add kijiye pehle. Aap mujhe **Best Sellers** dikhane ke liye keh sakte hain!";
-        } else {
-          const itemsList = cart.map(item => `- ${item.name} (${item.size}, ${item.color}) x${item.quantity}`).join('\n');
-          reply = `Aapke shopping bag me ye items hain:\n${itemsList}\n\nKya aap checkout karna chahte hain? Click kijiye: [Proceed to Checkout](checkout) 🛒`;
-        }
-        toggleCartDrawer(true);
-      }
-      else if (query.includes('add') && (query.includes('cart') || query.includes('bag'))) {
-        // Try to find a matching product from visible ones
-        let match = null;
-        
-        // Check if there is an ID specified (e.g. "product 5" or "id 5" or "item 5")
-        const idMatch = query.match(/(?:id|product|item)\s*(\d+)/i);
-        if (idMatch) {
-          const id = parseInt(idMatch[1]);
-          match = PRODUCTS.find(p => p.id === id);
-        } else {
-          // Find first product whose name is a substring of query
-          match = PRODUCTS.find(p => query.includes(p.name.toLowerCase()));
-          if (!match) {
-            // Find by keywords in product name
-            const keywords = query.replace('add', '').replace('to', '').replace('cart', '').replace('bag', '').split(' ');
-            match = PRODUCTS.find(p => keywords.some(k => k.length > 3 && p.name.toLowerCase().includes(k)));
-          }
-        }
-
-        if (match) {
-          const size = match.sizes.includes('M') ? 'M' : match.sizes[0];
-          const color = match.colors[0];
-          addToCart(match, size, color);
-          reply = `Awesome choice! Maine **${match.name}** (Size: ${size}, Color: ${color}) aapke shopping bag me add kar diya hai! 🛒`;
-        } else {
-          // If no product is matched, offer to add a recommended popular item
-          const rec = PRODUCTS[0]; // Ribbed Top
-          reply = `Mujhe woh product nahi mila. Kya main humare best-selling **${rec.name}** ko aapke cart me add ko doon? [Haan, add kar do!](add_rec)`;
-        }
-      }
-      
-      // 3. FAQs & General knowledge
-      else if (query.includes('shipping') || query.includes('delivery')) {
-        reply = "Threadzy par ₹1999 se upar ke orders par **Free Delivery** milti hai! Usse kam ke orders par shipping ₹149 hai. Delivery me **3 to 5 business days** lagte hain. 🚚";
-      }
-      else if (query.includes('return') || query.includes('exchange')) {
-        reply = "Humari **15-day easy return policy** hai! Tags attached hone chahiye aur product unused hona chahiye. Returns ekdum free hain! 🔄";
-      }
-      else if (query.includes('size') || query.includes('sizing') || query.includes('fit')) {
-        reply = "Humare sizes **XS se XXL** tak aate hain. Fits me *Slim Fit* (fitted), *Regular Fit* (standard), aur *Oversized* (loose/boxy, perfect for streetwear) options hain. Aapka standard size kya hai? 📏";
-      }
-      else if (query.includes('coupon') || query.includes('code') || query.includes('discount') || query.includes('promo')) {
-        reply = "Aapke liye ek special coupon code hai! Checkout par **ASHWINI15** coupon code use kijiye aur paiye flat **15% OFF**! 🎫";
-      }
-      else if (query.includes('best seller') || query.includes('popular') || query.includes('trend')) {
-        reply = "Humare top trending items ye hain:\n1. **Ribbed One-Shoulder Drape Top** (Ladies)\n2. **Chanel Matte Lip Crayon** (Beauty)\n3. **Wilson Professional Tennis Racket** (Sport)\n4. **Oversized Graphic Tees** (Men)\n\nAap inme se kya explore karna chahenge? 🌟";
-      }
-      else if (query.includes('hello') || query.includes('hi') || query.includes('hey') || query.includes('help') || query.includes('hola') || query.includes('namaste')) {
-        reply = "Hello! 😊 Main Ashwini hoon. Main aapke liye products filter kar sakti hoon, sizes check kar sakti hoon, discount coupon de sakti hoon, ya product ko cart me add kar sakti hoon. Aap aaj kya dhoondh rahe hain?";
-      }
-      else {
-        reply = "Mujhe thoda samajh nahi aaya, par main seekh rahi hoon! 🧠 Aap mujhse *'Ladies section dikhao'*, *'Beauty products dikhao'*, *'Cart dikhao'* ya *'Shipping rules kya hain'* pooch sakte hain!";
-      }
-
-      appendAgentMessage(reply);
-    }, 800 + Math.random() * 600); // Realistic simulated typing speed
+  // Active / Timed trade desk
+  let progress = 100;
+  if (status === 'SCANNING_ACTIVE') {
+    const elapsed = (tc.hour - 9) * 60 + tc.minute;
+    progress = Math.min(Math.round((elapsed / 120) * 100), 100);
   }
 
-  function triggerCategoryChange(category) {
-    const link = document.querySelector(`.nav-link[data-category="${category}"], .mobile-link[data-category="${category}"]`);
-    if (link) {
-      link.click();
-    } else if (category === 'sale') {
-      const saleLink = document.querySelector(`.nav-link[data-category="sale"], .mobile-link[data-category="sale"]`);
-      if (saleLink) saleLink.click();
+  let logsHtml = '';
+  if (progress >= 5) logsHtml += `<div class="log-line"><span class="log-time">[09:05]</span> Initializing WholeUp AI Intraday Confluence scan... Booting algorithms.</div>`;
+  if (progress >= 15) logsHtml += `<div class="log-line"><span class="log-time">[09:15]</span> Pre-market indices orders matched. IT heavyweights showing positive order imbalance.</div>`;
+  if (progress >= 30) logsHtml += `<div class="log-line"><span class="log-time">[09:35]</span> Calculating put-call ratio (PCR) limits. Critical index resistance structures identified.</div>`;
+  if (progress >= 45) logsHtml += `<div class="log-line"><span class="log-time">[10:00]</span> Institutional FII block trade structures evaluated. Futures long-short ratio rising.</div>`;
+  if (progress >= 65) logsHtml += `<div class="log-line"><span class="log-time">[10:20]</span> Technicals scan complete: RSI and Bollinger Bands confluences checked across Nifty stocks.</div>`;
+  if (progress >= 80) logsHtml += `<div class="log-line"><span class="log-time">[10:40]</span> Evaluating news catalyst trends. Sentiment score: +3.8 (Extremely positive/bullish).</div>`;
+  if (progress >= 95) logsHtml += `<div class="log-line"><span class="log-time">[10:55]</span> Final surety check complete. High-confidence trade targets and Stop Loss limits finalized.</div>`;
+
+  // Render Trades
+  const is11amUnlocked = status === 'TRADE_11AM_UNLOCKED' || status === 'ALL_TRADES_UNLOCKED';
+  const is1pmUnlocked = status === 'ALL_TRADES_UNLOCKED';
+
+  const t11 = getTrade(
+    outlook.NIFTY50.trend === 'BULLISH' ? 'NIFTY50' : 'SENSEX',
+    outlook.NIFTY50.trend === 'BULLISH',
+    tc.dateStr + '-11am'
+  );
+  
+  const t1 = getTrade(
+    'BANKNIFTY',
+    outlook.BANKNIFTY.trend === 'BULLISH',
+    tc.dateStr + '-1pm'
+  );
+
+  let p11Html = '';
+  if (is11amUnlocked) {
+    const pnl = calculateTradePnL(t11, prices[t11.asset]?.current);
+    p11Html = `
+      <div class="pnl-ticker-box ${pnl.diff >= 0 ? 'profit' : 'loss'}">
+        <span class="pnl-ticker-label">Running P&L</span>
+        <span class="pnl-ticker-value">${pnl.diff >= 0 ? '+' : ''}${pnl.diff.toLocaleString('en-IN')} pts (${pnl.diff >= 0 ? '+' : ''}${pnl.percent}%)</span>
+        <div class="pnl-ticker-status">${pnl.message}</div>
+      </div>
+    `;
+  }
+
+  let p1Html = '';
+  if (is1pmUnlocked) {
+    const pnl = calculateTradePnL(t1, prices[t1.asset]?.current);
+    p1Html = `
+      <div class="pnl-ticker-box ${pnl.diff >= 0 ? 'profit' : 'loss'}">
+        <span class="pnl-ticker-label">Running P&L</span>
+        <span class="pnl-ticker-value">${pnl.diff >= 0 ? '+' : ''}${pnl.diff.toLocaleString('en-IN')} pts (${pnl.diff >= 0 ? '+' : ''}${pnl.percent}%)</span>
+        <div class="pnl-ticker-status">${pnl.message}</div>
+      </div>
+    `;
+  }
+
+  tradingMainDesk.innerHTML = `
+    <section class="scanning-card">
+      <div class="scanning-header-row">
+        <h3 class="scanning-title">AI Confluence Scan</h3>
+        <span class="scanning-status-badge">${status === 'SCANNING_ACTIVE' ? 'Active Scan' : 'Idle Standby'}</span>
+      </div>
+      <div class="progress-container">
+        <div class="progress-labels-row">
+          <span>Progress</span>
+          <span>${progress}%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: ${progress}%;"></div>
+        </div>
+      </div>
+      <div class="scanning-logs-terminal">${logsHtml || '<div class="log-line" style="color:#71717a;">[09:00] Waiting for ticker feed activation...</div>'}</div>
+    </section>
+
+    <div class="trades-grid">
+      <!-- 11:00 AM Card -->
+      ${!is11amUnlocked ? `
+        <div class="trade-card locked">
+          <div class="lock-overlay">
+            <div class="lock-icon-circle">🔒</div>
+            <span class="lock-title">11:00 AM Surety Trade</span>
+            <span class="lock-desc">Unlocks at 11:00 AM IST</span>
+          </div>
+        </div>
+      ` : `
+        <div class="trade-card unlocked">
+          <div class="trade-card-header">
+            <span class="trade-time-tag">11:00 AM SURE TRADE</span>
+            <span class="confidence-badge">CONFIDENCE: ${t11.confidence}%</span>
+          </div>
+          <div class="trade-asset-name">
+            ${t11.asset}
+            <span class="trade-action-badge ${t11.action.toLowerCase()}">${t11.action}</span>
+          </div>
+          ${p11Html}
+          <div class="trade-levels-box">
+            <div class="trade-level-field"><span class="trade-level-label">Entry Price</span><span class="trade-level-value">₹${t11.entry.toLocaleString('en-IN')}</span></div>
+            <div class="trade-level-field"><span class="trade-level-label">Stop Loss</span><span class="trade-level-value" style="color:#ef4444;">₹${t11.stopLoss.toLocaleString('en-IN')}</span></div>
+            <div class="trade-level-field"><span class="trade-level-label">Target 1</span><span class="trade-level-value" style="color:#10b981;">₹${t11.target1.toLocaleString('en-IN')}</span></div>
+            <div class="trade-level-field"><span class="trade-level-label">Target 2</span><span class="trade-level-value" style="color:#10b981;">₹${t11.target2.toLocaleString('en-IN')}</span></div>
+          </div>
+          <div class="atr-badge">⚡ Volatility ATR Stop Loss (Smart Limits)</div>
+          <div style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary); border-left:3px solid #f59e0b; padding-left:0.75rem; margin-top: 0.5rem;">
+            <strong>Surety Reason: </strong>${t11.reason}
+          </div>
+        </div>
+      `}
+
+      <!-- 01:00 PM Card -->
+      ${!is1pmUnlocked ? `
+        <div class="trade-card locked">
+          <div class="lock-overlay">
+            <div class="lock-icon-circle">🔒</div>
+            <span class="lock-title">01:00 PM Surety Trade</span>
+            <span class="lock-desc">Unlocks at 01:00 PM IST</span>
+          </div>
+        </div>
+      ` : `
+        <div class="trade-card unlocked">
+          <div class="trade-card-header">
+            <span class="trade-time-tag">01:00 PM SURE TRADE</span>
+            <span class="confidence-badge">CONFIDENCE: ${t1.confidence}%</span>
+          </div>
+          <div class="trade-asset-name">
+            ${t1.asset}
+            <span class="trade-action-badge ${t1.action.toLowerCase()}">${t1.action}</span>
+          </div>
+          ${p1Html}
+          <div class="trade-levels-box">
+            <div class="trade-level-field"><span class="trade-level-label">Entry Price</span><span class="trade-level-value">₹${t1.entry.toLocaleString('en-IN')}</span></div>
+            <div class="trade-level-field"><span class="trade-level-label">Stop Loss</span><span class="trade-level-value" style="color:#ef4444;">₹${t1.stopLoss.toLocaleString('en-IN')}</span></div>
+            <div class="trade-level-field"><span class="trade-level-label">Target 1</span><span class="trade-level-value" style="color:#10b981;">₹${t1.target1.toLocaleString('en-IN')}</span></div>
+            <div class="trade-level-field"><span class="trade-level-label">Target 2</span><span class="trade-level-value" style="color:#10b981;">₹${t1.target2.toLocaleString('en-IN')}</span></div>
+          </div>
+          <div class="atr-badge">⚡ Volatility ATR Stop Loss (Smart Limits)</div>
+          <div style="font-size:0.8rem; line-height:1.45; color:var(--text-secondary); border-left:3px solid #f59e0b; padding-left:0.75rem; margin-top: 0.5rem;">
+            <strong>Surety Reason: </strong>${t1.reason}
+          </div>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+// Render FII / DII Flow section
+function renderFIIDIIFlow(tc) {
+  const fiiNet = parseFloat(((seedRandom(tc.dateStr + '-fii') - 0.43) * 6500).toFixed(0));
+  const diiNet = parseFloat(((0.12 + seedRandom(tc.dateStr + '-dii') * 0.75) * 3200).toFixed(0));
+  const bias = (fiiNet + diiNet) > 0 ? 'NET_BUY' : 'NET_SELL';
+
+  fiiDiiSidebar.innerHTML = `
+    <h4 class="section-title-small">🏦 Institutional Flow (FII / DII)</h4>
+    <div class="fii-row">
+      <span class="fii-entity">FII Net</span>
+      <div class="fii-right">
+        <span class="fii-amount ${fiiNet >= 0 ? 'positive' : 'negative'}">${fiiNet >= 0 ? '+' : ''}₹${Math.abs(fiiNet).toLocaleString('en-IN')} Cr</span>
+        <span class="fii-direction ${fiiNet >= 0 ? 'buy' : 'sell'}">${fiiNet >= 0 ? '↑ BUY' : '↓ SELL'}</span>
+      </div>
+    </div>
+    <div class="fii-row">
+      <span class="fii-entity">DII Net</span>
+      <div class="fii-right">
+        <span class="fii-amount ${diiNet >= 0 ? 'positive' : 'negative'}">${diiNet >= 0 ? '+' : ''}₹${Math.abs(diiNet).toLocaleString('en-IN')} Cr</span>
+        <span class="fii-direction ${diiNet >= 0 ? 'buy' : 'sell'}">${diiNet >= 0 ? '↑ BUY' : '↓ SELL'}</span>
+      </div>
+    </div>
+    <div class="inst-bias-badge ${bias === 'NET_BUY' ? 'bullish' : 'bearish'}">
+      🏦 Institutions are ${bias === 'NET_BUY' ? 'NET BUYING' : 'NET SELLING'} today
+    </div>
+  `;
+}
+
+// Position Size Calculator calculation
+function renderPositionCalculator() {
+  const cap = parseFloat(capital) || 500000;
+  const risk = parseFloat(riskPercent) || 1;
+  const maxRisk = cap * risk / 100;
+
+  const tc = getTimeContext();
+  const t11 = getTrade(
+    outlook.NIFTY50.trend === 'BULLISH' ? 'NIFTY50' : 'SENSEX',
+    outlook.NIFTY50.trend === 'BULLISH',
+    tc.dateStr + '-11am'
+  );
+  const t1 = getTrade('BANKNIFTY', outlook.BANKNIFTY.trend === 'BULLISH', tc.dateStr + '-1pm');
+
+  const nSL = Math.abs(prices.NIFTY50.current - t11.stopLoss);
+  const bSL = Math.abs(prices.BANKNIFTY.current - t1.stopLoss);
+
+  const niftyLots = Math.max(0, Math.floor(maxRisk / (nSL * 75)));
+  const bankNiftyLots = Math.max(0, Math.floor(maxRisk / (bSL * 30)));
+
+  posCalcResults.innerHTML = `
+    <div class="pos-result-row">
+      <span class="pos-result-label">Max Risk Amount</span>
+      <span class="pos-result-val risk-amt">₹${maxRisk.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+    </div>
+    <div class="pos-result-row">
+      <span class="pos-result-label">Nifty 50 Lots</span>
+      <span class="pos-result-val">${niftyLots} lots <span class="pos-units">(${niftyLots * 75} units)</span></span>
+    </div>
+    <div class="pos-result-row">
+      <span class="pos-result-label">BankNifty Lots</span>
+      <span class="pos-result-val">${bankNiftyLots} lots <span class="pos-units">(${bankNiftyLots * 30} units)</span></span>
+    </div>
+  `;
+}
+
+// Render performance ledger
+function renderDailyJournal(tc) {
+  const reports = getHistoricalReports(tc.dateStr);
+  
+  // Calculations
+  let totalPts = 0;
+  let totalWins = 0;
+  let totalTrades = 0;
+
+  reports.forEach(r => {
+    totalPts += r.netPoints;
+    if (r.trade11am.win) totalWins++;
+    if (r.trade1pm.win) totalWins++;
+    totalTrades += 2;
+  });
+
+  const cumulativeWinRate = totalTrades > 0 ? Math.round((totalWins / totalTrades) * 100) : 80;
+
+  journalStatsHeader.innerHTML = `
+    <div class="stat-pill">
+      <span class="stat-pill-label">Total Points</span>
+      <span class="stat-pill-val positive">${totalPts >= 0 ? '+' : ''}${totalPts} pts</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-label">Ledger Win Rate</span>
+      <span class="stat-pill-val win-rate">${cumulativeWinRate}%</span>
+    </div>
+  `;
+
+  let rowsHtml = '';
+  reports.forEach(r => {
+    rowsHtml += `
+      <tr class="today-trade-row">
+        <td class="journal-date-cell">${r.dateLabel}</td>
+        <td>
+          <div class="mini-trade-info">
+            <div class="mini-trade-row">
+              <span class="mini-asset">${r.trade11am.asset}</span>
+              <span class="mini-action ${r.trade11am.action.toLowerCase()}">${r.trade11am.action}</span>
+            </div>
+            <span class="mini-result">${r.trade11am.result}</span>
+            <span class="mini-points ${r.trade11am.win ? 'positive' : 'negative'}">
+              ${r.trade11am.win ? '+' : ''}${r.trade11am.points} pts
+            </span>
+          </div>
+        </td>
+        <td>
+          <div class="mini-trade-info">
+            <div class="mini-trade-row">
+              <span class="mini-asset">${r.trade1pm.asset}</span>
+              <span class="mini-action ${r.trade1pm.action.toLowerCase()}">${r.trade1pm.action}</span>
+            </div>
+            <span class="mini-result">${r.trade1pm.result}</span>
+            <span class="mini-points ${r.trade1pm.win ? 'positive' : 'negative'}">
+              ${r.trade1pm.win ? '+' : ''}${r.trade1pm.points} pts
+            </span>
+          </div>
+        </td>
+        <td class="total-points-cell ${r.netPoints >= 0 ? 'positive' : 'negative'}">
+          ${r.netPoints >= 0 ? '+' : ''}${r.netPoints} pts
+        </td>
+        <td>
+          <span class="rate-badge ${r.winRate === '100%' ? 'high' : 'low'}">${r.winRate} Win</span>
+        </td>
+      </tr>
+    `;
+  });
+
+  journalTableBody.innerHTML = rowsHtml;
+}
+
+// Tick live pricing simulation
+function startTicking() {
+  setInterval(() => {
+    const status = getMarketStatus();
+    if (status === 'WEEKEND_CLOSED' || status === 'CLOSED_BEFORE_OPEN' || status === 'CLOSED_AFTER_CLOSE') {
+      return; // Stop simulation on closed hours
     }
+
+    Object.keys(prices).forEach(key => {
+      const isBull = outlook[key]?.trend === 'BULLISH';
+      const directionBias = isBull ? 0.00015 : -0.00015;
+      const tick = (Math.random() - 0.49 + directionBias) * (prices[key].current * 0.0004);
+      
+      prices[key].current = parseFloat((prices[key].current + tick).toFixed(2));
+      prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
+    });
+    updateTickerUI();
+
+    // Re-render intraday panel and position sizing dynamically to track live price
+    const tc = getTimeContext();
+    renderIntradayDesk(tc, status);
+    renderPositionCalculator();
+  }, 3000);
+}
+
+function updateTickerUI() {
+  priceNifty.textContent = `₹${prices.NIFTY50.current.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+  changeNifty.textContent = `(${prices.NIFTY50.change >= 0 ? '+' : ''}${prices.NIFTY50.change}%)`;
+  changeNifty.className = `price-percent ${prices.NIFTY50.change >= 0 ? 'positive' : 'negative'}`;
+
+  priceBanknifty.textContent = `₹${prices.BANKNIFTY.current.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+  changeBanknifty.textContent = `(${prices.BANKNIFTY.change >= 0 ? '+' : ''}${prices.BANKNIFTY.change}%)`;
+  changeBanknifty.className = `price-percent ${prices.BANKNIFTY.change >= 0 ? 'positive' : 'negative'}`;
+
+  priceSensex.textContent = `₹${prices.SENSEX.current.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+  changeSensex.textContent = `(${prices.SENSEX.change >= 0 ? '+' : ''}${prices.SENSEX.change}%)`;
+  changeSensex.className = `price-percent ${prices.SENSEX.change >= 0 ? 'positive' : 'negative'}`;
+}
+
+// Direct fetch trigger
+async function handleMarketScan() {
+  if (loading) return;
+  
+  loading = true;
+  scanTriggerBtn.disabled = true;
+  scanBtnText.textContent = 'Scanning Trends...';
+  scanRefreshIcon.classList.add('spin');
+
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  if (!apiKey) {
+    // Generate fallback randomized but realistic data
+    const isBullNifty = Math.random() > 0.45;
+    const isBullBank = Math.random() > 0.5;
+    const isBullSensex = Math.random() > 0.45;
+
+    const NiftyReasonsBullish = [
+      "Volume structure on IT index confirms a major breakout. Key heavyweight stocks defending daily SMA supports.",
+      "Derivatives long position addition, positive global sentiment and index heavyweight buying push targets higher.",
+      "Support levels defended by domestic institutional buyers. IT heavyweights showing positive structure."
+    ];
+    const NiftyReasonsBearish = [
+      "US inflation and global bond yields rising put heavy pressure on indices. Key support lines broken.",
+      "FII selling continuous chal rahi hai aur indices key support areas break karke downward trend bana rahe hain.",
+      "Profit booking in key heavyweights. Global markets correction and short setups active."
+    ];
+
+    const BankReasonsBullish = [
+      "HDFC Bank aur ICICI Bank results strong hain aur momentum upar targets break karne ko ready hai.",
+      "Private banks supporting index continuation trend. Heavy derivatives open interest building up.",
+      "Double bottom breakout on daily charts for financial sectors, targets are set for targets high."
+    ];
+    const BankReasonsBearish = [
+      "RBI guidelines tightening has put extreme pressure on margins. Institutional shorts building up.",
+      "Key private banks leading the breakdown. High volume selling targets next support areas.",
+      "Asset quality concerns and continuous FII unwinding in financial heavyweights triggers downward bias."
+    ];
+
+    const SensexReasonsBullish = [
+      "Large-caps showing support buying. Key technical targets locked as global index trades high.",
+      "Positive global sentiment, domestic mutual fund inflows confirm strong bullish index continuation.",
+      "IT and energy sectors supporting index structure. Targets set for continuation breakout."
+    ];
+    const SensexReasonsBearish = [
+      "Geopolitical tensions and global index corrections triggering selling pressure on heavy weights.",
+      "Selloff in industrial and manufacturing heavyweights targets lower support levels. Downside confirmed.",
+      "Derivatives long unwinding, institutional selling pressure remains active across large cap stocks."
+    ];
+
+    const tc = getTimeContext();
+    const seed = tc.dateStr;
+
+    outlook = {
+      NIFTY50: {
+        trend: isBullNifty ? 'BULLISH' : 'BEARISH',
+        reason: isBullNifty ? selectRandom(NiftyReasonsBullish, seed + '-n') : selectRandom(NiftyReasonsBearish, seed + '-n')
+      },
+      BANKNIFTY: {
+        trend: isBullBank ? 'BULLISH' : 'BEARISH',
+        reason: isBullBank ? selectRandom(BankReasonsBullish, seed + '-b') : selectRandom(BankReasonsBearish, seed + '-b')
+      },
+      SENSEX: {
+        trend: isBullSensex ? 'BULLISH' : 'BEARISH',
+        reason: isBullSensex ? selectRandom(SensexReasonsBullish, seed + '-s') : selectRandom(SensexReasonsBearish, seed + '-s')
+      }
+    };
+
+    localStorage.setItem('market_outlook_cache', JSON.stringify(outlook));
+    renderAllComponents();
+    loading = false;
+    scanTriggerBtn.disabled = false;
+    scanBtnText.textContent = 'Scan Market Trends (AI)';
+    scanRefreshIcon.classList.remove('spin');
+    return;
   }
 
-  function handleLinkAction(action) {
-    if (action === 'checkout') {
-      const checkoutBtn = document.getElementById('checkout-btn');
-      if (checkoutBtn) checkoutBtn.click();
-    } else if (action === 'add_rec') {
-      const rec = PRODUCTS[0];
-      const size = rec.sizes.includes('M') ? 'M' : rec.sizes[0];
-      const color = rec.colors[0];
-      addToCart(rec, size, color);
-      appendAgentMessage(`Added **${rec.name}** to your cart! 🛍️`);
-    }
+  try {
+    const prompt = `You are an elite Indian stock market quant and analyst.
+Analyze the current sentiment and overall directional bias for the following three Indian stock market indices:
+1. NIFTY 50
+2. BANK NIFTY (Nifty Bank)
+3. BSE SENSEX
+
+For each index, determine if the directional bias is BULLISH or BEARISH (use "BEARISH" for bearish/down outlook).
+Provide a brief 1-2 sentence technical/fundamental explanation in simple Hinglish (Hindi + English mix, exactly like: "Global markets positive hain isliye Nifty 50 key resistance break karke bullish trend dikha raha hai").
+
+You must return the response strictly in JSON format with the following schema:
+{
+  "NIFTY50": {
+    "trend": "BULLISH" | "BEARISH",
+    "reason": "your Hinglish reason here"
+  },
+  "BANKNIFTY": {
+    "trend": "BULLISH" | "BEARISH",
+    "reason": "your Hinglish reason here"
+  },
+  "SENSEX": {
+    "trend": "BULLISH" | "BEARISH",
+    "reason": "your Hinglish reason here"
   }
 }
 
-document.addEventListener('DOMContentLoaded', init);
+Do not include any markdown format wrapper (like \`\`\`json) in your response, return just the plain JSON string.`;
 
-if (document.readyState === 'interactive' || document.readyState === 'complete') {
-  init();
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: "application/json" }
+      })
+    });
+
+    if (!response.ok) throw new Error(`API fetch failed with status ${response.status}`);
+
+    const data = await response.json();
+    const text = data.candidates[0].content.parts[0].text;
+    const cleanJson = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    const result = JSON.parse(cleanJson);
+
+    if (result && result.NIFTY50 && result.BANKNIFTY && result.SENSEX) {
+      outlook = result;
+      localStorage.setItem('market_outlook_cache', JSON.stringify(result));
+      renderAllComponents();
+    }
+  } catch (error) {
+    console.error('Gemini direct fetch error:', error);
+  } finally {
+    loading = false;
+    scanTriggerBtn.disabled = false;
+    scanBtnText.textContent = 'Scan Market Trends (AI)';
+    scanRefreshIcon.classList.remove('spin');
+  }
 }
+
+// Start Engine
+init();
