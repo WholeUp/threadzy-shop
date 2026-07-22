@@ -203,20 +203,6 @@ function init() {
   selectCardBanknifty.addEventListener('click', () => switchAsset('BANKNIFTY'));
   selectCardSensex.addEventListener('click', () => switchAsset('SENSEX'));
 
-  document.getElementById('engine-tv-btn')?.addEventListener('click', () => {
-    chartEngineMode = 'tradingview';
-    document.getElementById('engine-tv-btn')?.classList.add('active');
-    document.getElementById('engine-canvas-btn')?.classList.remove('active');
-    initTradingViewWidget();
-  });
-
-  document.getElementById('engine-canvas-btn')?.addEventListener('click', () => {
-    chartEngineMode = 'canvas';
-    document.getElementById('engine-canvas-btn')?.classList.add('active');
-    document.getElementById('engine-tv-btn')?.classList.remove('active');
-    initTradingViewWidget();
-  });
-
   document.querySelectorAll('.tf-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
@@ -292,45 +278,13 @@ function switchAsset(asset) {
   renderAllComponents();
 }
 
-// CHART ENGINE (TradingView Official Script + Instant GTF Canvas Fallback)
+// GTF PRICE ACTION CANDLESTICK CHART ENGINE
 function initTradingViewWidget() {
   const container = document.getElementById('tradingview_chart_container');
   if (!container) return;
 
-  if (chartEngineMode === 'canvas') {
-    container.innerHTML = `<canvas id="tradingview-chart-canvas" style="width:100%; height:100%; min-height:480px; display:block;"></canvas>`;
-    drawCandlestickCanvasChart();
-    return;
-  }
-
-  const tvSymbol = selectedAsset === 'NIFTY50' ? 'NSE:NIFTY' : selectedAsset === 'BANKNIFTY' ? 'NSE:BANKNIFTY' : 'BSE:SENSEX';
-  const tfVal = selectedTF === '1' ? '1' : selectedTF === '5' ? '5' : selectedTF === '15' ? '15' : selectedTF === '60' ? '60' : 'D';
-
-  container.innerHTML = `
-    <div class="tradingview-widget-container" style="height:100%;width:100%">
-      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-    </div>
-  `;
-
-  const script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-  script.async = true;
-  script.innerHTML = JSON.stringify({
-    "autosize": true,
-    "symbol": tvSymbol,
-    "interval": tfVal,
-    "timezone": "Asia/Kolkata",
-    "theme": "dark",
-    "style": "1",
-    "locale": "en",
-    "allow_symbol_change": true,
-    "calendar": false,
-    "support_host": "https://www.tradingview.com"
-  });
-
-  const widgetBox = container.querySelector('.tradingview-widget-container__widget');
-  if (widgetBox) widgetBox.appendChild(script);
+  container.innerHTML = `<canvas id="tradingview-chart-canvas" style="width:100%; height:100%; min-height:480px; display:block;"></canvas>`;
+  drawCandlestickCanvasChart();
 }
 
 function drawCandlestickCanvasChart() {
