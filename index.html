@@ -4,236 +4,299 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WholeUp Market Outlook AI</title>
+    <title>WholeUp QuantTerminal Pro | Nifty, BankNifty & Sensex AI Trading Suite</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <div class="main-wrapper">
+      
+      <!-- Top Live Market Ticker Marquee -->
+      <div class="top-ticker-bar">
+        <div class="ticker-track" id="ticker-marquee">
+          <!-- Dynamically populated live market marquee -->
+        </div>
+      </div>
+
       <div class="container">
         
-        <!-- Simulation Banner -->
+        <!-- Simulation Mode Banner -->
         <div id="simulation-banner" class="simulation-banner hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem; color: #f59e0b;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           <span id="simulation-banner-text">Time Simulation active: <strong>WEEKEND</strong>. Switch back to Real-Time in settings.</span>
         </div>
 
         <!-- Header -->
         <header class="header-glass">
           <div class="header-brand">
-            <div class="brand-icon">
-              <!-- SVG Sparkles Icon -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            <div class="brand-icon-glow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             </div>
             <div>
-              <h1 class="brand-title">WholeUp <span class="accent-text">Market Outlook AI</span></h1>
-              <p class="brand-tagline">Simplistic Index Sentiment Scanner</p>
+              <h1 class="brand-title">WholeUp <span class="accent-glow">QuantTerminal Pro</span></h1>
+              <p class="brand-tagline">AI Price Action & Demand-Supply Trading Suite</p>
             </div>
           </div>
 
           <div class="header-controls">
             <div class="status-indicator">
-              <span class="pulse-dot"></span>
-              <span id="api-status-text">MOCK FALLBACK ACTIVE</span>
+              <span class="pulse-dot green"></span>
+              <span id="api-status-text">GEMINI AI ACTIVE</span>
             </div>
 
-            <!-- Theme Toggle -->
-            <button class="btn btn-secondary icon-only-btn" id="theme-toggle-btn" title="Toggle Theme">
-              <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-              <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-            </button>
+            <!-- Time Clock -->
+            <div class="time-clock-box" id="ist-time-clock">
+              09:15:00 IST
+            </div>
 
             <!-- Settings -->
             <button class="btn btn-secondary icon-only-btn" id="settings-toggle-btn" title="Configure Gemini AI">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </button>
           </div>
         </header>
 
-        <!-- Main Cards Grid -->
-        <main class="cards-grid">
+        <!-- Top Index Selector Overview Bar (3-Column Sleek Cards) -->
+        <section class="index-summary-grid">
+          <!-- NIFTY 50 -->
+          <div class="index-card active" id="select-card-nifty">
+            <div class="index-card-head">
+              <span class="index-name">NIFTY 50</span>
+              <span class="index-tag">NSE BENCHMARK</span>
+            </div>
+            <div class="index-price-row">
+              <span class="index-price-big" id="price-nifty">₹24,350.80</span>
+              <span class="index-change-badge positive" id="change-nifty">+0.28%</span>
+            </div>
+            <div class="index-card-footer">
+              <span class="index-bias bullish" id="bias-nifty">🟢 BULLISH</span>
+              <span class="index-zone-tag" id="zone-nifty">Demand Zone Active</span>
+            </div>
+          </div>
+
+          <!-- BANK NIFTY -->
+          <div class="index-card" id="select-card-banknifty">
+            <div class="index-card-head">
+              <span class="index-name">BANK NIFTY</span>
+              <span class="index-tag">NIFTY BANK</span>
+            </div>
+            <div class="index-price-row">
+              <span class="index-price-big" id="price-banknifty">₹52,300.20</span>
+              <span class="index-change-badge negative" id="change-banknifty">-0.42%</span>
+            </div>
+            <div class="index-card-footer">
+              <span class="index-bias bearish" id="bias-banknifty">🔴 BEARISH</span>
+              <span class="index-zone-tag" id="zone-banknifty">Supply Pressure</span>
+            </div>
+          </div>
+
+          <!-- SENSEX -->
+          <div class="index-card" id="select-card-sensex">
+            <div class="index-card-head">
+              <span class="index-name">SENSEX</span>
+              <span class="index-tag">BSE INDEX</span>
+            </div>
+            <div class="index-price-row">
+              <span class="index-price-big" id="price-sensex">₹79,800.50</span>
+              <span class="index-change-badge positive" id="change-sensex">+0.19%</span>
+            </div>
+            <div class="index-card-footer">
+              <span class="index-bias bullish" id="bias-sensex">🟢 BULLISH</span>
+              <span class="index-zone-tag" id="zone-sensex">Demand Zone Active</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Main Trading Terminal Container (Chart + Right Terminal Side) -->
+        <div class="terminal-layout">
           
-          <!-- Nifty 50 Card -->
-          <section id="card-nifty" class="outlook-card bullish">
-            <div class="card-header">
-              <div>
-                <h2 class="card-title">NIFTY 50</h2>
-                <p class="card-subtitle">NSE Benchmark Index</p>
+          <!-- Left: TradingView-Style Interactive Chart & Demand-Supply Canvas -->
+          <div class="terminal-main-chart">
+            
+            <div class="chart-top-toolbar">
+              <div class="chart-title-area">
+                <span class="chart-active-symbol" id="chart-symbol-name">NIFTY 50 INDEX</span>
+                <span class="chart-time-badge" id="chart-tf-label">15M TIMEFRAME</span>
               </div>
-              <span class="card-badge">INDEX</span>
-            </div>
 
-            <!-- Price -->
-            <div class="ticker-price-container">
-              <span class="ticker-label">Live Price</span>
-              <span class="ticker-value">
-                <span id="price-nifty">₹24,350.80</span>
-                <span id="change-nifty" class="price-percent positive">(+0.28%)</span>
-              </span>
-            </div>
-
-            <!-- Outlook -->
-            <div class="status-section">
-              <span class="status-label">Outlook Direction</span>
-              <div id="badge-nifty" class="status-badge bullish">
-                <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m19 12-7-7-7 7"/><path d="M12 5v14"/></svg>
-                <span id="text-nifty">Bullish / Market Up</span>
+              <!-- Timeframe Selector Tabs -->
+              <div class="tf-tabs">
+                <button class="tf-btn" data-tf="1m">1M</button>
+                <button class="tf-btn" data-tf="5m">5M</button>
+                <button class="tf-btn active" data-tf="15m">15M</button>
+                <button class="tf-btn" data-tf="1h">1H</button>
+                <button class="tf-btn" data-tf="1d">1D</button>
               </div>
             </div>
 
-            <!-- Catalyst Reason -->
-            <div class="reason-section">
-              <span class="reason-label">Catalyst Reason</span>
-              <p id="reason-nifty" class="reason-content">Global cues positive hain aur IT sector mein heavy weighting breakout ke liye ready hai.</p>
-            </div>
-          </section>
-
-          <!-- Bank Nifty Card -->
-          <section id="card-banknifty" class="outlook-card bearish">
-            <div class="card-header">
-              <div>
-                <h2 class="card-title">BANK NIFTY</h2>
-                <p class="card-subtitle">Nifty Bank Index</p>
-              </div>
-              <span class="card-badge">SECTOR</span>
-            </div>
-
-            <!-- Price -->
-            <div class="ticker-price-container">
-              <span class="ticker-label">Live Price</span>
-              <span class="ticker-value">
-                <span id="price-banknifty">₹52,300.20</span>
-                <span id="change-banknifty" class="price-percent negative">(-0.42%)</span>
-              </span>
-            </div>
-
-            <!-- Outlook -->
-            <div class="status-section">
-              <span class="status-label">Outlook Direction</span>
-              <div id="badge-banknifty" class="status-badge bearish">
-                <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
-                <span id="text-banknifty">Bearish / Down</span>
-              </div>
-            </div>
-
-            <!-- Catalyst Reason -->
-            <div class="reason-section">
-              <span class="reason-label">Catalyst Reason</span>
-              <p id="reason-banknifty" class="reason-content">RBI ke credit regulations and margin pressures ki wajah se private banks support tod rahe hain.</p>
-            </div>
-          </section>
-
-          <!-- Sensex Card -->
-          <section id="card-sensex" class="outlook-card bullish">
-            <div class="card-header">
-              <div>
-                <h2 class="card-title">SENSEX</h2>
-                <p class="card-subtitle">BSE Benchmark Index</p>
-              </div>
-              <span class="card-badge">INDEX</span>
-            </div>
-
-            <!-- Price -->
-            <div class="ticker-price-container">
-              <span class="ticker-label">Live Price</span>
-              <span class="ticker-value">
-                <span id="price-sensex">₹79,800.50</span>
-                <span id="change-sensex" class="price-percent positive">(+0.19%)</span>
-              </span>
-            </div>
-
-            <!-- Outlook -->
-            <div class="status-section">
-              <span class="status-label">Outlook Direction</span>
-              <div id="badge-sensex" class="status-badge bullish">
-                <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m19 12-7-7-7 7"/><path d="M12 5v14"/></svg>
-                <span id="text-sensex">Bullish / Market Up</span>
-              </div>
-            </div>
-
-            <!-- Catalyst Reason -->
-            <div class="reason-section">
-              <span class="reason-label">Catalyst Reason</span>
-              <p id="reason-sensex" class="reason-content">Large-cap stocks low level par buying support dikha rahe hain aur global markets overall positive chal rahe hain.</p>
-            </div>
-          </section>
-
-        </main>
-
-        <!-- Market Indicators Panel -->
-        <section id="indicators-panel" class="indicators-panel">
-          <!-- Rendered dynamically -->
-        </section>
-
-        <!-- Demand & Supply Zone Visualizer (GTF Price Action Engine) -->
-        <section id="demand-supply-panel" class="demand-supply-panel">
-          <!-- Rendered dynamically -->
-        </section>
-
-        <!-- Smart Signals Bar -->
-        <div id="signals-bar" class="signals-bar">
-          <!-- Rendered dynamically -->
-        </div>
-
-        <!-- Intraday Desk Section -->
-        <div class="desk-title-section">
-          <span class="desk-tagline">Intraday Trading Terminal</span>
-          <h2 class="desk-title">WholeUp AI Confluence Desk</h2>
-        </div>
-
-        <div class="trading-dashboard-layout">
-          <!-- Left: Main Desk -->
-          <div class="trading-main-desk" id="trading-main-desk">
-            <!-- Will render closed states or active scans and trade cards -->
-          </div>
-
-          <!-- Right: Sidebar -->
-          <div class="trading-sidebar">
-            <!-- FII/DII flow -->
-            <div class="sidebar-section fii-dii-section" id="fii-dii-sidebar-section">
-              <!-- Rendered dynamically -->
-            </div>
-
-            <!-- Position Calculator -->
-            <div class="sidebar-section pos-calc-section">
-              <h4 class="section-title-small">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 0.3rem;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Position Size Calculator
-              </h4>
-              <div class="pos-inputs">
-                <div class="pos-input-row">
-                  <label class="pos-label">Your Capital</label>
-                  <div class="pos-input-wrap">
-                    <span class="pos-prefix">₹</span>
-                    <input type="number" class="pos-input" id="capital-input" value="500000" placeholder="500000" />
-                  </div>
+            <!-- HTML5 Candlestick Chart Engine Canvas -->
+            <div class="chart-canvas-wrapper">
+              <canvas id="tradingview-chart-canvas"></canvas>
+              
+              <!-- Floating Chart Legend / Overlay -->
+              <div class="chart-overlay-info">
+                <div class="overlay-row">
+                  <span class="overlay-lbl">GTF Demand Zone:</span>
+                  <span class="overlay-val green" id="chart-overlay-demand">₹24,280 - ₹24,310</span>
                 </div>
-                <div class="pos-input-row">
-                  <label class="pos-label">Risk Per Trade</label>
-                  <div class="pos-input-wrap">
-                    <input type="number" class="pos-input" id="risk-percent-input" value="1" placeholder="1" step="0.1" />
-                    <span class="pos-suffix">%</span>
-                  </div>
+                <div class="overlay-row">
+                  <span class="overlay-lbl">GTF Supply Zone:</span>
+                  <span class="overlay-val red" id="chart-overlay-supply">₹24,450 - ₹24,480</span>
                 </div>
               </div>
-              <div class="pos-results" id="pos-calc-results">
-                <!-- Calculated dynamically -->
+            </div>
+
+            <!-- AI Reason Breakdown Box -->
+            <div class="ai-catalyst-card">
+              <div class="ai-card-head">
+                <span class="ai-card-tag">⚡ GEMINI AI MARKET CATALYST & REASONING</span>
+                <span class="ai-model-tag">Model: Gemini 2.5 Flash</span>
+              </div>
+              <p class="ai-card-content" id="selected-asset-reason">
+                Global cues positive hain aur IT sector ke heavyweights (TCS, Infosys) key resistance breakouts ki taraf badh rahe hain. Nifty 50 Demand Zone (24,280) ko strongly defend kar raha hai.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Right: Pro Quant Panel (Indicators, Option Chain, Risk Calculator) -->
+          <div class="terminal-sidebar">
+            
+            <!-- Confluence Score Dial -->
+            <div class="sidebar-block confluence-block">
+              <div class="block-title-row">
+                <span class="block-title">AI CONFLUENCE METER</span>
+                <span class="block-tag" id="confluence-signal-tag">BUY SIGNAL</span>
+              </div>
+
+              <div class="dial-container">
+                <div class="score-number-big" id="confluence-big-score">82</div>
+                <div class="score-subtext">/ 100 CONFLUENCE SCORE</div>
+                <div class="score-bar">
+                  <div class="score-fill" id="confluence-bar-fill" style="width: 82%;"></div>
+                </div>
+              </div>
+
+              <!-- Indicator Mini Grid -->
+              <div class="ind-mini-list">
+                <div class="ind-item">
+                  <span class="ind-name">RSI (14)</span>
+                  <span class="ind-val" id="ind-rsi-val">58.4 (Bullish)</span>
+                </div>
+                <div class="ind-item">
+                  <span class="ind-name">EMA Cross (9/21)</span>
+                  <span class="ind-val green" id="ind-ema-val">Bullish Cross</span>
+                </div>
+                <div class="ind-item">
+                  <span class="ind-name">MACD Histogram</span>
+                  <span class="ind-val green" id="ind-macd-val">+14.2 Above Signal</span>
+                </div>
+                <div class="ind-item">
+                  <span class="ind-name">Bollinger Band</span>
+                  <span class="ind-val" id="ind-bb-val">Upper Band Expansion</span>
+                </div>
               </div>
             </div>
+
+            <!-- Option Chain & Volatility Block -->
+            <div class="sidebar-block option-chain-block">
+              <span class="block-title">OPTION CHAIN & VOLATILITY</span>
+              <div class="option-grid">
+                <div class="opt-card">
+                  <span class="opt-lbl">Put-Call Ratio (PCR)</span>
+                  <span class="opt-val green" id="pcr-val">1.18</span>
+                  <span class="opt-sub">Bullish Unwinding</span>
+                </div>
+                <div class="opt-card">
+                  <span class="opt-lbl">India VIX</span>
+                  <span class="opt-val" id="vix-val">12.8</span>
+                  <span class="opt-sub green">Low Volatility Risk</span>
+                </div>
+                <div class="opt-card">
+                  <span class="opt-lbl">Nifty Max Pain</span>
+                  <span class="opt-val" id="maxpain-nifty">₹24,350</span>
+                  <span class="opt-sub">Weekly Expiry</span>
+                </div>
+                <div class="opt-card">
+                  <span class="opt-lbl">BankNifty Max Pain</span>
+                  <span class="opt-val" id="maxpain-bank">₹52,300</span>
+                  <span class="opt-sub">Weekly Expiry</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Position Size & Stop-Loss Calculator -->
+            <div class="sidebar-block risk-calc-block">
+              <span class="block-title">RISK & POSITION SIZE CALCULATOR</span>
+              
+              <div class="calc-inputs-grid">
+                <div class="calc-field">
+                  <label class="calc-lbl">Trading Capital (₹)</label>
+                  <input type="number" class="calc-input" id="capital-input" value="500000" />
+                </div>
+                <div class="calc-field">
+                  <label class="calc-lbl">Risk Per Trade (%)</label>
+                  <input type="number" class="calc-input" id="risk-percent-input" value="1.0" step="0.5" />
+                </div>
+              </div>
+
+              <div class="calc-results-box" id="pos-calc-results">
+                <!-- Dynamically populated position limits -->
+              </div>
+            </div>
+
           </div>
+
         </div>
 
-        <!-- Daily Report Journal -->
+        <!-- Demand & Supply Zone Matrix (GTF Price Action Engine) -->
+        <section class="ds-matrix-section">
+          <div class="ds-section-header">
+            <div>
+              <span class="ds-section-tag">🎯 PRICE ACTION ENGINE</span>
+              <h2 class="ds-section-title">GTF Demand & Supply Zone Matrix</h2>
+            </div>
+            <span class="ds-section-subtitle">Real-time Base Candle & Proximal/Distal Line Tracking</span>
+          </div>
+
+          <div class="ds-cards-wrapper" id="demand-supply-cards-wrapper">
+            <!-- Dynamically populated DS Cards -->
+          </div>
+        </section>
+
+        <!-- Intraday AI Signal Terminal & Surety Trades Desk -->
+        <section class="trading-terminal-desk">
+          <div class="desk-header">
+            <div>
+              <span class="desk-tag">⚡ INTRADAY EXECUTION DESK</span>
+              <h2 class="desk-title">High-Surety AI Trades & Live Progress</h2>
+            </div>
+          </div>
+
+          <div class="desk-grid">
+            <!-- Left: Live Scanner Progress & Terminal Output -->
+            <div class="scanner-progress-card" id="trading-main-desk">
+              <!-- Dynamically populated scanner logs & trade cards -->
+            </div>
+
+            <!-- Right: FII / DII Institutional Flow -->
+            <div class="fii-dii-card" id="fii-dii-sidebar-section">
+              <!-- Dynamically populated FII/DII flow -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Daily Performance Ledger & Journal -->
         <section class="journal-section">
           <div class="journal-header-row">
             <div>
-              <span class="journal-tagline">Performance Ledger</span>
-              <h3 class="journal-title">Daily Report Journal</h3>
+              <span class="journal-tagline">PERFORMANCE LEDGER</span>
+              <h3 class="journal-title">Daily Trades Report Journal</h3>
             </div>
             <div class="journal-stats" id="journal-stats-header">
-              <!-- Dynamically populated -->
+              <!-- Dynamically populated stats -->
             </div>
           </div>
 
@@ -242,23 +305,23 @@
               <thead>
                 <tr>
                   <th>Date & Day</th>
-                  <th>11:00 AM Scan</th>
-                  <th>01:00 PM Scan</th>
+                  <th>11:00 AM Scan Trade</th>
+                  <th>01:00 PM Scan Trade</th>
                   <th>Total Points</th>
                   <th>Daily Win Rate</th>
                 </tr>
               </thead>
               <tbody id="journal-table-body">
-                <!-- Dynamically populated -->
+                <!-- Dynamically populated ledger -->
               </tbody>
             </table>
           </div>
         </section>
 
-        <!-- Scan Button -->
-        <button class="scan-btn" id="scan-trigger-btn">
-          <svg id="scan-refresh-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M16 3h5v5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 21H3v-5"/></svg>
-          <span id="scan-btn-text">Scan Market Trends (AI)</span>
+        <!-- Floating AI Scan Button -->
+        <button class="floating-scan-btn" id="scan-trigger-btn">
+          <svg id="scan-refresh-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M16 3h5v5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 21H3v-5"/></svg>
+          <span id="scan-btn-text">SCAN MARKET TRENDS (GEMINI AI)</span>
         </button>
 
       </div>
@@ -267,17 +330,17 @@
     <!-- Settings Modal -->
     <div class="modal-overlay hidden" id="settings-modal-overlay">
       <div class="modal-content">
-        <h3 class="modal-title">Gemini AI Settings</h3>
+        <h3 class="modal-title">Gemini AI Engine Settings</h3>
         <p class="modal-description">
-          Enter your Gemini API key below to query real-time market outlook trends and get dynamic catalyst reasoning. If left empty, local algorithms will dynamically mock the trends.
+          Enter your Gemini API key below to query live market trends and get dynamic catalyst reasoning. If left empty, local quant models will dynamically mock the trends.
         </p>
 
         <div class="input-group">
           <label class="input-label">Gemini API Key</label>
           <input type="password" class="input-field" id="api-key-input" placeholder="Enter key starting with AIza...">
           <span class="input-help-text">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            Stored securely in local browser storage.
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            Saved securely in local browser storage.
           </span>
         </div>
 
