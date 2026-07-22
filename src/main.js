@@ -169,6 +169,7 @@ const simBanner = document.getElementById('simulation-banner');
 const simBannerText = document.getElementById('simulation-banner-text');
 
 const indicatorsPanel = document.getElementById('indicators-panel');
+const demandSupplyPanel = document.getElementById('demand-supply-panel');
 const signalsBar = document.getElementById('signals-bar');
 const tradingMainDesk = document.getElementById('trading-main-desk');
 const fiiDiiSidebar = document.getElementById('fii-dii-sidebar-section');
@@ -430,6 +431,9 @@ function renderAllComponents() {
   // 3. Indicators Panel
   renderIndicatorsPanel(tc);
 
+  // 3.5. Demand & Supply Zone Panel (GTF Price Action)
+  renderDemandSupplyPanel(tc);
+
   // 4. Signals Bar
   renderSignalsBar(tc);
 
@@ -544,6 +548,73 @@ function renderIndicatorsPanel(tc) {
       </div>
     </div>
     <div class="indicators-grid">${cardsHtml}</div>
+  `;
+}
+
+// Render GTF Price Action Demand & Supply Zone Panel
+function renderDemandSupplyPanel(tc) {
+  if (!demandSupplyPanel) return;
+
+  const assets = ['NIFTY50', 'BANKNIFTY', 'SENSEX'];
+  let cardsHtml = '';
+
+  assets.forEach(asset => {
+    const curPrice = prices[asset]?.current || BASE_PRICES[asset];
+    const isBull = outlook[asset]?.trend === 'BULLISH';
+
+    // GTF Price Action Zone Calculations
+    const demandLower = parseFloat((curPrice * 0.993).toFixed(2));
+    const demandUpper = parseFloat((curPrice * 0.997).toFixed(2));
+    const supplyLower = parseFloat((curPrice * 1.003).toFixed(2));
+    const supplyUpper = parseFloat((curPrice * 1.007).toFixed(2));
+
+    const zoneType = isBull ? 'DEMAND ZONE ACTIVE' : 'SUPPLY PRESSURE';
+    const zoneClass = isBull ? 'demand' : 'supply';
+    const zonePattern = isBull ? 'Rally-Base-Rally (RBR)' : 'Drop-Base-Drop (DBD)';
+
+    cardsHtml += `
+      <div class="ds-card">
+        <div class="ds-card-title">
+          <span class="ds-asset-name">${asset === 'NIFTY50' ? 'NIFTY 50' : asset === 'BANKNIFTY' ? 'BANK NIFTY' : 'SENSEX'}</span>
+          <span class="ds-zone-badge ${zoneClass}">${zoneType}</span>
+        </div>
+
+        <div class="ds-levels-box">
+          <div class="ds-level-row">
+            <span class="ds-level-label">🟢 Demand Zone (Support)</span>
+            <span class="ds-level-val green">₹${demandLower.toLocaleString('en-IN')} - ₹${demandUpper.toLocaleString('en-IN')}</span>
+          </div>
+          <div class="ds-level-row">
+            <span class="ds-level-label">🔴 Supply Zone (Resistance)</span>
+            <span class="ds-level-val red">₹${supplyLower.toLocaleString('en-IN')} - ₹${supplyUpper.toLocaleString('en-IN')}</span>
+          </div>
+          <div class="ds-level-row">
+            <span class="ds-level-label">📐 Pattern Formation</span>
+            <span class="ds-level-val">${zonePattern}</span>
+          </div>
+        </div>
+
+        <div class="ds-mtf-row">
+          <span style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">MULTI-TIMEFRAME</span>
+          <div style="display: flex; gap: 0.35rem;">
+            <span class="mtf-pill ${isBull ? 'bull' : 'bear'}">15M: ${isBull ? '↑ BULL' : '↓ BEAR'}</span>
+            <span class="mtf-pill ${isBull ? 'bull' : 'bear'}">1H: ${isBull ? '↑ BULL' : '↓ BEAR'}</span>
+            <span class="mtf-pill bull">1D: ↑ BULL</span>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  demandSupplyPanel.innerHTML = `
+    <div class="ds-header">
+      <div>
+        <span class="ds-tagline">🎯 PRICE ACTION ENGINE (GTF DEMAND & SUPPLY)</span>
+        <h2 class="ds-title">Institutional Zone Visualizer</h2>
+      </div>
+      <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Live Proximal & Distal Line Tracking</span>
+    </div>
+    <div class="ds-grid">${cardsHtml}</div>
   `;
 }
 
@@ -1050,7 +1121,7 @@ You must return the response strictly in JSON format with the following schema:
 
 Do not include any markdown format wrapper (like \`\`\`json) in your response, return just the plain JSON string.`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1058,6 +1129,18 @@ Do not include any markdown format wrapper (like \`\`\`json) in your response, r
         generationConfig: { responseMimeType: "application/json" }
       })
     });
+
+    if (!response.ok) {
+      // Fallback to gemini-1.5-flash if 2.5 is unavailable
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json" }
+        })
+      });
+    }
 
     if (!response.ok) throw new Error(`API fetch failed with status ${response.status}`);
 

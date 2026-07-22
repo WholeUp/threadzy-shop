@@ -1282,3 +1282,115 @@ html:not(.dark) .scanning-logs-terminal {
 html:not(.dark) .log-line { color: #374151; }
 html:not(.dark) .log-time { color: #6b7280; }
 
+/* Demand & Supply Zone Panel (GTF Price Action Engine) */
+.demand-supply-panel {
+  background: rgba(15, 15, 20, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  margin-top: 1rem;
+}
+.ds-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.ds-tagline {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f59e0b;
+}
+.ds-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.ds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+.ds-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.ds-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+.ds-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ds-asset-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+.ds-zone-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.ds-zone-badge.demand { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.ds-zone-badge.supply { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+.ds-levels-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem;
+}
+.ds-level-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+.ds-level-label { color: var(--text-muted); font-weight: 600; }
+.ds-level-val { font-weight: 800; color: var(--text-primary); }
+.ds-level-val.green { color: #10b981; }
+.ds-level-val.red { color: #ef4444; }
+.ds-mtf-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.4rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+.mtf-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+}
+.mtf-pill.bull { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.mtf-pill.bear { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+html:not(.dark) .demand-supply-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+html:not(.dark) .ds-card {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
