@@ -9,9 +9,11 @@ const BASE_PRICES = {
 
 // Global State
 let selectedAsset = 'NIFTY50';
-let selectedTF = '15m';
+let selectedTF = '15'; // TradingView interval 1, 5, 15, 60, D
 let simTimeMode = localStorage.getItem('sim_time_mode') || 'real';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
+let telegramToken = localStorage.getItem('telegram_token') || '';
+let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
 
 let outlook = JSON.parse(localStorage.getItem('market_outlook_cache')) || {
@@ -25,6 +27,10 @@ let prices = {
   BANKNIFTY: { current: BASE_PRICES.BANKNIFTY, change: -0.42 },
   SENSEX: { current: BASE_PRICES.SENSEX, change: 0.19 }
 };
+
+// FEATURE 3: Virtual Paper Trading State
+let paperWallet = parseFloat(localStorage.getItem('paper_wallet')) || 100000;
+let paperActiveTrade = JSON.parse(localStorage.getItem('paper_active_trade')) || null;
 
 let capital = localStorage.getItem('capital') || '500000';
 let riskPercent = localStorage.getItem('risk_percent') || '1.0';
@@ -59,7 +65,6 @@ function getISTContext() {
   return { day, hour, minute, second, dateStr, timeFormatted };
 }
 
-// Check Real Stock Market Trading Hours (NSE/BSE: Mon-Fri 09:15 to 15:30 IST)
 function getMarketStatus(ist) {
   if (simTimeMode !== 'real') {
     if (simTimeMode === 'weekend') return { isOpen: false, reason: 'WEEKEND_CLOSED', label: 'MARKET CLOSED (WEEKEND)' };
@@ -67,7 +72,7 @@ function getMarketStatus(ist) {
     return { isOpen: true, reason: 'SIMULATED_OPEN', label: 'SIMULATED MARKET OPEN' };
   }
 
-  const day = ist.day; // 0 = Sun, 6 = Sat
+  const day = ist.day;
   const hour = ist.hour;
   const minute = ist.minute;
 
@@ -76,8 +81,8 @@ function getMarketStatus(ist) {
   }
 
   const timeInMinutes = hour * 60 + minute;
-  const openTimeInMinutes = 9 * 60 + 15;  // 09:15 AM IST
-  const closeTimeInMinutes = 15 * 60 + 30; // 03:30 PM IST
+  const openTimeInMinutes = 9 * 60 + 15;  // 09:15 AM
+  const closeTimeInMinutes = 15 * 60 + 30; // 03:30 PM
 
   if (timeInMinutes < openTimeInMinutes) {
     return { isOpen: false, reason: 'PRE_MARKET_CLOSED', label: 'PRE-MARKET (OPENS 09:15 AM)' };
@@ -98,10 +103,30 @@ function seedRandom(str) {
   return ((t ^ t >>> 14) >>> 0) / 4294967296;
 }
 
+// FEATURE 2: Voice Alert Helper
+function speakVoiceAlert(text) {
+  if (audioMuted) return;
+  try {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+  } catch (e) {
+    console.error('Audio alert error:', e);
+  }
+}
+
 // DOM Elements
 const tickerMarquee = document.getElementById('ticker-marquee');
 const apiStatusText = document.getElementById('api-status-text');
 const istTimeClock = document.getElementById('ist-time-clock');
+
+const audioToggleBtn = document.getElementById('audio-toggle-btn');
+const audioIcon = document.getElementById('audio-icon');
+const audioStatusText = document.getElementById('audio-status-text');
 
 const selectCardNifty = document.getElementById('select-card-nifty');
 const selectCardBanknifty = document.getElementById('select-card-banknifty');
@@ -109,10 +134,25 @@ const selectCardSensex = document.getElementById('select-card-sensex');
 
 const chartSymbolName = document.getElementById('chart-symbol-name');
 const chartTfLabel = document.getElementById('chart-tf-label');
-const chartCanvas = document.getElementById('tradingview-chart-canvas');
-const chartOverlayDemand = document.getElementById('chart-overlay-demand');
-const chartOverlaySupply = document.getElementById('chart-overlay-supply');
 const selectedAssetReason = document.getElementById('selected-asset-reason');
+
+const optionAtmTag = document.getElementById('option-atm-tag');
+const ceStrikeName = document.getElementById('ce-strike-name');
+const cePremiumVal = document.getElementById('ce-premium-val');
+const ceSlVal = document.getElementById('ce-sl-val');
+const ceTgtVal = document.getElementById('ce-tgt-val');
+
+const peStrikeName = document.getElementById('pe-strike-name');
+const pePremiumVal = document.getElementById('pe-premium-val');
+const peSlVal = document.getElementById('pe-sl-val');
+const peTgtVal = document.getElementById('pe-tgt-val');
+
+const paperWalletBal = document.getElementById('paper-wallet-bal');
+const paperBuyCeBtn = document.getElementById('paper-buy-ce-btn');
+const paperBuyPeBtn = document.getElementById('paper-buy-pe-btn');
+const paperActivePosBox = document.getElementById('paper-active-pos-box');
+const paperCeSub = document.getElementById('paper-ce-sub');
+const paperPeSub = document.getElementById('paper-pe-sub');
 
 const confluenceBigScore = document.getElementById('confluence-big-score');
 const confluenceBarFill = document.getElementById('confluence-bar-fill');
@@ -123,15 +163,7 @@ const indEmaVal = document.getElementById('ind-ema-val');
 const indMacdVal = document.getElementById('ind-macd-val');
 const indBbVal = document.getElementById('ind-bb-val');
 
-const pcrVal = document.getElementById('pcr-val');
-const vixVal = document.getElementById('vix-val');
-const maxpainNifty = document.getElementById('maxpain-nifty');
-const maxpainBank = document.getElementById('maxpain-bank');
-
-const capitalInput = document.getElementById('capital-input');
-const riskPercentInput = document.getElementById('risk-percent-input');
-const posCalcResults = document.getElementById('pos-calc-results');
-
+const sectorGridWrapper = document.getElementById('sector-grid-wrapper');
 const demandSupplyCardsWrapper = document.getElementById('demand-supply-cards-wrapper');
 const tradingMainDesk = document.getElementById('trading-main-desk');
 const fiiDiiSidebarSection = document.getElementById('fii-dii-sidebar-section');
@@ -146,6 +178,7 @@ const scanRefreshIcon = document.getElementById('scan-refresh-icon');
 const settingsToggleBtn = document.getElementById('settings-toggle-btn');
 const settingsModalOverlay = document.getElementById('settings-modal-overlay');
 const apiKeyInput = document.getElementById('api-key-input');
+const telegramTokenInput = document.getElementById('telegram-token-input');
 const simTimeSelect = document.getElementById('sim-time-select');
 const settingsCancelBtn = document.getElementById('settings-cancel-btn');
 const settingsSaveBtn = document.getElementById('settings-save-btn');
@@ -155,13 +188,16 @@ const simBannerText = document.getElementById('simulation-banner-text');
 
 // Init Engine
 function init() {
+  updateAudioUI();
   updateStatusText();
   renderTickerMarquee();
   renderAllComponents();
+  initTradingViewWidget();
   startClockTicker();
   startPriceTicker();
 
   // Event Handlers
+  audioToggleBtn.addEventListener('click', toggleAudio);
   selectCardNifty.addEventListener('click', () => switchAsset('NIFTY50'));
   selectCardBanknifty.addEventListener('click', () => switchAsset('BANKNIFTY'));
   selectCardSensex.addEventListener('click', () => switchAsset('SENSEX'));
@@ -171,22 +207,36 @@ function init() {
       document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
       selectedTF = e.target.getAttribute('data-tf');
-      chartTfLabel.textContent = `${selectedTF.toUpperCase()} TIMEFRAME`;
-      drawCandlestickChart();
+      initTradingViewWidget();
     });
   });
+
+  paperBuyCeBtn.addEventListener('click', () => executePaperTrade('CE'));
+  paperBuyPeBtn.addEventListener('click', () => executePaperTrade('PE'));
 
   settingsToggleBtn.addEventListener('click', openSettings);
   settingsCancelBtn.addEventListener('click', closeSettings);
   settingsSaveBtn.addEventListener('click', saveSettings);
   scanTriggerBtn.addEventListener('click', handleMarketScan);
+}
 
-  capitalInput.value = capital;
-  riskPercentInput.value = riskPercent;
-  capitalInput.addEventListener('input', handleRiskCalcUpdate);
-  riskPercentInput.addEventListener('input', handleRiskCalcUpdate);
+function updateAudioUI() {
+  if (audioMuted) {
+    audioIcon.textContent = '🔇';
+    audioStatusText.textContent = 'Voice Muted';
+    audioToggleBtn.classList.add('muted');
+  } else {
+    audioIcon.textContent = '🔊';
+    audioStatusText.textContent = 'Voice Alerts ON';
+    audioToggleBtn.classList.remove('muted');
+  }
+}
 
-  window.addEventListener('resize', drawCandlestickChart);
+function toggleAudio() {
+  audioMuted = !audioMuted;
+  localStorage.setItem('audio_muted', audioMuted ? 'true' : 'false');
+  updateAudioUI();
+  if (!audioMuted) speakVoiceAlert("Voice alert system activated.");
 }
 
 function updateStatusText() {
@@ -223,13 +273,38 @@ function switchAsset(asset) {
   if (asset === 'SENSEX') selectCardSensex.classList.add('active');
 
   chartSymbolName.textContent = asset === 'NIFTY50' ? 'NIFTY 50 INDEX' : asset === 'BANKNIFTY' ? 'BANK NIFTY INDEX' : 'SENSEX INDEX';
+  initTradingViewWidget();
   renderAllComponents();
+}
+
+// OFFICIAL TRADINGVIEW WIDGET ENGINE
+function initTradingViewWidget() {
+  const container = document.getElementById('tradingview_chart_container');
+  if (!container) return;
+  container.innerHTML = ''; // reset
+
+  const tvSymbol = selectedAsset === 'NIFTY50' ? 'NSE:NIFTY' : selectedAsset === 'BANKNIFTY' ? 'NSE:BANKNIFTY' : 'BSE:SENSEX';
+
+  if (typeof TradingView !== 'undefined') {
+    new TradingView.widget({
+      "autosize": true,
+      "symbol": tvSymbol,
+      "interval": selectedTF,
+      "timezone": "Asia/Kolkata",
+      "theme": "dark",
+      "style": "1",
+      "locale": "en",
+      "toolbar_bg": "#090c13",
+      "enable_publishing": false,
+      "allow_symbol_change": true,
+      "container_id": "tradingview_chart_container"
+    });
+  }
 }
 
 function renderAllComponents() {
   const ist = getISTContext();
 
-  // Simulation Banner
   if (simTimeMode !== 'real') {
     simBanner.classList.remove('hidden');
     simBannerText.innerHTML = `Simulation Active: <strong>${simTimeMode.toUpperCase()}</strong>. Switch back to Real-Time Clock in settings.`;
@@ -239,11 +314,11 @@ function renderAllComponents() {
 
   updateStatusText();
   renderTickerCards();
-  drawCandlestickChart();
   renderAIReasoning();
+  renderOptionStrikeCalculator(ist);
+  renderPaperTradingUI();
   renderConfluenceMeter(ist);
-  renderOptionChain(ist);
-  renderPositionCalculator();
+  renderSectorHeatmap(ist);
   renderDemandSupplyMatrix();
   renderIntradayDesk(ist);
   renderFIIDIIFlow(ist);
@@ -297,131 +372,103 @@ function renderTickerCards() {
   document.getElementById('bias-sensex').className = `index-bias ${outlook.SENSEX.trend.toLowerCase()}`;
 }
 
-// 2. HTML5 Candlestick Chart Engine
-function drawCandlestickChart() {
-  if (!chartCanvas) return;
-  const ctx = chartCanvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const rect = chartCanvas.getBoundingClientRect();
-
-  chartCanvas.width = rect.width * dpr;
-  chartCanvas.height = rect.height * dpr;
-  ctx.scale(dpr, dpr);
-
-  const width = rect.width;
-  const height = rect.height;
-
-  // Clear
-  ctx.fillStyle = '#090c13';
-  ctx.fillRect(0, 0, width, height);
-
-  // Grid
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-  ctx.lineWidth = 1;
-  for (let x = 0; x < width; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
-  for (let y = 0; y < height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
-
-  const curPrice = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
-  const isBullish = outlook[selectedAsset]?.trend === 'BULLISH';
-
-  const demandLower = parseFloat((curPrice * 0.993).toFixed(2));
-  const demandUpper = parseFloat((curPrice * 0.997).toFixed(2));
-  const supplyLower = parseFloat((curPrice * 1.003).toFixed(2));
-  const supplyUpper = parseFloat((curPrice * 1.007).toFixed(2));
-
-  chartOverlayDemand.textContent = `₹${demandLower.toLocaleString('en-IN')} - ₹${demandUpper.toLocaleString('en-IN')}`;
-  chartOverlaySupply.textContent = `₹${supplyLower.toLocaleString('en-IN')} - ₹${supplyUpper.toLocaleString('en-IN')}`;
-
-  // Demand Box
-  const demandYTop = height * 0.65;
-  const demandYBot = height * 0.85;
-  ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
-  ctx.fillRect(0, demandYTop, width, demandYBot - demandYTop);
-  ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
-  ctx.strokeRect(0, demandYTop, width, demandYBot - demandYTop);
-
-  ctx.fillStyle = '#10b981';
-  ctx.font = '10px JetBrains Mono';
-  ctx.fillText(`GTF DEMAND ZONE (₹${demandLower})`, 15, demandYTop + 14);
-
-  // Supply Box
-  const supplyYTop = height * 0.1;
-  const supplyYBot = height * 0.3;
-  ctx.fillStyle = 'rgba(239, 68, 68, 0.12)';
-  ctx.fillRect(0, supplyYTop, width, supplyYBot - supplyYTop);
-  ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
-  ctx.strokeRect(0, supplyYTop, width, supplyYBot - supplyYTop);
-
-  ctx.fillStyle = '#ef4444';
-  ctx.fillText(`GTF SUPPLY ZONE (₹${supplyUpper})`, 15, supplyYTop + 14);
-
-  // Candlesticks
-  const candleCount = 32;
-  const candleWidth = (width - 60) / candleCount;
-  let price = curPrice * (isBullish ? 0.988 : 1.012);
-
-  const candles = [];
-  for (let i = 0; i < candleCount; i++) {
-    const seed = i + selectedAsset + selectedTF;
-    const change = (seedRandom(seed) - (isBullish ? 0.42 : 0.58)) * (curPrice * 0.003);
-    const open = price;
-    const close = price + change;
-    const high = Math.max(open, close) + seedRandom(seed + '-h') * (curPrice * 0.0015);
-    const low = Math.min(open, close) - seedRandom(seed + '-l') * (curPrice * 0.0015);
-    price = close;
-    candles.push({ open, close, high, low });
-  }
-
-  let minP = Math.min(...candles.map(c => c.low));
-  let maxP = Math.max(...candles.map(c => c.high));
-  const rangeP = maxP - minP || 1;
-
-  candles.forEach((c, idx) => {
-    const x = 30 + idx * candleWidth;
-    const openY = height - 40 - ((c.open - minP) / rangeP) * (height - 80);
-    const closeY = height - 40 - ((c.close - minP) / rangeP) * (height - 80);
-    const highY = height - 40 - ((c.high - minP) / rangeP) * (height - 80);
-    const lowY = height - 40 - ((c.low - minP) / rangeP) * (height - 80);
-
-    const isUp = c.close >= c.open;
-    const color = isUp ? '#10b981' : '#ef4444';
-
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(x + candleWidth / 2, highY);
-    ctx.lineTo(x + candleWidth / 2, lowY);
-    ctx.stroke();
-
-    ctx.fillStyle = color;
-    const bodyTop = Math.min(openY, closeY);
-    const bodyHeight = Math.max(Math.abs(closeY - openY), 2);
-    ctx.fillRect(x + 2, bodyTop, candleWidth - 4, bodyHeight);
-  });
-
-  // OVERLAY IF MARKET IS CLOSED IN REAL-TIME
-  const ist = getISTContext();
-  const mStatus = getMarketStatus(ist);
-
-  if (!mStatus.isOpen) {
-    ctx.fillStyle = 'rgba(5, 7, 12, 0.82)';
-    ctx.fillRect(0, 0, width, height);
-
-    ctx.fillStyle = '#ef4444';
-    ctx.font = 'bold 16px Space Grotesk';
-    ctx.textAlign = 'center';
-    ctx.fillText(`🔒 ${mStatus.label}`, width / 2, height / 2 - 12);
-
-    ctx.fillStyle = '#9ca3af';
-    ctx.font = '12px Plus Jakarta Sans';
-    ctx.fillText('Live NSE/BSE trading resumes tomorrow at 09:15 AM IST', width / 2, height / 2 + 14);
-    ctx.fillText('Configure Simulated Time in Settings to test market hours', width / 2, height / 2 + 34);
-    ctx.textAlign = 'left';
-  }
-}
-
 function renderAIReasoning() {
   selectedAssetReason.textContent = outlook[selectedAsset]?.reason || 'AI analyzing price action...';
+}
+
+// FEATURE 1: Option Strike CE/PE Calculator
+function renderOptionStrikeCalculator(ist) {
+  const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
+  const step = selectedAsset === 'BANKNIFTY' ? 100 : selectedAsset === 'SENSEX' ? 100 : 50;
+  const atmStrike = Math.round(curP / step) * step;
+
+  const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
+  const cePrem = parseFloat((110 + (isBull ? 25 : -15) + seedRandom(ist.dateStr + selectedAsset + 'ce') * 10).toFixed(2));
+  const pePrem = parseFloat((95 + (!isBull ? 25 : -15) + seedRandom(ist.dateStr + selectedAsset + 'pe') * 10).toFixed(2));
+
+  optionAtmTag.textContent = `ATM ${atmStrike}`;
+  ceStrikeName.textContent = `${selectedAsset} ${atmStrike} CE`;
+  cePremiumVal.textContent = `₹${cePrem}`;
+  ceSlVal.textContent = `₹${(cePrem * 0.75).toFixed(1)}`;
+  ceTgtVal.textContent = `₹${(cePrem * 1.45).toFixed(1)}`;
+
+  peStrikeName.textContent = `${selectedAsset} ${atmStrike} PE`;
+  pePremiumVal.textContent = `₹${pePrem}`;
+  peSlVal.textContent = `₹${(pePrem * 0.75).toFixed(1)}`;
+  peTgtVal.textContent = `₹${(pePrem * 1.45).toFixed(1)}`;
+
+  paperCeSub.textContent = `₹${cePrem} Premium`;
+  paperPeSub.textContent = `₹${pePrem} Premium`;
+}
+
+// FEATURE 3: Virtual Paper Trading Engine
+function executePaperTrade(type) {
+  if (paperActiveTrade) {
+    alert("You already have an active paper position! Close it first before opening a new one.");
+    return;
+  }
+
+  const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
+  const step = selectedAsset === 'BANKNIFTY' ? 100 : selectedAsset === 'SENSEX' ? 100 : 50;
+  const atmStrike = Math.round(curP / step) * step;
+  const isCe = type === 'CE';
+  const prem = isCe ? 128.50 : 95.20;
+
+  paperActiveTrade = {
+    asset: selectedAsset,
+    type,
+    strike: atmStrike,
+    entryPrice: prem,
+    indexEntry: curP,
+    time: getISTContext().timeFormatted
+  };
+
+  localStorage.setItem('paper_active_trade', JSON.stringify(paperActiveTrade));
+  speakVoiceAlert(`Virtual paper position executed. Buy ${selectedAsset} ${atmStrike} ${type}`);
+  renderPaperTradingUI();
+}
+
+function closePaperTrade() {
+  if (!paperActiveTrade) return;
+
+  const curP = prices[paperActiveTrade.asset]?.current || BASE_PRICES[paperActiveTrade.asset];
+  const diff = (curP - paperActiveTrade.indexEntry) * (paperActiveTrade.type === 'CE' ? 1 : -1);
+  const pnlRupees = Math.round(diff * 50);
+
+  paperWallet += pnlRupees;
+  localStorage.setItem('paper_wallet', paperWallet.toString());
+  localStorage.removeItem('paper_active_trade');
+
+  speakVoiceAlert(`Virtual trade closed. Result ${pnlRupees >= 0 ? 'profit' : 'loss'} of ${Math.abs(pnlRupees)} rupees.`);
+  paperActiveTrade = null;
+  renderPaperTradingUI();
+}
+
+function renderPaperTradingUI() {
+  paperWalletBal.textContent = `₹${Math.round(paperWallet).toLocaleString('en-IN')}`;
+
+  if (!paperActiveTrade) {
+    paperActivePosBox.innerHTML = `<span style="color:var(--text-muted); font-size:0.72rem;">No active paper positions. Click BUY CALL or BUY PUT to execute virtual trade.</span>`;
+    return;
+  }
+
+  const curP = prices[paperActiveTrade.asset]?.current || BASE_PRICES[paperActiveTrade.asset];
+  const diff = (curP - paperActiveTrade.indexEntry) * (paperActiveTrade.type === 'CE' ? 1 : -1);
+  const pnlRupees = Math.round(diff * 50);
+  const pnlPct = ((diff / paperActiveTrade.indexEntry) * 100).toFixed(2);
+
+  paperActivePosBox.innerHTML = `
+    <div class="pos-card-inner">
+      <div class="pos-title-row">
+        <span class="pos-symbol-name">${paperActiveTrade.asset} ${paperActiveTrade.strike} ${paperActiveTrade.type}</span>
+        <span class="pos-pnl-val ${pnlRupees >= 0 ? 'pos' : 'neg'}">${pnlRupees >= 0 ? '+' : ''}₹${pnlRupees} (${pnlPct}%)</span>
+      </div>
+      <div style="font-size:0.65rem; color:var(--text-muted);">Entry: ₹${paperActiveTrade.entryPrice} | Executed: ${paperActiveTrade.time}</div>
+      <button class="btn-close-pos" id="close-paper-pos-btn">CLOSE POSITION</button>
+    </div>
+  `;
+
+  document.getElementById('close-paper-pos-btn')?.addEventListener('click', closePaperTrade);
 }
 
 function renderConfluenceMeter(ist) {
@@ -442,48 +489,26 @@ function renderConfluenceMeter(ist) {
   indBbVal.textContent = isBull ? 'Upper Band Expansion' : 'Below Lower Band Support';
 }
 
-function renderOptionChain(ist) {
-  pcrVal.textContent = (0.85 + seedRandom(ist.dateStr + selectedAsset) * 0.5).toFixed(2);
-  vixVal.textContent = (11.5 + seedRandom(ist.dateStr + '-vix') * 3).toFixed(1);
+// FEATURE 5: Sectoral Heatmap Engine
+function renderSectorHeatmap(ist) {
+  if (!sectorGridWrapper) return;
 
-  const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
-  maxpainNifty.textContent = `₹${(Math.round((prices.NIFTY50.current || BASE_PRICES.NIFTY50) / 50) * 50).toLocaleString('en-IN')}`;
-  maxpainBank.textContent = `₹${(Math.round((prices.BANKNIFTY.current || BASE_PRICES.BANKNIFTY) / 100) * 100).toLocaleString('en-IN')}`;
-}
+  const sectors = [
+    { name: 'NIFTY IT', change: '+1.45%', pos: true, flow: 'FII Inflow Buying' },
+    { name: 'NIFTY BANK', change: '-0.38%', pos: false, flow: 'Margin Pressure' },
+    { name: 'NIFTY AUTO', change: '+0.82%', pos: true, flow: 'Volume Breakout' },
+    { name: 'NIFTY METAL', change: '+1.12%', pos: true, flow: 'Global Demand' },
+    { name: 'NIFTY PHARMA', change: '-0.15%', pos: false, flow: 'Consolidation' },
+    { name: 'NIFTY ENERGY', change: '+0.65%', pos: true, flow: 'Reliance Support' }
+  ];
 
-function handleRiskCalcUpdate() {
-  capital = capitalInput.value.trim() || '500000';
-  riskPercent = riskPercentInput.value.trim() || '1.0';
-  localStorage.setItem('capital', capital);
-  localStorage.setItem('risk_percent', riskPercent);
-  renderPositionCalculator();
-}
-
-function renderPositionCalculator() {
-  const cap = parseFloat(capital) || 500000;
-  const risk = parseFloat(riskPercent) || 1.0;
-  const maxRiskRupees = (cap * risk) / 100;
-
-  const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
-  const slOffset = curP * 0.0035; // 0.35% SL
-  const lotSize = selectedAsset === 'BANKNIFTY' ? 30 : selectedAsset === 'SENSEX' ? 20 : 75;
-
-  const allowedLots = Math.max(1, Math.floor(maxRiskRupees / (slOffset * lotSize)));
-
-  posCalcResults.innerHTML = `
-    <div class="calc-res-row">
-      <span class="calc-res-lbl">Max Risk Allowed:</span>
-      <span class="calc-res-val red">₹${maxRiskRupees.toLocaleString('en-IN')}</span>
+  sectorGridWrapper.innerHTML = sectors.map(s => `
+    <div class="sector-card ${s.pos ? 'pos' : 'neg'}">
+      <span class="sector-name">${s.name}</span>
+      <span class="sector-change-val ${s.pos ? 'pos' : 'neg'}">${s.change}</span>
+      <span class="sector-flow">${s.flow}</span>
     </div>
-    <div class="calc-res-row">
-      <span class="calc-res-lbl">Recommended Lot Size:</span>
-      <span class="calc-res-val">${allowedLots} Lot (${allowedLots * lotSize} Units)</span>
-    </div>
-    <div class="calc-res-row">
-      <span class="calc-res-lbl">Risk-to-Reward Ratio:</span>
-      <span class="calc-res-val green">1 : 2.5 Target</span>
-    </div>
-  `;
+  `).join('');
 }
 
 function renderDemandSupplyMatrix() {
@@ -650,11 +675,7 @@ function startPriceTicker() {
     const ist = getISTContext();
     const mStatus = getMarketStatus(ist);
 
-    // Freeze Ticks if Market is Closed
-    if (!mStatus.isOpen) {
-      drawCandlestickChart();
-      return;
-    }
+    if (!mStatus.isOpen) return;
 
     Object.keys(prices).forEach(key => {
       const isBull = outlook[key]?.trend === 'BULLISH';
@@ -663,12 +684,13 @@ function startPriceTicker() {
       prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
     });
     renderTickerCards();
-    drawCandlestickChart();
+    renderPaperTradingUI();
   }, 2500);
 }
 
 function openSettings() {
   apiKeyInput.value = apiKey;
+  telegramTokenInput.value = telegramToken;
   simTimeSelect.value = simTimeMode;
   settingsModalOverlay.classList.remove('hidden');
 }
@@ -679,9 +701,13 @@ function closeSettings() {
 
 function saveSettings() {
   apiKey = apiKeyInput.value.trim();
+  telegramToken = telegramTokenInput.value.trim();
   simTimeMode = simTimeSelect.value;
+
   localStorage.setItem('gemini_api_key', apiKey);
+  localStorage.setItem('telegram_token', telegramToken);
   localStorage.setItem('sim_time_mode', simTimeMode);
+
   updateStatusText();
   closeSettings();
   renderAllComponents();
@@ -694,6 +720,8 @@ async function handleMarketScan() {
   scanTriggerBtn.disabled = true;
   scanBtnText.textContent = 'SCANNING MARKET (GEMINI AI)...';
   scanRefreshIcon.classList.add('spin');
+
+  speakVoiceAlert("Scanning market trends with Gemini AI.");
 
   await new Promise(r => setTimeout(r, 1000));
 
@@ -708,6 +736,7 @@ async function handleMarketScan() {
     scanTriggerBtn.disabled = false;
     scanBtnText.textContent = 'SCAN MARKET TRENDS (GEMINI AI)';
     scanRefreshIcon.classList.remove('spin');
+    speakVoiceAlert("Market scan complete. Nifty 50 is Bullish.");
     return;
   }
 
@@ -752,6 +781,7 @@ Return plain JSON:
       outlook = result;
       localStorage.setItem('market_outlook_cache', JSON.stringify(result));
       renderAllComponents();
+      speakVoiceAlert(`Gemini AI scan complete. Nifty 50 is ${result.NIFTY50.trend}`);
     }
   } catch (err) {
     console.error(err);
