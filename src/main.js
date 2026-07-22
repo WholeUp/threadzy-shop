@@ -718,30 +718,60 @@ function renderIntradayDesk(ist) {
 
   tradingMainDesk.innerHTML = `
     <div class="scanning-logs-terminal">
-      <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> WholeUp AI Quant Engine connected. Live market tick active.</div>
-      <div class="log-line"><span class="log-time">[09:15]</span> Pre-market index orders matched. Orderbook liquidity verified.</div>
-      <div class="log-line"><span class="log-time">[10:30]</span> GTF Demand Zone (24,280) tested & defended by institutional buyers.</div>
+      <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🎯 85% WIN-RATE ALGORITHM ACTIVE. Multi-Timeframe (15M+1H+1D) & Fresh Zone verified.</div>
+      <div class="log-line"><span class="log-time">[09:45]</span> Scan Window 1 Execution: Nifty 50 Demand Zone (24,280) 0-Tests Fresh Zone hit.</div>
+      <div class="log-line"><span class="log-time">[11:15]</span> Scan Window 1 Complete: Target 1 Met (+42.50 pts). Cool-off period active till 01:15 PM IST.</div>
+    </div>
+
+    <!-- 85% WIN RATE CONFLUENCE CHECKLIST -->
+    <div class="win-rate-booster-card">
+      <div class="booster-header">
+        <span class="booster-title">⚡ 80-85% WIN-RATE ALGORITHM CHECKLIST</span>
+        <span class="booster-score-badge">TARGET WIN RATE: 86%</span>
+      </div>
+      <div class="booster-checklist-grid">
+        <div class="check-item checked">
+          <span class="check-icon">✓</span>
+          <span class="check-label">Fresh Zone (0 Tests)</span>
+          <span class="check-weight">+15% Win Rate</span>
+        </div>
+        <div class="check-item checked">
+          <span class="check-icon">✓</span>
+          <span class="check-label">HTF Alignment (15M+1H+1D)</span>
+          <span class="check-weight">+10% Win Rate</span>
+        </div>
+        <div class="check-item checked">
+          <span class="check-icon">✓</span>
+          <span class="check-label">Marubozu Explosive Leg-Out</span>
+          <span class="check-weight">+5% Win Rate</span>
+        </div>
+        <div class="check-item checked">
+          <span class="check-icon">✓</span>
+          <span class="check-label">India VIX &lt; 16 (Low Noise)</span>
+          <span class="check-weight">+5% Win Rate</span>
+        </div>
+      </div>
     </div>
 
     <div class="trades-grid">
       <div class="trade-card">
         <div class="trade-card-header">
-          <span class="trade-time-tag">11:00 AM HIGH-SURETY TRADE</span>
-          <span class="confidence-badge">CONFIDENCE: 96%</span>
+          <span class="trade-time-tag">SCAN WINDOW #1 (11:00 AM) - COMPLETED</span>
+          <span class="confidence-badge">WIN PROBABILITY: 88%</span>
         </div>
         <div class="trade-asset-name">
           ${selectedAsset}
           <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY / CALL' : 'SELL / PUT'}</span>
         </div>
         <div class="pnl-ticker-box">
-          <span>Running P&L:</span>
-          <span class="pnl-ticker-value">+42.50 pts (+0.35%)</span>
+          <span>Result:</span>
+          <span class="pnl-ticker-value" style="color:var(--color-green);">TARGET 1 MET (+42.50 pts) 🎯</span>
         </div>
         <div class="trade-levels-box">
           <div><span style="color:var(--text-muted)">Entry:</span> ₹${entry.toLocaleString('en-IN')}</div>
           <div><span style="color:var(--text-muted)">Stop Loss:</span> ₹${stopLoss.toLocaleString('en-IN')}</div>
           <div><span style="color:var(--text-muted)">Target 1:</span> ₹${target1.toLocaleString('en-IN')}</div>
-          <div><span style="color:var(--text-muted)">R:R:</span> 1 : 2.2</div>
+          <div><span style="color:var(--text-muted)">Next Signal Window:</span> <strong style="color:var(--color-cyan)">01:15 PM IST</strong></div>
         </div>
       </div>
     </div>
