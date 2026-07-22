@@ -10,7 +10,7 @@ const BASE_PRICES = {
 // Global State
 let selectedAsset = 'NIFTY50';
 let selectedTF = '15'; // TradingView interval 1, 5, 15, 60, D
-let chartEngineMode = 'tradingview'; // 'tradingview' or 'canvas'
+let chartEngineMode = 'canvas'; // 'canvas' default for 0ms instant loading, or 'tradingview'
 let simTimeMode = localStorage.getItem('sim_time_mode') || 'real';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
 let telegramToken = localStorage.getItem('telegram_token') || '';
@@ -346,14 +346,29 @@ function drawCandlestickCanvasChart() {
 
   const width = rect.width;
   const height = rect.height;
+  const rightMargin = 70; // Y-axis price scale width
+  const bottomMargin = 30; // X-axis time scale height
+  const chartW = width - rightMargin;
+  const chartH = height - bottomMargin;
 
   ctx.fillStyle = '#090c13';
   ctx.fillRect(0, 0, width, height);
 
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+  // Background Grid
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
   ctx.lineWidth = 1;
-  for (let x = 0; x < width; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
-  for (let y = 0; y < height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
+  for (let x = 0; x < chartW; x += 60) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, chartH); ctx.stroke(); }
+  for (let y = 0; y < chartH; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(chartW, y); ctx.stroke(); }
+
+  // Y-Axis Price Panel background
+  ctx.fillStyle = '#0e121b';
+  ctx.fillRect(chartW, 0, rightMargin, height);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.beginPath(); ctx.moveTo(chartW, 0); ctx.lineTo(chartW, height); ctx.stroke();
+
+  // X-Axis Time Panel background
+  ctx.fillRect(0, chartH, chartW, bottomMargin);
+  ctx.beginPath(); ctx.moveTo(0, chartH); ctx.lineTo(chartW, chartH); ctx.stroke();
 
   const curPrice = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
   const isBullish = outlook[selectedAsset]?.trend === 'BULLISH';
@@ -364,30 +379,30 @@ function drawCandlestickCanvasChart() {
   const supplyUpper = parseFloat((curPrice * 1.007).toFixed(2));
 
   // Demand Box
-  const demandYTop = height * 0.65;
-  const demandYBot = height * 0.85;
+  const demandYTop = chartH * 0.65;
+  const demandYBot = chartH * 0.85;
   ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
-  ctx.fillRect(0, demandYTop, width, demandYBot - demandYTop);
+  ctx.fillRect(0, demandYTop, chartW, demandYBot - demandYTop);
   ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
-  ctx.strokeRect(0, demandYTop, width, demandYBot - demandYTop);
+  ctx.strokeRect(0, demandYTop, chartW, demandYBot - demandYTop);
   ctx.fillStyle = '#10b981';
   ctx.font = '11px JetBrains Mono';
   ctx.fillText(`🟢 GTF DEMAND ZONE (₹${demandLower} - ₹${demandUpper})`, 15, demandYTop + 16);
 
   // Supply Box
-  const supplyYTop = height * 0.1;
-  const supplyYBot = height * 0.3;
+  const supplyYTop = chartH * 0.1;
+  const supplyYBot = chartH * 0.3;
   ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
-  ctx.fillRect(0, supplyYTop, width, supplyYBot - supplyYTop);
+  ctx.fillRect(0, supplyYTop, chartW, supplyYBot - supplyYTop);
   ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
-  ctx.strokeRect(0, supplyYTop, width, supplyYBot - supplyYTop);
+  ctx.strokeRect(0, supplyYTop, chartW, supplyYBot - supplyYTop);
   ctx.fillStyle = '#ef4444';
   ctx.font = '11px JetBrains Mono';
   ctx.fillText(`🔴 GTF SUPPLY ZONE (₹${supplyLower} - ₹${supplyUpper})`, 15, supplyYTop + 16);
 
-  // Candlesticks
-  const candleCount = 32;
-  const candleWidth = (width - 60) / candleCount;
+  // Candlesticks Data Generator
+  const candleCount = 36;
+  const candleWidth = (chartW - 40) / candleCount;
   let price = curPrice * (isBullish ? 0.988 : 1.012);
 
   const candles = [];
@@ -395,7 +410,7 @@ function drawCandlestickCanvasChart() {
     const seed = i + selectedAsset + selectedTF;
     const change = (seedRandom(seed) - (isBullish ? 0.42 : 0.58)) * (curPrice * 0.003);
     const open = price;
-    const close = price + change;
+    const close = (i === candleCount - 1) ? curPrice : price + change;
     const high = Math.max(open, close) + seedRandom(seed + '-h') * (curPrice * 0.0015);
     const low = Math.min(open, close) - seedRandom(seed + '-l') * (curPrice * 0.0015);
     price = close;
@@ -406,12 +421,32 @@ function drawCandlestickCanvasChart() {
   let maxP = Math.max(...candles.map(c => c.high));
   const rangeP = maxP - minP || 1;
 
+  // Render Price Scale Labels (Y-Axis)
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '10px JetBrains Mono';
+  for (let i = 0; i <= 5; i++) {
+    const pVal = minP + (rangeP / 5) * i;
+    const yPos = chartH - 10 - (i / 5) * (chartH - 20);
+    ctx.fillText(pVal.toFixed(1), chartW + 8, yPos + 3);
+  }
+
+  // Render Time Scale Labels (X-Axis)
+  const times = ['09:15', '10:30', '11:45', '13:00', '14:15', '15:30'];
+  times.forEach((t, idx) => {
+    const xPos = (chartW / (times.length - 1)) * idx;
+    ctx.fillText(t, xPos + 10, height - 10);
+  });
+
+  // Render Candles
+  let lastY = 0;
   candles.forEach((c, idx) => {
-    const x = 30 + idx * candleWidth;
-    const openY = height - 40 - ((c.open - minP) / rangeP) * (height - 80);
-    const closeY = height - 40 - ((c.close - minP) / rangeP) * (height - 80);
-    const highY = height - 40 - ((c.high - minP) / rangeP) * (height - 80);
-    const lowY = height - 40 - ((c.low - minP) / rangeP) * (height - 80);
+    const x = 20 + idx * candleWidth;
+    const openY = chartH - 20 - ((c.open - minP) / rangeP) * (chartH - 40);
+    const closeY = chartH - 20 - ((c.close - minP) / rangeP) * (chartH - 40);
+    const highY = chartH - 20 - ((c.high - minP) / rangeP) * (chartH - 40);
+    const lowY = chartH - 20 - ((c.low - minP) / rangeP) * (chartH - 40);
+
+    lastY = closeY;
 
     const isUp = c.close >= c.open;
     const color = isUp ? '#10b981' : '#ef4444';
@@ -428,6 +463,21 @@ function drawCandlestickCanvasChart() {
     const bodyHeight = Math.max(Math.abs(closeY - openY), 2);
     ctx.fillRect(x + 2, bodyTop, candleWidth - 4, bodyHeight);
   });
+
+  // Live Current Price Horizontal Line & Tag
+  ctx.strokeStyle = '#06b6d4';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(0, lastY);
+  ctx.lineTo(chartW, lastY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = '#06b6d4';
+  ctx.fillRect(chartW + 2, lastY - 9, rightMargin - 4, 18);
+  ctx.fillStyle = '#000000';
+  ctx.font = 'bold 10px JetBrains Mono';
+  ctx.fillText(curPrice.toFixed(1), chartW + 6, lastY + 3);
 }
 
 function renderAllComponents() {
