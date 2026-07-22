@@ -277,29 +277,19 @@ function switchAsset(asset) {
   renderAllComponents();
 }
 
-// OFFICIAL TRADINGVIEW WIDGET ENGINE
+// OFFICIAL TRADINGVIEW WIDGET ENGINE (Smooth 100% Reliable Embed)
 function initTradingViewWidget() {
   const container = document.getElementById('tradingview_chart_container');
   if (!container) return;
-  container.innerHTML = ''; // reset
 
   const tvSymbol = selectedAsset === 'NIFTY50' ? 'NSE:NIFTY' : selectedAsset === 'BANKNIFTY' ? 'NSE:BANKNIFTY' : 'BSE:SENSEX';
+  const encodedSymbol = encodeURIComponent(tvSymbol);
 
-  if (typeof TradingView !== 'undefined') {
-    new TradingView.widget({
-      "autosize": true,
-      "symbol": tvSymbol,
-      "interval": selectedTF,
-      "timezone": "Asia/Kolkata",
-      "theme": "dark",
-      "style": "1",
-      "locale": "en",
-      "toolbar_bg": "#090c13",
-      "enable_publishing": false,
-      "allow_symbol_change": true,
-      "container_id": "tradingview_chart_container"
-    });
-  }
+  const iframeUrl = `https://s.tradingview.com/widgetembed/?frameElementId=tradingview_widget_iframe&symbol=${encodedSymbol}&interval=${selectedTF}&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=090c13&theme=dark&style=1&timezone=Asia%2FKolkata`;
+
+  container.innerHTML = `
+    <iframe id="tradingview_widget_iframe" src="${iframeUrl}" style="width: 100%; height: 100%; min-height: 480px; border: none; border-radius: 8px;" allowtransparency="true" scrolling="no" allowfullscreen></iframe>
+  `;
 }
 
 function renderAllComponents() {
