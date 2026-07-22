@@ -10,12 +10,17 @@ const BASE_PRICES = {
 // Global State
 let selectedAsset = 'NIFTY50';
 let selectedTF = '15'; // TradingView interval 1, 5, 15, 60, D
-let chartEngineMode = 'canvas'; // 'canvas' default for 0ms instant loading, or 'tradingview'
 let simTimeMode = localStorage.getItem('sim_time_mode') || 'real';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
 let telegramToken = localStorage.getItem('telegram_token') || '';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
+
+let targetAlertPrice = parseFloat(localStorage.getItem('target_alert_price')) || null;
+let alertTriggered = false;
+
+let userCapital = parseFloat(localStorage.getItem('user_capital')) || 500000;
+let userRiskPct = parseFloat(localStorage.getItem('user_risk_pct')) || 1.0;
 
 let outlook = JSON.parse(localStorage.getItem('market_outlook_cache')) || {
   NIFTY50: { trend: 'BULLISH', reason: 'Global cues positive hain aur IT sector ke heavyweights (TCS, Infosys) key resistance breakouts ki taraf badh rahe hain. Demand Zone (24,280) strongly hold ho raha hai.' },
@@ -29,12 +34,9 @@ let prices = {
   SENSEX: { current: BASE_PRICES.SENSEX, change: 0.19 }
 };
 
-// FEATURE 3: Virtual Paper Trading State
+// Paper Trading State
 let paperWallet = parseFloat(localStorage.getItem('paper_wallet')) || 100000;
 let paperActiveTrade = JSON.parse(localStorage.getItem('paper_active_trade')) || null;
-
-let capital = localStorage.getItem('capital') || '500000';
-let riskPercent = localStorage.getItem('risk_percent') || '1.0';
 
 // IST Time Helper
 function getISTContext() {
@@ -63,7 +65,7 @@ function getISTContext() {
   const dateStr = `${year}-${month}-${dayNum}`;
   const timeFormatted = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')} IST`;
   
-  return { day, hour, minute, second, dateStr, timeFormatted };
+  return { day, hour, minute, second, dateStr, timeFormatted, weekdayStr };
 }
 
 function getMarketStatus(ist) {
@@ -129,13 +131,26 @@ const audioToggleBtn = document.getElementById('audio-toggle-btn');
 const audioIcon = document.getElementById('audio-icon');
 const audioStatusText = document.getElementById('audio-status-text');
 
+const expiryCalendarBadge = document.getElementById('expiry-calendar-badge');
+
 const selectCardNifty = document.getElementById('select-card-nifty');
 const selectCardBanknifty = document.getElementById('select-card-banknifty');
 const selectCardSensex = document.getElementById('select-card-sensex');
 
 const chartSymbolName = document.getElementById('chart-symbol-name');
-const chartTfLabel = document.getElementById('chart-tf-label');
 const selectedAssetReason = document.getElementById('selected-asset-reason');
+
+const alertPriceValInput = document.getElementById('alert-price-val');
+const setAlertBtn = document.getElementById('set-alert-btn');
+const alertActiveMsgText = document.getElementById('alert-active-msg-text');
+const alertStatusTag = document.getElementById('alert-status-tag');
+
+const capitalInputVal = document.getElementById('capital-input-val');
+const riskPctInputVal = document.getElementById('risk-pct-input-val');
+const calcRiskRupees = document.getElementById('calc-risk-rupees');
+const calcNiftyLots = document.getElementById('calc-nifty-lots');
+const calcBankniftyLots = document.getElementById('calc-banknifty-lots');
+const calcSensexLots = document.getElementById('calc-sensex-lots');
 
 const optionAtmTag = document.getElementById('option-atm-tag');
 const ceStrikeName = document.getElementById('ce-strike-name');
@@ -168,6 +183,7 @@ const sectorGridWrapper = document.getElementById('sector-grid-wrapper');
 const demandSupplyCardsWrapper = document.getElementById('demand-supply-cards-wrapper');
 const tradingMainDesk = document.getElementById('trading-main-desk');
 const fiiDiiSidebarSection = document.getElementById('fii-dii-sidebar-section');
+const copySignalBtn = document.getElementById('copy-signal-btn');
 
 const journalStatsHeader = document.getElementById('journal-stats-header');
 const journalTableBody = document.getElementById('journal-table-body');
@@ -211,6 +227,11 @@ function init() {
       initTradingViewWidget();
     });
   });
+
+  setAlertBtn.addEventListener('click', handleSetAlert);
+  capitalInputVal.addEventListener('input', updateLotCalculator);
+  riskPctInputVal.addEventListener('input', updateLotCalculator);
+  copySignalBtn?.addEventListener('click', copyTradeSignalToClipboard);
 
   paperBuyCeBtn.addEventListener('click', () => executePaperTrade('CE'));
   paperBuyPeBtn.addEventListener('click', () => executePaperTrade('PE'));
@@ -300,8 +321,8 @@ function drawCandlestickCanvasChart() {
 
   const width = rect.width;
   const height = rect.height;
-  const rightMargin = 70; // Y-axis price scale width
-  const bottomMargin = 30; // X-axis time scale height
+  const rightMargin = 75;
+  const bottomMargin = 30;
   const chartW = width - rightMargin;
   const chartH = height - bottomMargin;
 
@@ -445,6 +466,9 @@ function renderAllComponents() {
   }
 
   updateStatusText();
+  renderExpiryBadge(ist);
+  renderPriceAlertUI();
+  updateLotCalculator();
   renderTickerCards();
   renderAIReasoning();
   renderOptionStrikeCalculator(ist);
@@ -455,6 +479,108 @@ function renderAllComponents() {
   renderIntradayDesk(ist);
   renderFIIDIIFlow(ist);
   renderDailyJournal(ist);
+}
+
+// FEATURE 3: Indian Options Expiry Calendar Badge
+function renderExpiryBadge(ist) {
+  const dayName = ist.weekdayStr; // Sun, Mon, Tue, Wed, Thu, Fri, Sat
+  let badgeText = '⚡ TODAY EXPIRY: NONE';
+
+  if (dayName === 'Thu') badgeText = '🔥 TODAY EXPIRY: NIFTY 50 (ZERO-HERO)';
+  else if (dayName === 'Wed') badgeText = '🔥 TODAY EXPIRY: BANK NIFTY';
+  else if (dayName === 'Fri') badgeText = '🔥 TODAY EXPIRY: SENSEX';
+  else if (dayName === 'Tue') badgeText = '⚡ UPCOMING: BANK NIFTY (WED)';
+  else badgeText = '⚡ UPCOMING: NIFTY 50 (THU)';
+
+  if (expiryCalendarBadge) expiryCalendarBadge.textContent = badgeText;
+}
+
+// FEATURE 1: Price Alert Alarm Logic
+function handleSetAlert() {
+  const val = parseFloat(alertPriceValInput.value);
+  if (isNaN(val) || val <= 0) {
+    alert("Please enter a valid target price number for alert.");
+    return;
+  }
+  targetAlertPrice = val;
+  alertTriggered = false;
+  localStorage.setItem('target_alert_price', targetAlertPrice.toString());
+  speakVoiceAlert(`Price alert set for ${targetAlertPrice} rupees.`);
+  renderPriceAlertUI();
+}
+
+function renderPriceAlertUI() {
+  if (targetAlertPrice) {
+    alertStatusTag.textContent = 'ALERT ACTIVE';
+    alertStatusTag.className = 'block-tag green';
+    alertActiveMsgText.innerHTML = `Target: Alert when price reaches <strong>₹${targetAlertPrice.toLocaleString('en-IN')}</strong>`;
+  } else {
+    alertStatusTag.textContent = 'NO ALERT';
+    alertStatusTag.className = 'block-tag';
+    alertActiveMsgText.innerHTML = `Set price alert to receive voice notification when zone is hit.`;
+  }
+}
+
+function checkPriceAlertsTrigger() {
+  if (!targetAlertPrice || alertTriggered) return;
+  const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
+
+  if (Math.abs(curP - targetAlertPrice) <= 15) {
+    alertTriggered = true;
+    speakVoiceAlert(`Warning! ${selectedAsset} has hit your target alert price of ${targetAlertPrice} rupees!`);
+    alert("🔔 PRICE ALERT TRIGGERED: " + selectedAsset + " reached ₹" + targetAlertPrice);
+  }
+}
+
+// FEATURE 2: Dynamic Capital & Lot Size Calculator
+function updateLotCalculator() {
+  userCapital = parseFloat(capitalInputVal.value) || 500000;
+  userRiskPct = parseFloat(riskPctInputVal.value) || 1.0;
+
+  localStorage.setItem('user_capital', userCapital.toString());
+  localStorage.setItem('user_risk_pct', userRiskPct.toString());
+
+  const riskAmount = (userCapital * (userRiskPct / 100));
+  const riskPerTradeSL = 45; // average stoploss points
+
+  const niftyLots = Math.max(1, Math.floor(riskAmount / (riskPerTradeSL * 75)));
+  const bankniftyLots = Math.max(1, Math.floor(riskAmount / (riskPerTradeSL * 2.5 * 30)));
+  const sensexLots = Math.max(1, Math.floor(riskAmount / (riskPerTradeSL * 3.5 * 20)));
+
+  calcRiskRupees.textContent = `₹${Math.round(riskAmount).toLocaleString('en-IN')}`;
+  calcNiftyLots.textContent = `${niftyLots} Lots (${niftyLots * 75} Qty)`;
+  calcBankniftyLots.textContent = `${bankniftyLots} Lots (${bankniftyLots * 30} Qty)`;
+  calcSensexLots.textContent = `${sensexLots} Lots (${sensexLots * 20} Qty)`;
+}
+
+// FEATURE 4: One-Click Copy Signal
+function copyTradeSignalToClipboard() {
+  const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
+  const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
+  const step = selectedAsset === 'BANKNIFTY' ? 100 : selectedAsset === 'SENSEX' ? 100 : 50;
+  const atm = Math.round(curP / step) * step;
+  const type = isBull ? 'CE' : 'PE';
+
+  const entryPrem = isBull ? 128.50 : 95.20;
+  const slPrem = (entryPrem * 0.75).toFixed(1);
+  const tgtPrem = (entryPrem * 1.45).toFixed(1);
+
+  const signalText = `🚀 WHOLEUP QUANT SIGNAL:
+Asset: ${selectedAsset} (${atm} ${type})
+Type: ${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}
+Entry Premium: ₹${entryPrem}
+Stop Loss: ₹${slPrem}
+Target 1: ₹${tgtPrem}
+Win-Rate Confluence: 86% (Fresh GTF Zone)
+Time: ${getISTContext().timeFormatted}
+Live Desk: https://threadzy.shop/`;
+
+  navigator.clipboard.writeText(signalText).then(() => {
+    speakVoiceAlert("Trade signal copied to clipboard.");
+    alert("📋 Trade Signal copied to clipboard!\n\n" + signalText);
+  }).catch(err => {
+    console.error('Clipboard copy error:', err);
+  });
 }
 
 // 1. Live Marquee
@@ -508,7 +634,6 @@ function renderAIReasoning() {
   selectedAssetReason.textContent = outlook[selectedAsset]?.reason || 'AI analyzing price action...';
 }
 
-// FEATURE 1: Option Strike CE/PE Calculator
 function renderOptionStrikeCalculator(ist) {
   const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
   const step = selectedAsset === 'BANKNIFTY' ? 100 : selectedAsset === 'SENSEX' ? 100 : 50;
@@ -533,7 +658,6 @@ function renderOptionStrikeCalculator(ist) {
   paperPeSub.textContent = `₹${pePrem} Premium`;
 }
 
-// FEATURE 3: Virtual Paper Trading Engine
 function executePaperTrade(type) {
   if (paperActiveTrade) {
     alert("You already have an active paper position! Close it first before opening a new one.");
@@ -580,7 +704,7 @@ function renderPaperTradingUI() {
   paperWalletBal.textContent = `₹${Math.round(paperWallet).toLocaleString('en-IN')}`;
 
   if (!paperActiveTrade) {
-    paperActivePosBox.innerHTML = `<span style="color:var(--text-muted); font-size:0.72rem;">No active paper positions. Click BUY CALL or BUY PUT to execute virtual trade.</span>`;
+    paperActivePosBox.innerHTML = `<span style="color:var(--text-muted); font-size:0.72rem;">No active paper positions. Click BUY CE or BUY PE to execute virtual trade.</span>`;
     return;
   }
 
@@ -621,7 +745,6 @@ function renderConfluenceMeter(ist) {
   indBbVal.textContent = isBull ? 'Upper Band Expansion' : 'Below Lower Band Support';
 }
 
-// FEATURE 5: Sectoral Heatmap Engine
 function renderSectorHeatmap(ist) {
   if (!sectorGridWrapper) return;
 
@@ -846,7 +969,9 @@ function startPriceTicker() {
       prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
     });
     renderTickerCards();
+    drawCandlestickCanvasChart();
     renderPaperTradingUI();
+    checkPriceAlertsTrigger();
   }, 2500);
 }
 

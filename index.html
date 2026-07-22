@@ -9,8 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- TradingView Widget Library -->
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
   </head>
   <body>
     <div class="main-wrapper">
@@ -38,11 +36,16 @@
             </div>
             <div>
               <h1 class="brand-title">WholeUp <span class="accent-glow">QuantTerminal Pro</span></h1>
-              <p class="brand-tagline">TradingView Chart + Option CE/PE + Paper Trading Suite</p>
+              <p class="brand-tagline">AI Price Action & Demand-Supply Trading Suite</p>
             </div>
           </div>
 
           <div class="header-controls">
+            <!-- FEATURE 3: Options Expiry Badge -->
+            <div class="expiry-badge-box" id="expiry-calendar-badge">
+              ⚡ TODAY EXPIRY: NIFTY 50
+            </div>
+
             <!-- Audio Voice Toggle -->
             <button class="btn btn-secondary audio-btn" id="audio-toggle-btn" title="Toggle Hindi Voice Alerts">
               <span id="audio-icon">🔊</span>
@@ -118,10 +121,10 @@
           </div>
         </section>
 
-        <!-- Main Trading Terminal Container (TradingView Chart + Right Side Panels) -->
+        <!-- Main Trading Terminal Container (GTF Chart + Right Side Panels) -->
         <div class="terminal-layout">
           
-          <!-- Left: Official TradingView Interactive Chart Container -->
+          <!-- Left: GTF Candlestick Interactive Chart Container -->
           <div class="terminal-main-chart">
             
             <div class="chart-top-toolbar">
@@ -140,9 +143,9 @@
               </div>
             </div>
 
-            <!-- OFFICIAL TRADINGVIEW WIDGET CONTAINER -->
+            <!-- GTF CANVAS CHART CONTAINER -->
             <div class="chart-canvas-wrapper" id="tradingview_chart_container">
-              <!-- TradingView JS widget mounts here smoothly -->
+              <!-- HTML5 Candlestick Canvas mounts here -->
             </div>
 
             <!-- AI Reason Breakdown Box -->
@@ -158,10 +161,62 @@
 
           </div>
 
-          <!-- Right: Pro Quant Panel (Option CE/PE Calculator, Paper Trading, Confluence) -->
+          <!-- Right: Pro Quant Panel (Option CE/PE, Lot Size Calculator, Alerts, Confluence) -->
           <div class="terminal-sidebar">
             
-            <!-- FEATURE 1: Option Strike Price & Premium CE/PE Selector -->
+            <!-- FEATURE 1: Price Alert Alarm Box -->
+            <div class="sidebar-block price-alert-block">
+              <div class="block-title-row">
+                <span class="block-title">🔔 LIVE PRICE ALERT ALARM</span>
+                <span class="block-tag green" id="alert-status-tag">ALERT ACTIVE</span>
+              </div>
+              <div class="alert-input-row">
+                <input type="number" class="alert-num-input" id="alert-price-val" placeholder="Target Price (e.g. 24280)">
+                <button class="btn btn-primary alert-set-btn" id="set-alert-btn">SET ALERT</button>
+              </div>
+              <div class="alert-active-msg" id="alert-active-msg-text">
+                Target: Alert when price hits <strong>₹24,280</strong>
+              </div>
+            </div>
+
+            <!-- FEATURE 2: Dynamic Lot Size & Capital Calculator -->
+            <div class="sidebar-block lot-calc-block">
+              <div class="block-title-row">
+                <span class="block-title">📊 LOT SIZE & RISK CALCULATOR</span>
+                <span class="block-tag cyan">RISK 1%</span>
+              </div>
+              <div class="lot-inputs-grid">
+                <div class="lot-input-group">
+                  <label class="lot-lbl">Capital (₹)</label>
+                  <input type="number" class="lot-field" id="capital-input-val" value="500000" step="50000">
+                </div>
+                <div class="lot-input-group">
+                  <label class="lot-lbl">Risk %</label>
+                  <input type="number" class="lot-field" id="risk-pct-input-val" value="1.0" step="0.5">
+                </div>
+              </div>
+
+              <div class="lot-results-box">
+                <div class="lot-res-row">
+                  <span>Max Risk Amount:</span>
+                  <strong style="color:var(--color-red)" id="calc-risk-rupees">₹5,000</strong>
+                </div>
+                <div class="lot-res-row">
+                  <span>Nifty 50 Lots:</span>
+                  <strong style="color:var(--color-green)" id="calc-nifty-lots">3 Lots (225 Qty)</strong>
+                </div>
+                <div class="lot-res-row">
+                  <span>BankNifty Lots:</span>
+                  <strong style="color:var(--color-cyan)" id="calc-banknifty-lots">2 Lots (60 Qty)</strong>
+                </div>
+                <div class="lot-res-row">
+                  <span>Sensex Lots:</span>
+                  <strong style="color:var(--color-amber)" id="calc-sensex-lots">2 Lots (40 Qty)</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Option Strike Price Selector -->
             <div class="sidebar-block option-strike-block">
               <div class="block-title-row">
                 <span class="block-title">⚡ OPTION CE / PE STRIKE SELECTOR</span>
@@ -197,7 +252,7 @@
               </div>
             </div>
 
-            <!-- FEATURE 3: One-Click Virtual Paper Trading Terminal -->
+            <!-- Virtual Paper Trading Terminal -->
             <div class="sidebar-block paper-trading-block">
               <div class="block-title-row">
                 <span class="block-title">🎮 VIRTUAL PAPER TRADING</span>
@@ -261,7 +316,7 @@
 
         </div>
 
-        <!-- FEATURE 5: Indian Sectors Performance Heatmap -->
+        <!-- Indian Sectors Performance Heatmap -->
         <section class="sector-heatmap-section">
           <div class="ds-section-header">
             <div>
@@ -298,6 +353,11 @@
               <span class="desk-tag">⚡ INTRADAY EXECUTION DESK</span>
               <h2 class="desk-title">High-Surety AI Trades & Live Progress</h2>
             </div>
+
+            <!-- FEATURE 4: Copy Signal Button -->
+            <button class="btn btn-secondary share-signal-btn" id="copy-signal-btn">
+              📋 COPY SIGNAL FOR WHATSAPP/TELEGRAM
+            </button>
           </div>
 
           <div class="desk-grid">
@@ -366,7 +426,7 @@
         </div>
 
         <div class="input-group">
-          <label class="input-label">FEATURE 4: Telegram Bot Token (Optional Alerts)</label>
+          <label class="input-label">Telegram Bot Token (Optional Alerts)</label>
           <input type="text" class="input-field" id="telegram-token-input" placeholder="e.g. 123456789:ABCdefGHI...">
         </div>
 

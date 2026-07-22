@@ -617,6 +617,87 @@ body {
 .ind-val { font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); }
 .ind-val.green { color: var(--color-green); }
 
+/* Expiry Badge Box */
+.expiry-badge-box {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: var(--color-amber);
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Feature 1: Price Alert Block */
+.price-alert-block { display: flex; flex-direction: column; gap: 0.65rem; }
+.alert-input-row { display: flex; gap: 0.4rem; }
+.alert-num-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  outline: none;
+}
+.alert-num-input:focus { border-color: var(--color-cyan); }
+.alert-set-btn { font-size: 0.68rem; padding: 0.4rem 0.75rem; font-weight: 800; }
+.alert-active-msg { font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-sans); }
+
+/* Feature 2: Lot Size & Risk Calculator */
+.lot-calc-block { display: flex; flex-direction: column; gap: 0.65rem; }
+.lot-inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.lot-input-group { display: flex; flex-direction: column; gap: 0.2rem; }
+.lot-lbl { font-size: 0.62rem; color: var(--text-muted); font-weight: 600; }
+.lot-field {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 0.35rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  outline: none;
+}
+.lot-results-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+}
+.lot-res-row { display: flex; justify-content: space-between; align-items: center; }
+
+/* Share Signal Button */
+.share-signal-btn {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.4rem 0.85rem;
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: var(--color-cyan);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.share-signal-btn:hover { background: rgba(6, 182, 212, 0.3); }
+
+/* Audio Button */
+.audio-btn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
 /* Option Chain Block */
 .option-grid {
   display: grid;
