@@ -387,6 +387,34 @@ body {
   font-weight: 700;
 }
 
+.engine-tabs {
+  display: flex;
+  gap: 0.35rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.engine-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.engine-btn:hover { color: var(--text-primary); }
+.engine-btn.active {
+  background: linear-gradient(135deg, #06b6d4, #10b981);
+  color: #000;
+  font-weight: 800;
+}
+
 .tf-tabs {
   display: flex;
   gap: 0.35rem;

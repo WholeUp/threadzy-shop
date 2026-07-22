@@ -10,6 +10,7 @@ const BASE_PRICES = {
 // Global State
 let selectedAsset = 'NIFTY50';
 let selectedTF = '15'; // TradingView interval 1, 5, 15, 60, D
+let chartEngineMode = 'tradingview'; // 'tradingview' or 'canvas'
 let simTimeMode = localStorage.getItem('sim_time_mode') || 'real';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
 let telegramToken = localStorage.getItem('telegram_token') || '';
@@ -202,6 +203,20 @@ function init() {
   selectCardBanknifty.addEventListener('click', () => switchAsset('BANKNIFTY'));
   selectCardSensex.addEventListener('click', () => switchAsset('SENSEX'));
 
+  document.getElementById('engine-tv-btn')?.addEventListener('click', () => {
+    chartEngineMode = 'tradingview';
+    document.getElementById('engine-tv-btn')?.classList.add('active');
+    document.getElementById('engine-canvas-btn')?.classList.remove('active');
+    initTradingViewWidget();
+  });
+
+  document.getElementById('engine-canvas-btn')?.addEventListener('click', () => {
+    chartEngineMode = 'canvas';
+    document.getElementById('engine-canvas-btn')?.classList.add('active');
+    document.getElementById('engine-tv-btn')?.classList.remove('active');
+    initTradingViewWidget();
+  });
+
   document.querySelectorAll('.tf-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
@@ -277,19 +292,142 @@ function switchAsset(asset) {
   renderAllComponents();
 }
 
-// OFFICIAL TRADINGVIEW WIDGET ENGINE (Smooth 100% Reliable Embed)
+// CHART ENGINE (TradingView Official Script + Instant GTF Canvas Fallback)
 function initTradingViewWidget() {
   const container = document.getElementById('tradingview_chart_container');
   if (!container) return;
 
-  const tvSymbol = selectedAsset === 'NIFTY50' ? 'NSE:NIFTY' : selectedAsset === 'BANKNIFTY' ? 'NSE:BANKNIFTY' : 'BSE:SENSEX';
-  const encodedSymbol = encodeURIComponent(tvSymbol);
+  if (chartEngineMode === 'canvas') {
+    container.innerHTML = `<canvas id="tradingview-chart-canvas" style="width:100%; height:100%; min-height:480px; display:block;"></canvas>`;
+    drawCandlestickCanvasChart();
+    return;
+  }
 
-  const iframeUrl = `https://s.tradingview.com/widgetembed/?frameElementId=tradingview_widget_iframe&symbol=${encodedSymbol}&interval=${selectedTF}&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=090c13&theme=dark&style=1&timezone=Asia%2FKolkata`;
+  const tvSymbol = selectedAsset === 'NIFTY50' ? 'NSE:NIFTY' : selectedAsset === 'BANKNIFTY' ? 'NSE:BANKNIFTY' : 'BSE:SENSEX';
+  const tfVal = selectedTF === '1' ? '1' : selectedTF === '5' ? '5' : selectedTF === '15' ? '15' : selectedTF === '60' ? '60' : 'D';
 
   container.innerHTML = `
-    <iframe id="tradingview_widget_iframe" src="${iframeUrl}" style="width: 100%; height: 100%; min-height: 480px; border: none; border-radius: 8px;" allowtransparency="true" scrolling="no" allowfullscreen></iframe>
+    <div class="tradingview-widget-container" style="height:100%;width:100%">
+      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+    </div>
   `;
+
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+  script.async = true;
+  script.innerHTML = JSON.stringify({
+    "autosize": true,
+    "symbol": tvSymbol,
+    "interval": tfVal,
+    "timezone": "Asia/Kolkata",
+    "theme": "dark",
+    "style": "1",
+    "locale": "en",
+    "allow_symbol_change": true,
+    "calendar": false,
+    "support_host": "https://www.tradingview.com"
+  });
+
+  const widgetBox = container.querySelector('.tradingview-widget-container__widget');
+  if (widgetBox) widgetBox.appendChild(script);
+}
+
+function drawCandlestickCanvasChart() {
+  const canvas = document.getElementById('tradingview-chart-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+
+  const width = rect.width;
+  const height = rect.height;
+
+  ctx.fillStyle = '#090c13';
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < width; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
+  for (let y = 0; y < height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
+
+  const curPrice = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
+  const isBullish = outlook[selectedAsset]?.trend === 'BULLISH';
+
+  const demandLower = parseFloat((curPrice * 0.993).toFixed(2));
+  const demandUpper = parseFloat((curPrice * 0.997).toFixed(2));
+  const supplyLower = parseFloat((curPrice * 1.003).toFixed(2));
+  const supplyUpper = parseFloat((curPrice * 1.007).toFixed(2));
+
+  // Demand Box
+  const demandYTop = height * 0.65;
+  const demandYBot = height * 0.85;
+  ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
+  ctx.fillRect(0, demandYTop, width, demandYBot - demandYTop);
+  ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+  ctx.strokeRect(0, demandYTop, width, demandYBot - demandYTop);
+  ctx.fillStyle = '#10b981';
+  ctx.font = '11px JetBrains Mono';
+  ctx.fillText(`🟢 GTF DEMAND ZONE (₹${demandLower} - ₹${demandUpper})`, 15, demandYTop + 16);
+
+  // Supply Box
+  const supplyYTop = height * 0.1;
+  const supplyYBot = height * 0.3;
+  ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+  ctx.fillRect(0, supplyYTop, width, supplyYBot - supplyYTop);
+  ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+  ctx.strokeRect(0, supplyYTop, width, supplyYBot - supplyYTop);
+  ctx.fillStyle = '#ef4444';
+  ctx.font = '11px JetBrains Mono';
+  ctx.fillText(`🔴 GTF SUPPLY ZONE (₹${supplyLower} - ₹${supplyUpper})`, 15, supplyYTop + 16);
+
+  // Candlesticks
+  const candleCount = 32;
+  const candleWidth = (width - 60) / candleCount;
+  let price = curPrice * (isBullish ? 0.988 : 1.012);
+
+  const candles = [];
+  for (let i = 0; i < candleCount; i++) {
+    const seed = i + selectedAsset + selectedTF;
+    const change = (seedRandom(seed) - (isBullish ? 0.42 : 0.58)) * (curPrice * 0.003);
+    const open = price;
+    const close = price + change;
+    const high = Math.max(open, close) + seedRandom(seed + '-h') * (curPrice * 0.0015);
+    const low = Math.min(open, close) - seedRandom(seed + '-l') * (curPrice * 0.0015);
+    price = close;
+    candles.push({ open, close, high, low });
+  }
+
+  let minP = Math.min(...candles.map(c => c.low));
+  let maxP = Math.max(...candles.map(c => c.high));
+  const rangeP = maxP - minP || 1;
+
+  candles.forEach((c, idx) => {
+    const x = 30 + idx * candleWidth;
+    const openY = height - 40 - ((c.open - minP) / rangeP) * (height - 80);
+    const closeY = height - 40 - ((c.close - minP) / rangeP) * (height - 80);
+    const highY = height - 40 - ((c.high - minP) / rangeP) * (height - 80);
+    const lowY = height - 40 - ((c.low - minP) / rangeP) * (height - 80);
+
+    const isUp = c.close >= c.open;
+    const color = isUp ? '#10b981' : '#ef4444';
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x + candleWidth / 2, highY);
+    ctx.lineTo(x + candleWidth / 2, lowY);
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    const bodyTop = Math.min(openY, closeY);
+    const bodyHeight = Math.max(Math.abs(closeY - openY), 2);
+    ctx.fillRect(x + 2, bodyTop, candleWidth - 4, bodyHeight);
+  });
 }
 
 function renderAllComponents() {
