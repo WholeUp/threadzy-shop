@@ -59,6 +59,36 @@ function getISTContext() {
   return { day, hour, minute, second, dateStr, timeFormatted };
 }
 
+// Check Real Stock Market Trading Hours (NSE/BSE: Mon-Fri 09:15 to 15:30 IST)
+function getMarketStatus(ist) {
+  if (simTimeMode !== 'real') {
+    if (simTimeMode === 'weekend') return { isOpen: false, reason: 'WEEKEND_CLOSED', label: 'MARKET CLOSED (WEEKEND)' };
+    if (simTimeMode === '400pm') return { isOpen: false, reason: 'AFTER_HOURS_CLOSED', label: 'MARKET CLOSED (3:30 PM IST)' };
+    return { isOpen: true, reason: 'SIMULATED_OPEN', label: 'SIMULATED MARKET OPEN' };
+  }
+
+  const day = ist.day; // 0 = Sun, 6 = Sat
+  const hour = ist.hour;
+  const minute = ist.minute;
+
+  if (day === 0 || day === 6) {
+    return { isOpen: false, reason: 'WEEKEND_CLOSED', label: 'MARKET CLOSED (WEEKEND)' };
+  }
+
+  const timeInMinutes = hour * 60 + minute;
+  const openTimeInMinutes = 9 * 60 + 15;  // 09:15 AM IST
+  const closeTimeInMinutes = 15 * 60 + 30; // 03:30 PM IST
+
+  if (timeInMinutes < openTimeInMinutes) {
+    return { isOpen: false, reason: 'PRE_MARKET_CLOSED', label: 'PRE-MARKET (OPENS 09:15 AM)' };
+  }
+  if (timeInMinutes >= closeTimeInMinutes) {
+    return { isOpen: false, reason: 'AFTER_HOURS_CLOSED', label: 'MARKET CLOSED (3:30 PM IST)' };
+  }
+
+  return { isOpen: true, reason: 'REAL_LIVE_OPEN', label: 'LIVE MARKET OPEN (09:15 - 15:30)' };
+}
+
 function seedRandom(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = Math.imul(31, h) + str.charCodeAt(i) | 0;
@@ -160,10 +190,28 @@ function init() {
 }
 
 function updateStatusText() {
-  if (apiKey) {
-    apiStatusText.textContent = 'GEMINI AI ACTIVE';
+  const ist = getISTContext();
+  const mStatus = getMarketStatus(ist);
+  const statusElem = document.querySelector('.status-indicator');
+
+  if (!mStatus.isOpen) {
+    apiStatusText.textContent = mStatus.label;
+    if (statusElem) {
+      statusElem.style.background = 'rgba(239, 68, 68, 0.12)';
+      statusElem.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+      statusElem.style.color = '#ef4444';
+      const dot = statusElem.querySelector('.pulse-dot');
+      if (dot) dot.style.backgroundColor = '#ef4444';
+    }
   } else {
-    apiStatusText.textContent = 'QUANT MOCK FALLBACK';
+    apiStatusText.textContent = apiKey ? 'GEMINI AI LIVE OPEN' : 'LIVE MARKET OPEN';
+    if (statusElem) {
+      statusElem.style.background = 'rgba(16, 185, 129, 0.08)';
+      statusElem.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+      statusElem.style.color = '#10b981';
+      const dot = statusElem.querySelector('.pulse-dot');
+      if (dot) dot.style.backgroundColor = '#10b981';
+    }
   }
 }
 
@@ -180,7 +228,16 @@ function switchAsset(asset) {
 
 function renderAllComponents() {
   const ist = getISTContext();
-  
+
+  // Simulation Banner
+  if (simTimeMode !== 'real') {
+    simBanner.classList.remove('hidden');
+    simBannerText.innerHTML = `Simulation Active: <strong>${simTimeMode.toUpperCase()}</strong>. Switch back to Real-Time Clock in settings.`;
+  } else {
+    simBanner.classList.add('hidden');
+  }
+
+  updateStatusText();
   renderTickerCards();
   drawCandlestickChart();
   renderAIReasoning();
@@ -214,7 +271,7 @@ function renderTickerMarquee() {
     </span>
   `).join('');
 
-  tickerMarquee.innerHTML = html + html; // Duplicate for smooth infinite loop
+  tickerMarquee.innerHTML = html + html;
 }
 
 function renderTickerCards() {
@@ -240,7 +297,7 @@ function renderTickerCards() {
   document.getElementById('bias-sensex').className = `index-bias ${outlook.SENSEX.trend.toLowerCase()}`;
 }
 
-// 2. HTML5 Candlestick Chart Engine (TradingView Style with Demand/Supply Overlays)
+// 2. HTML5 Candlestick Chart Engine
 function drawCandlestickChart() {
   if (!chartCanvas) return;
   const ctx = chartCanvas.getContext('2d');
@@ -258,18 +315,12 @@ function drawCandlestickChart() {
   ctx.fillStyle = '#090c13';
   ctx.fillRect(0, 0, width, height);
 
-  // Draw Grid Lines
+  // Grid
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
   ctx.lineWidth = 1;
+  for (let x = 0; x < width; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
+  for (let y = 0; y < height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
 
-  for (let x = 0; x < width; x += 50) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
-  }
-  for (let y = 0; y < height; y += 40) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
-  }
-
-  // Generate Candlestick Data based on selectedAsset and selectedTF
   const curPrice = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
   const isBullish = outlook[selectedAsset]?.trend === 'BULLISH';
 
@@ -281,7 +332,7 @@ function drawCandlestickChart() {
   chartOverlayDemand.textContent = `₹${demandLower.toLocaleString('en-IN')} - ₹${demandUpper.toLocaleString('en-IN')}`;
   chartOverlaySupply.textContent = `₹${supplyLower.toLocaleString('en-IN')} - ₹${supplyUpper.toLocaleString('en-IN')}`;
 
-  // Draw Demand Zone Translucent Box (Green)
+  // Demand Box
   const demandYTop = height * 0.65;
   const demandYBot = height * 0.85;
   ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
@@ -293,7 +344,7 @@ function drawCandlestickChart() {
   ctx.font = '10px JetBrains Mono';
   ctx.fillText(`GTF DEMAND ZONE (₹${demandLower})`, 15, demandYTop + 14);
 
-  // Draw Supply Zone Translucent Box (Red)
+  // Supply Box
   const supplyYTop = height * 0.1;
   const supplyYBot = height * 0.3;
   ctx.fillStyle = 'rgba(239, 68, 68, 0.12)';
@@ -304,7 +355,7 @@ function drawCandlestickChart() {
   ctx.fillStyle = '#ef4444';
   ctx.fillText(`GTF SUPPLY ZONE (₹${supplyUpper})`, 15, supplyYTop + 14);
 
-  // Draw Candlesticks
+  // Candlesticks
   const candleCount = 32;
   const candleWidth = (width - 60) / candleCount;
   let price = curPrice * (isBullish ? 0.988 : 1.012);
@@ -321,7 +372,6 @@ function drawCandlestickChart() {
     candles.push({ open, close, high, low });
   }
 
-  // Find Min/Max for chart scaling
   let minP = Math.min(...candles.map(c => c.low));
   let maxP = Math.max(...candles.map(c => c.high));
   const rangeP = maxP - minP || 1;
@@ -336,7 +386,6 @@ function drawCandlestickChart() {
     const isUp = c.close >= c.open;
     const color = isUp ? '#10b981' : '#ef4444';
 
-    // Wick
     ctx.strokeStyle = color;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -344,12 +393,31 @@ function drawCandlestickChart() {
     ctx.lineTo(x + candleWidth / 2, lowY);
     ctx.stroke();
 
-    // Body
     ctx.fillStyle = color;
     const bodyTop = Math.min(openY, closeY);
     const bodyHeight = Math.max(Math.abs(closeY - openY), 2);
     ctx.fillRect(x + 2, bodyTop, candleWidth - 4, bodyHeight);
   });
+
+  // OVERLAY IF MARKET IS CLOSED IN REAL-TIME
+  const ist = getISTContext();
+  const mStatus = getMarketStatus(ist);
+
+  if (!mStatus.isOpen) {
+    ctx.fillStyle = 'rgba(5, 7, 12, 0.82)';
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.fillStyle = '#ef4444';
+    ctx.font = 'bold 16px Space Grotesk';
+    ctx.textAlign = 'center';
+    ctx.fillText(`🔒 ${mStatus.label}`, width / 2, height / 2 - 12);
+
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '12px Plus Jakarta Sans';
+    ctx.fillText('Live NSE/BSE trading resumes tomorrow at 09:15 AM IST', width / 2, height / 2 + 14);
+    ctx.fillText('Configure Simulated Time in Settings to test market hours', width / 2, height / 2 + 34);
+    ctx.textAlign = 'left';
+  }
 }
 
 function renderAIReasoning() {
@@ -460,8 +528,33 @@ function renderDemandSupplyMatrix() {
 }
 
 function renderIntradayDesk(ist) {
-  const is11amUnlocked = ist.hour >= 11 || simTimeMode !== 'real';
-  const is1pmUnlocked = ist.hour >= 13 || simTimeMode !== 'real';
+  const mStatus = getMarketStatus(ist);
+
+  if (!mStatus.isOpen) {
+    tradingMainDesk.innerHTML = `
+      <div class="scanning-logs-terminal">
+        <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🔴 ${mStatus.label}. Live ticks paused until 09:15 AM IST.</div>
+        <div class="log-line"><span class="log-time">[15:30]</span> Market Closed. Settlement & closing ledger calculated.</div>
+      </div>
+
+      <div class="trades-grid">
+        <div class="trade-card" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.03);">
+          <div class="trade-card-header">
+            <span class="trade-time-tag" style="color:#ef4444;">🔒 MARKET CLOSED</span>
+            <span class="confidence-badge" style="color:var(--text-muted);">STANDBY MODE</span>
+          </div>
+          <div class="trade-asset-name">
+            NSE / BSE INDICES
+            <span class="trade-action-badge sell">CLOSED</span>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.45;">
+            Indian stock market is closed for today. Real-time scanning & live execution unlocks tomorrow at <strong>09:15 AM IST</strong>.
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
 
   const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
   const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
@@ -472,7 +565,7 @@ function renderIntradayDesk(ist) {
 
   tradingMainDesk.innerHTML = `
     <div class="scanning-logs-terminal">
-      <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> WholeUp AI Quant Engine connected. Live ticker sync active.</div>
+      <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> WholeUp AI Quant Engine connected. Live market tick active.</div>
       <div class="log-line"><span class="log-time">[09:15]</span> Pre-market index orders matched. Orderbook liquidity verified.</div>
       <div class="log-line"><span class="log-time">[10:30]</span> GTF Demand Zone (24,280) tested & defended by institutional buyers.</div>
     </div>
@@ -548,11 +641,21 @@ function startClockTicker() {
   setInterval(() => {
     const ist = getISTContext();
     istTimeClock.textContent = ist.timeFormatted;
+    updateStatusText();
   }, 1000);
 }
 
 function startPriceTicker() {
   setInterval(() => {
+    const ist = getISTContext();
+    const mStatus = getMarketStatus(ist);
+
+    // Freeze Ticks if Market is Closed
+    if (!mStatus.isOpen) {
+      drawCandlestickChart();
+      return;
+    }
+
     Object.keys(prices).forEach(key => {
       const isBull = outlook[key]?.trend === 'BULLISH';
       const tick = (Math.random() - 0.48) * (prices[key].current * 0.0003);
@@ -595,7 +698,6 @@ async function handleMarketScan() {
   await new Promise(r => setTimeout(r, 1000));
 
   if (!apiKey) {
-    // Generate realistic mock
     outlook = {
       NIFTY50: { trend: 'BULLISH', reason: 'IT heavyweights (TCS, Infosys) in strong breakout setup. Demand Zone (24,280) held by institutional buyers.' },
       BANKNIFTY: { trend: 'BEARISH', reason: 'Private banking profit booking pushing BankNifty towards Demand Zone support.' },
