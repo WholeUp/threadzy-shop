@@ -1,3 +1,5 @@
+import './style.css';
+
 // Base Index prices (Real NSE/BSE Initial Baseline)
 const BASE_PRICES = {
   NIFTY50: 23870.00,
