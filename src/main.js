@@ -14,6 +14,7 @@ let simTimeMode = localStorage.getItem('sim_time_mode') || 'real';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
 let telegramToken = localStorage.getItem('telegram_token') || '';
 let whatsappNumber = localStorage.getItem('whatsapp_number') || '';
+let callmebotKey = localStorage.getItem('callmebot_key') || '';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
 let isRealDataConnected = false;
@@ -202,6 +203,7 @@ const settingsModalOverlay = document.getElementById('settings-modal-overlay');
 const apiKeyInput = document.getElementById('api-key-input');
 const telegramTokenInput = document.getElementById('telegram-token-input');
 const whatsappNumInput = document.getElementById('whatsapp-num-input');
+const callmebotKeyInput = document.getElementById('callmebot-key-input');
 const waTest0900Btn = document.getElementById('wa-test-0900-btn');
 const waSendSignalBtn = document.getElementById('wa-send-signal-btn');
 const waAlertStatusTag = document.getElementById('wa-alert-status-tag');
@@ -1141,6 +1143,7 @@ function openSettings() {
   apiKeyInput.value = apiKey;
   telegramTokenInput.value = telegramToken;
   if (whatsappNumInput) whatsappNumInput.value = whatsappNumber;
+  if (callmebotKeyInput) callmebotKeyInput.value = callmebotKey;
   simTimeSelect.value = simTimeMode;
   settingsModalOverlay.classList.remove('hidden');
 }
@@ -1153,11 +1156,13 @@ function saveSettings() {
   apiKey = apiKeyInput.value.trim();
   telegramToken = telegramTokenInput.value.trim();
   if (whatsappNumInput) whatsappNumber = whatsappNumInput.value.trim();
+  if (callmebotKeyInput) callmebotKey = callmebotKeyInput.value.trim();
   simTimeMode = simTimeSelect.value;
 
   localStorage.setItem('gemini_api_key', apiKey);
   localStorage.setItem('telegram_token', telegramToken);
   localStorage.setItem('whatsapp_number', whatsappNumber);
+  localStorage.setItem('callmebot_key', callmebotKey);
   localStorage.setItem('sim_time_mode', simTimeMode);
 
   updateStatusText();

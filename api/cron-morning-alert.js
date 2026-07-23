@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const { time } = req.query;
+  const { time, phone, apikey } = req.query;
   const now = new Date();
 
   try {
@@ -32,11 +32,23 @@ Scan Window #1 Active at 09:45 AM!
 Live Desk: https://threadzy.shop/`;
     }
 
+    // CallMeBot Direct WhatsApp Inbox Delivery
+    let whatsappDeliveryStatus = 'Web Redirect Ready';
+    if (phone && apikey) {
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const callmebotUrl = `https://api.callmebot.com/whatsapp.php?phone=${cleanPhone}&text=${encodeURIComponent(message)}&apikey=${apikey}`;
+      const waRes = await fetch(callmebotUrl).catch(() => null);
+      if (waRes && waRes.ok) {
+        whatsappDeliveryStatus = 'Direct WhatsApp Inbox Delivered!';
+      }
+    }
+
     return res.status(200).json({
       success: true,
       time: time || '0900',
       cronRanAt: now.toISOString(),
       message,
+      whatsappDeliveryStatus,
       status: 'Automated Mon-Fri Cron Execution Successful'
     });
   } catch (err) {
