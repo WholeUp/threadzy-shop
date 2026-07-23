@@ -233,6 +233,8 @@ function checkTerminalLockState() {
   }
 }
 
+const unlockAnimOverlay = document.getElementById('unlock-anim-overlay');
+
 function handleUnlockTerminal() {
   const entered = masterPasscodeInput ? masterPasscodeInput.value.trim() : '';
   if (entered === masterPassword) {
@@ -241,7 +243,21 @@ function handleUnlockTerminal() {
     localStorage.removeItem('terminal_unlocked');
     lockErrorMsg?.classList.add('hidden');
     terminalLockScreen?.classList.add('hidden');
-    speakVoiceAlert("Access Granted! QuantTerminal Unlocked.");
+
+    if (unlockAnimOverlay) {
+      unlockAnimOverlay.classList.remove('hidden');
+      unlockAnimOverlay.classList.remove('fade-out');
+      speakVoiceAlert("Access Granted! Initializing WholeUp Quant Terminal.");
+
+      setTimeout(() => {
+        unlockAnimOverlay.classList.add('fade-out');
+        setTimeout(() => {
+          unlockAnimOverlay.classList.add('hidden');
+        }, 400);
+      }, 1400);
+    } else {
+      speakVoiceAlert("Access Granted! QuantTerminal Unlocked.");
+    }
   } else {
     lockErrorMsg?.classList.remove('hidden');
     if (masterPasscodeInput) {

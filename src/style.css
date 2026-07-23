@@ -747,6 +747,116 @@ body {
 .lock-error-msg.hidden { display: none !important; }
 .lock-footer-note { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.05em; }
 
+/* Stock Market Unlock Animation Overlay */
+.unlock-anim-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 7, 12, 0.96);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.unlock-anim-overlay.hidden { display: none !important; }
+.unlock-anim-overlay.fade-out { opacity: 0; transform: scale(1.05); pointer-events: none; }
+
+.unlock-anim-card {
+  background: rgba(14, 18, 27, 0.9);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 60px rgba(16, 185, 129, 0.3), 0 0 100px rgba(6, 182, 212, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2.5rem;
+  max-width: 460px;
+  width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.unlock-bull-icon {
+  font-size: 3.5rem;
+  animation: bullPulse 0.7s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.8));
+}
+@keyframes bullPulse {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-10px) scale(1.15); }
+}
+
+.unlock-anim-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #10b981;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+}
+
+.unlock-anim-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  font-family: var(--font-mono);
+}
+
+/* Candlestick Animation Row */
+.candlestick-anim-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 65px;
+  margin: 1rem 0;
+}
+.candlestick-anim-row .bar {
+  width: 14px;
+  border-radius: 3px;
+}
+.candlestick-anim-row .bar-green {
+  background: #10b981;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.9);
+}
+.candlestick-anim-row .bar-red {
+  background: #ef4444;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.9);
+}
+
+.animate-bar-1 { animation: growBar1 0.8s ease-in-out infinite alternate; }
+.animate-bar-2 { animation: growBar2 0.6s ease-in-out infinite alternate; }
+.animate-bar-3 { animation: growBar3 1.0s ease-in-out infinite alternate; }
+.animate-bar-4 { animation: growBar4 0.5s ease-in-out infinite alternate; }
+.animate-bar-5 { animation: growBar5 0.9s ease-in-out infinite alternate; }
+
+@keyframes growBar1 { 0% { height: 15px; } 100% { height: 50px; } }
+@keyframes growBar2 { 0% { height: 35px; } 100% { height: 18px; } }
+@keyframes growBar3 { 0% { height: 20px; } 100% { height: 60px; } }
+@keyframes growBar4 { 0% { height: 12px; } 100% { height: 42px; } }
+@keyframes growBar5 { 0% { height: 28px; } 100% { height: 65px; } }
+
+.unlock-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #10b981;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  letter-spacing: 0.05em;
+}
+
 /* Share Signal Button */
 .share-signal-btn {
   font-size: 0.7rem;
