@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       fetchSymbol('^BSESN')
     ]);
 
-    res.setHeader('Cache-Control', 's-maxage=2, stale-while-revalidate=5');
+    res.setHeader('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate');
     return res.status(200).json({
       success: true,
       timestamp: new Date().toISOString(),

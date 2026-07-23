@@ -214,9 +214,9 @@ function init() {
   startClockTicker();
   startPriceTicker();
 
-  // Fetch Real Live NSE/BSE Market Quotes immediately & poll every 4s
+  // Fetch Real Live NSE/BSE Market Quotes immediately & poll every 1.5s
   fetchRealMarketPrices();
-  setInterval(fetchRealMarketPrices, 4000);
+  setInterval(fetchRealMarketPrices, 1500);
 
   // Event Handlers
   audioToggleBtn.addEventListener('click', toggleAudio);
@@ -317,6 +317,7 @@ async function fetchRealMarketPrices() {
       }
 
       updateStatusText();
+      renderTickerMarquee();
       renderTickerCards();
       renderOptionStrikeCalculator(getISTContext());
       drawCandlestickCanvasChart();
@@ -627,12 +628,16 @@ Live Desk: https://threadzy.shop/`;
 
 // 1. Live Marquee
 function renderTickerMarquee() {
+  const n = prices.NIFTY50;
+  const b = prices.BANKNIFTY;
+  const s = prices.SENSEX;
+
   const items = [
-    { s: 'NIFTY 50', p: '24,350.80', c: '+0.28%', pos: true },
-    { s: 'BANK NIFTY', p: '52,300.20', c: '-0.42%', pos: false },
-    { s: 'SENSEX', p: '79,800.50', c: '+0.19%', pos: true },
+    { s: 'NIFTY 50', p: `₹${n.current.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, c: `${n.change >= 0 ? '+' : ''}${n.change}%`, pos: n.change >= 0 },
+    { s: 'BANK NIFTY', p: `₹${b.current.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, c: `${b.change >= 0 ? '+' : ''}${b.change}%`, pos: b.change >= 0 },
+    { s: 'SENSEX', p: `₹${s.current.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, c: `${s.change >= 0 ? '+' : ''}${s.change}%`, pos: s.change >= 0 },
     { s: 'INDIA VIX', p: '12.80', c: '-2.15%', pos: true },
-    { s: 'GIFT NIFTY', p: '24,410.00', c: '+0.35%', pos: true },
+    { s: 'GIFT NIFTY', p: `₹${(n.current * 1.002).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, c: '+0.35%', pos: true },
     { s: 'DOW JONES', p: '40,250.10', c: '+0.45%', pos: true },
     { s: 'GOLD (10G)', p: '72,450.00', c: '+0.12%', pos: true },
     { s: 'CRUDE OIL', p: '$78.40', c: '-0.85%', pos: false }
