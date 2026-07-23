@@ -529,6 +529,7 @@ function renderAllComponents() {
   renderExpiryBadge(ist);
   renderPriceAlertUI();
   updateLotCalculator();
+  updateWhatsAppStatusUI();
   renderTickerCards();
   renderAIReasoning();
   renderOptionStrikeCalculator(ist);
@@ -1031,6 +1032,29 @@ function startClockTicker() {
   }, 1000);
 }
 
+function getWhatsAppNumbersList() {
+  if (!whatsappNumber) return [];
+  return whatsappNumber.split(',')
+    .map(n => n.trim().replace(/[^0-9]/g, ''))
+    .filter(n => n.length >= 8);
+}
+
+function updateWhatsAppStatusUI() {
+  const nums = getWhatsAppNumbersList();
+  if (waAlertStatusTag) {
+    if (nums.length > 1) {
+      waAlertStatusTag.textContent = `🟢 ${nums.length} WHATSAPP NUMBERS`;
+      waAlertStatusTag.className = 'block-tag green';
+    } else if (nums.length === 1) {
+      waAlertStatusTag.textContent = '🟢 1 NUMBER CONNECTED';
+      waAlertStatusTag.className = 'block-tag green';
+    } else {
+      waAlertStatusTag.textContent = 'ACTIVE (09:00 AM)';
+      waAlertStatusTag.className = 'block-tag green';
+    }
+  }
+}
+
 function send0900AMTestAlert() {
   const curP = prices.NIFTY50?.current || BASE_PRICES.NIFTY50;
   const bankP = prices.BANKNIFTY?.current || BASE_PRICES.BANKNIFTY;
@@ -1044,11 +1068,15 @@ Live Desk: https://threadzy.shop/`;
 
   speakVoiceAlert("Attention trader! It is 9:00 AM IST. Market opens in 15 minutes. Get ready for GTF Demand and Supply setups!");
 
-  if (whatsappNumber) {
-    const cleanNum = whatsappNumber.replace(/[^0-9]/g, '');
-    window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(msg)}`, '_blank');
+  const nums = getWhatsAppNumbersList();
+  if (nums.length > 0) {
+    nums.forEach((num, index) => {
+      setTimeout(() => {
+        window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank');
+      }, index * 800);
+    });
   } else {
-    alert("⏰ 09:00 AM MORNING PRE-MARKET ALERT:\n\n" + msg + "\n\n(Tip: Enter your WhatsApp number in ⚙️ Settings to auto-open WhatsApp!)");
+    alert("⏰ 09:00 AM MORNING PRE-MARKET ALERT:\n\n" + msg + "\n\n(Tip: Enter your WhatsApp numbers separated by comma in ⚙️ Settings!)");
   }
 }
 
@@ -1074,10 +1102,14 @@ Win-Rate: 86% (GTF Fresh Zone)
 Time: ${getISTContext().timeFormatted}
 Live Desk: https://threadzy.shop/`;
 
-  speakVoiceAlert("Opening WhatsApp trade signal.");
-  const cleanNum = whatsappNumber ? whatsappNumber.replace(/[^0-9]/g, '') : '';
-  if (cleanNum) {
-    window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(signalText)}`, '_blank');
+  speakVoiceAlert("Opening WhatsApp trade signal broadcast.");
+  const nums = getWhatsAppNumbersList();
+  if (nums.length > 0) {
+    nums.forEach((num, index) => {
+      setTimeout(() => {
+        window.open(`https://wa.me/${num}?text=${encodeURIComponent(signalText)}`, '_blank');
+      }, index * 800);
+    });
   } else {
     window.open(`https://wa.me/?text=${encodeURIComponent(signalText)}`, '_blank');
   }
