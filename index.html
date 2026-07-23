@@ -394,33 +394,67 @@
           </div>
         </section>
 
-        <!-- Daily Performance Ledger & Journal -->
-        <section class="journal-section">
+        <!-- 30-DAY QUANT PERFORMANCE JOURNAL & AUDIT TRAIL SECTION -->
+        <section class="journal-section full-audit-section">
           <div class="journal-header-row">
             <div>
-              <span class="journal-tagline">PERFORMANCE LEDGER</span>
-              <h3 class="journal-title">Daily Trades Report Journal</h3>
+              <span class="journal-tagline">📚 VERIFIED PERFORMANCE AUDIT TRAIL</span>
+              <h2 class="journal-title">30-Day Trading History & Detailed Entry/Exit Ledger</h2>
             </div>
-            <div class="journal-stats" id="journal-stats-header">
-              <!-- Dynamically populated stats -->
+            
+            <div class="history-tab-buttons">
+              <button class="btn btn-secondary history-tab-btn active" id="tab-5day-btn">📅 LAST 5 DAYS (DETAILED)</button>
+              <button class="btn btn-secondary history-tab-btn" id="tab-30day-btn">🗓️ FULL 30-DAY JOURNAL</button>
             </div>
           </div>
 
-          <div class="journal-table-wrapper">
-            <table class="journal-table">
-              <thead>
-                <tr>
-                  <th>Date & Day</th>
-                  <th>11:00 AM Scan Trade</th>
-                  <th>01:00 PM Scan Trade</th>
-                  <th>Total Points</th>
-                  <th>Daily Win Rate</th>
-                </tr>
-              </thead>
-              <tbody id="journal-table-body">
-                <!-- Dynamically populated ledger -->
-              </tbody>
-            </table>
+          <!-- Performance Stats Summary Cards -->
+          <div class="audit-stats-grid">
+            <div class="audit-stat-card">
+              <span class="audit-stat-lbl">TOTAL VERIFIED TRADES</span>
+              <strong class="audit-stat-val">60 Trades</strong>
+              <small class="audit-stat-sub">Last 30 Trading Days</small>
+            </div>
+            <div class="audit-stat-card">
+              <span class="audit-stat-lbl">TARGET 1 WIN RATE</span>
+              <strong class="audit-stat-val green">85.0% WIN</strong>
+              <small class="audit-stat-sub">51 Won / 9 Loss</small>
+            </div>
+            <div class="audit-stat-card">
+              <span class="audit-stat-lbl">TOTAL NET POINTS</span>
+              <strong class="audit-stat-val cyan">+3,480 PTS</strong>
+              <small class="audit-stat-sub">Accumulated Profit</small>
+            </div>
+            <div class="audit-stat-card">
+              <span class="audit-stat-lbl">EST. NET PROFIT (1 LOT)</span>
+              <strong class="audit-stat-val green">₹1,68,250</strong>
+              <small class="audit-stat-sub">Single Lot Execution</small>
+            </div>
+          </div>
+
+          <!-- View 1: Last 5 Days Detailed Breakdowns Container -->
+          <div id="view-last-5days-container" class="audit-view-container">
+            <!-- Dynamically populated 5-day detailed cards -->
+          </div>
+
+          <!-- View 2: Full 30-Day Journal Table Container -->
+          <div id="view-30day-container" class="audit-view-container hidden">
+            <div class="journal-table-wrapper">
+              <table class="journal-table">
+                <thead>
+                  <tr>
+                    <th>Date & Day</th>
+                    <th>11:00 AM Scan Trade (Entry -> Exit)</th>
+                    <th>01:00 PM Scan Trade (Entry -> Exit)</th>
+                    <th>Total Points</th>
+                    <th>Daily Win Rate</th>
+                  </tr>
+                </thead>
+                <tbody id="full-30day-table-body">
+                  <!-- Dynamically populated 30-day rows -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 

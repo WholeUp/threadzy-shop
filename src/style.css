@@ -857,6 +857,114 @@ body {
   letter-spacing: 0.05em;
 }
 
+/* 30-Day Audit Trail & 5-Day Detailed View Styles */
+.history-tab-buttons { display: flex; gap: 0.5rem; }
+.history-tab-btn { font-size: 0.72rem; padding: 0.4rem 0.8rem; font-weight: 800; border-radius: var(--radius-sm); }
+.history-tab-btn.active { background: var(--color-cyan); color: #000; border-color: var(--color-cyan); }
+
+.audit-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+@media (max-width: 768px) { .audit-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.audit-stat-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.audit-stat-lbl { font-size: 0.62rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; }
+.audit-stat-val { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 800; }
+.audit-stat-val.green { color: #10b981; }
+.audit-stat-val.cyan { color: #06b6d4; }
+.audit-stat-sub { font-size: 0.65rem; color: var(--text-muted); }
+
+.audit-view-container.hidden { display: none !important; }
+
+/* 5-Day Detailed Card */
+.audit-day-card {
+  background: rgba(14, 18, 27, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.audit-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.75rem;
+}
+.audit-day-title { font-family: var(--font-heading); font-size: 1rem; font-weight: 800; color: var(--text-primary); }
+.audit-day-summary-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.audit-trades-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 768px) { .audit-trades-grid { grid-template-columns: 1fr; } }
+
+.audit-single-trade-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.audit-trade-top { display: flex; justify-content: space-between; align-items: center; }
+.audit-trade-time { font-family: var(--font-mono); font-size: 0.68rem; color: var(--color-cyan); font-weight: 700; }
+.audit-trade-badge { font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 4px; }
+.audit-trade-badge.win { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.audit-trade-badge.loss { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+.audit-trade-title { font-family: var(--font-heading); font-size: 0.95rem; font-weight: 800; color: var(--text-primary); }
+
+.audit-trade-details-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.8rem;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.6rem;
+  border-radius: 4px;
+}
+.audit-dtl-item { display: flex; justify-content: space-between; }
+.audit-dtl-lbl { color: var(--text-muted); }
+.audit-dtl-val { color: var(--text-primary); font-weight: 700; }
+
+.audit-trade-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding-top: 0.2rem;
+}
+
 /* Share Signal Button */
 .share-signal-btn {
   font-size: 0.7rem;

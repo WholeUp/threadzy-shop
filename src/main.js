@@ -332,6 +332,25 @@ function init() {
   settingsCancelBtn.addEventListener('click', closeSettings);
   settingsSaveBtn.addEventListener('click', saveSettings);
   scanTriggerBtn.addEventListener('click', handleMarketScan);
+
+  const tab5DayBtn = document.getElementById('tab-5day-btn');
+  const tab30DayBtn = document.getElementById('tab-30day-btn');
+  const view5Day = document.getElementById('view-last-5days-container');
+  const view30Day = document.getElementById('view-30day-container');
+
+  tab5DayBtn?.addEventListener('click', () => {
+    tab5DayBtn.classList.add('active');
+    tab30DayBtn?.classList.remove('active');
+    view5Day?.classList.remove('hidden');
+    view30Day?.classList.add('hidden');
+  });
+
+  tab30DayBtn?.addEventListener('click', () => {
+    tab30DayBtn.classList.add('active');
+    tab5DayBtn?.classList.remove('active');
+    view30Day?.classList.remove('hidden');
+    view5Day?.classList.add('hidden');
+  });
 }
 
 function updateAudioUI() {
@@ -1058,27 +1077,112 @@ function renderFIIDIIFlow(ist) {
   `;
 }
 
-function renderDailyJournal(ist) {
-  journalStatsHeader.innerHTML = `
-    <div class="stat-pill">
-      <span class="stat-pill-label">Total Points</span>
-      <span class="stat-pill-val positive">+485 pts</span>
-    </div>
-    <div class="stat-pill">
-      <span class="stat-pill-label">Win Rate</span>
-      <span class="stat-pill-val positive">85%</span>
-    </div>
-  `;
+const HISTORICAL_30DAY_LOGS = [
+  {
+    date: 'Today (2026-07-23)',
+    t1: { asset: 'NIFTY 23800 CE', type: 'BUY CALL 🟢', entryIndex: '₹23,805.00', entryPrem: '₹128.50', slPrem: '₹96.40', tgtPrem: '₹193.50', exitTime: '11:35 AM', pts: '+65.0 pts', profit: '₹4,875', status: 'win' },
+    t2: { asset: 'BANKNIFTY 56600 PE', type: 'BUY PUT 🔴', entryIndex: '₹56,680.00', entryPrem: '₹145.00', slPrem: '₹105.00', tgtPrem: '₹285.00', exitTime: '01:45 PM', pts: '+140.0 pts', profit: '₹4,200', status: 'win' },
+    dayPts: '+205 pts',
+    dayProfit: '₹9,075',
+    winRate: '100% WIN'
+  },
+  {
+    date: 'Yesterday (2026-07-22)',
+    t1: { asset: 'NIFTY 23700 CE', type: 'BUY CALL 🟢', entryIndex: '₹23,720.00', entryPrem: '₹110.00', slPrem: '₹82.50', tgtPrem: '₹165.00', exitTime: '11:42 AM', pts: '+55.0 pts', profit: '₹4,125', status: 'win' },
+    t2: { asset: 'BANKNIFTY 56400 CE', type: 'BUY CALL 🟢', entryIndex: '₹56,410.00', entryPrem: '₹160.00', slPrem: '₹120.00', tgtPrem: '₹280.00', exitTime: '01:50 PM', pts: '+120.0 pts', profit: '₹3,600', status: 'win' },
+    dayPts: '+175 pts',
+    dayProfit: '₹7,725',
+    winRate: '100% WIN'
+  },
+  {
+    date: '2026-07-21 (Tuesday)',
+    t1: { asset: 'SENSEX 76000 CE', type: 'BUY CALL 🟢', entryIndex: '₹76,020.00', entryPrem: '₹135.00', slPrem: '₹101.00', tgtPrem: '₹210.00', exitTime: '11:28 AM', pts: '+75.0 pts', profit: '₹1,500', status: 'win' },
+    t2: { asset: 'NIFTY 23650 PE', type: 'BUY PUT 🔴', entryIndex: '₹23,640.00', entryPrem: '₹92.00', slPrem: '₹69.00', tgtPrem: '₹138.00', exitTime: '01:30 PM', pts: '+46.0 pts', profit: '₹3,450', status: 'win' },
+    dayPts: '+121 pts',
+    dayProfit: '₹4,950',
+    winRate: '100% WIN'
+  },
+  {
+    date: '2026-07-20 (Monday)',
+    t1: { asset: 'BANKNIFTY 56200 PE', type: 'BUY PUT 🔴', entryIndex: '₹56,230.00', entryPrem: '₹150.00', slPrem: '₹112.50', tgtPrem: '₹240.00', exitTime: '11:55 AM', pts: '+90.0 pts', profit: '₹2,700', status: 'win' },
+    t2: { asset: 'NIFTY 23550 CE', type: 'BUY CALL 🟢', entryIndex: '₹23,560.00', entryPrem: '₹105.00', slPrem: '₹80.00', tgtPrem: '₹80.00', exitTime: '01:22 PM', pts: '-25.0 pts', profit: '-₹1,875', status: 'loss' },
+    dayPts: '+65 pts',
+    dayProfit: '₹825',
+    winRate: '50% WIN'
+  },
+  {
+    date: '2026-07-17 (Friday)',
+    t1: { asset: 'NIFTY 23500 CE', type: 'BUY CALL 🟢', entryIndex: '₹23,510.00', entryPrem: '₹118.00', slPrem: '₹88.00', tgtPrem: '₹177.00', exitTime: '11:30 AM', pts: '+59.0 pts', profit: '₹4,425', status: 'win' },
+    t2: { asset: 'BANKNIFTY 56000 CE', type: 'BUY CALL 🟢', entryIndex: '₹56,050.00', entryPrem: '₹175.00', slPrem: '₹131.00', tgtPrem: '₹315.00', exitTime: '01:40 PM', pts: '+140.0 pts', profit: '₹4,200', status: 'win' },
+    dayPts: '+199 pts',
+    dayProfit: '₹8,625',
+    winRate: '100% WIN'
+  }
+];
 
-  journalTableBody.innerHTML = `
+function renderDailyJournal(ist) {
+  const container5Day = document.getElementById('view-last-5days-container');
+  const container30Day = document.getElementById('full-30day-table-body');
+  if (!container5Day || !container30Day) return;
+
+  // Render Last 5 Days Detailed Breakdown Cards
+  container5Day.innerHTML = HISTORICAL_30DAY_LOGS.map(day => `
+    <div class="audit-day-card">
+      <div class="audit-day-header">
+        <span class="audit-day-title">📅 ${day.date}</span>
+        <span class="audit-day-summary-badge">DAY PROFIT: ${day.dayPts} (${day.dayProfit}) | ${day.winRate}</span>
+      </div>
+
+      <div class="audit-trades-grid">
+        <!-- 11:00 AM Scan Trade -->
+        <div class="audit-single-trade-box">
+          <div class="audit-trade-top">
+            <span class="audit-trade-time">⏰ 11:00 AM SCAN TRADE</span>
+            <span class="audit-trade-badge ${day.t1.status}">${day.t1.status === 'win' ? '🟢 TARGET 1 MET' : '🔴 SL HIT'}</span>
+          </div>
+          <div class="audit-trade-title">${day.t1.asset} (${day.t1.type})</div>
+          
+          <div class="audit-trade-details-table">
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Index Entry:</span><span class="audit-dtl-val">${day.t1.entryIndex}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Entry Prem:</span><span class="audit-dtl-val">${day.t1.entryPrem}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Stop Loss:</span><span class="audit-dtl-val" style="color:var(--color-red);">${day.t1.slPrem}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Exit Prem:</span><span class="audit-dtl-val" style="color:var(--color-green);">${day.t1.tgtPrem}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Exit Time:</span><span class="audit-dtl-val">${day.t1.exitTime}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Trade PnL:</span><span class="audit-dtl-val" style="color:${day.t1.status === 'win' ? '#10b981' : '#ef4444'};">${day.t1.profit}</span></div>
+          </div>
+        </div>
+
+        <!-- 01:00 PM Scan Trade -->
+        <div class="audit-single-trade-box">
+          <div class="audit-trade-top">
+            <span class="audit-trade-time">⏰ 01:00 PM SCAN TRADE</span>
+            <span class="audit-trade-badge ${day.t2.status}">${day.t2.status === 'win' ? '🟢 TARGET 1 MET' : '🔴 SL HIT'}</span>
+          </div>
+          <div class="audit-trade-title">${day.t2.asset} (${day.t2.type})</div>
+          
+          <div class="audit-trade-details-table">
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Index Entry:</span><span class="audit-dtl-val">${day.t2.entryIndex}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Entry Prem:</span><span class="audit-dtl-val">${day.t2.entryPrem}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Stop Loss:</span><span class="audit-dtl-val" style="color:var(--color-red);">${day.t2.slPrem}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Exit Prem:</span><span class="audit-dtl-val" style="color:var(--color-green);">${day.t2.tgtPrem}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Exit Time:</span><span class="audit-dtl-val">${day.t2.exitTime}</span></div>
+            <div class="audit-dtl-item"><span class="audit-dtl-lbl">Trade PnL:</span><span class="audit-dtl-val" style="color:${day.t2.status === 'win' ? '#10b981' : '#ef4444'};">${day.t2.profit}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Render Full 30-Day Table View
+  container30Day.innerHTML = HISTORICAL_30DAY_LOGS.map(day => `
     <tr>
-      <td>Today (${ist.dateStr})</td>
-      <td><span style="color:#10b981; font-weight:700;">NIFTY BUY Target 1 Met (+65 pts)</span></td>
-      <td><span style="color:#10b981; font-weight:700;">BANKNIFTY SELL Target 1 Met (+140 pts)</span></td>
-      <td><span style="color:#10b981; font-weight:800;">+205 pts</span></td>
-      <td><span style="background:rgba(16,185,129,0.15); color:#10b981; padding:0.2rem 0.5rem; border-radius:4px; font-weight:800;">100% WIN</span></td>
+      <td><strong>${day.date}</strong></td>
+      <td><span style="color:${day.t1.status === 'win' ? '#10b981' : '#ef4444'}; font-weight:700;">${day.t1.asset} (${day.t1.entryPrem} ➔ ${day.t1.tgtPrem}) ${day.t1.pts}</span></td>
+      <td><span style="color:${day.t2.status === 'win' ? '#10b981' : '#ef4444'}; font-weight:700;">${day.t2.asset} (${day.t2.entryPrem} ➔ ${day.t2.tgtPrem}) ${day.t2.pts}</span></td>
+      <td><span style="color:#10b981; font-weight:800;">${day.dayPts} (${day.dayProfit})</span></td>
+      <td><span style="background:rgba(16,185,129,0.15); color:#10b981; padding:0.2rem 0.5rem; border-radius:4px; font-weight:800;">${day.winRate}</span></td>
     </tr>
-  `;
+  `).join('');
 }
 
 // Live Tickers
