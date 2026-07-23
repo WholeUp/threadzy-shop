@@ -1102,34 +1102,39 @@ function generate30DaysHistory() {
     const dayTotalPts = t1PtsVal + t2PtsVal;
     const dayWinStr = (t1Status === 'win' && t2Status === 'win') ? '100% WIN' : (t1Status === 'loss' && t2Status === 'loss') ? '0% LOSS' : '50% WIN';
 
+    const t1CapitalStr = (idx % 5 === 2) ? '\u{20B9}2,700 (1 Lot)' : (idx % 5 === 1 || idx % 5 === 4) ? '\u{20B9}4,350 (1 Lot)' : '\u{20B9}9,000 (1 Lot)';
+    const t2CapitalStr = ((idx + 2) % 5 === 2) ? '\u{20B9}2,700 (1 Lot)' : ((idx + 2) % 5 === 1 || (idx + 2) % 5 === 4) ? '\u{20B9}4,350 (1 Lot)' : '\u{20B9}9,000 (1 Lot)';
+
     return {
       date: d,
       t1: {
         asset: assets[idx % 5],
         type: (idx % 2 === 0) ? 'BUY CALL 🟢' : 'BUY PUT 🔴',
-        entryIndex: '₹' + (23800 - idx * 20).toLocaleString('en-IN') + '.00',
-        entryPrem: '₹' + (110 + (idx * 4) % 50) + '.00',
-        slPrem: '₹' + (85 + (idx * 3) % 40) + '.00',
-        tgtPrem: '₹' + (180 + (idx * 6) % 90) + '.00',
+        entryIndex: '\u{20B9}' + (23800 - idx * 20).toLocaleString('en-IN') + '.00',
+        entryPrem: '\u{20B9}' + (110 + (idx * 4) % 50) + '.00',
+        slPrem: '\u{20B9}' + (85 + (idx * 3) % 40) + '.00',
+        tgtPrem: '\u{20B9}' + (180 + (idx * 6) % 90) + '.00',
         exitTime: '11:35 AM',
         pts: (t1PtsVal > 0 ? '+' : '') + t1PtsVal + '.0 pts',
-        profit: (t1PtsVal > 0 ? '+' : '') + '₹' + (t1PtsVal * 75).toLocaleString('en-IN'),
+        profit: (t1PtsVal > 0 ? '+' : '') + '\u{20B9}' + (t1PtsVal * 75).toLocaleString('en-IN'),
+        capitalUsed: t1CapitalStr,
         status: t1Status
       },
       t2: {
         asset: assets[(idx + 2) % 5],
         type: (idx % 3 === 0) ? 'BUY PUT 🔴' : 'BUY CALL 🟢',
-        entryIndex: '₹' + (56500 - idx * 50).toLocaleString('en-IN') + '.00',
-        entryPrem: '₹' + (140 + (idx * 5) % 60) + '.00',
-        slPrem: '₹' + (105 + (idx * 4) % 40) + '.00',
-        tgtPrem: '₹' + (260 + (idx * 8) % 100) + '.00',
+        entryIndex: '\u{20B9}' + (56500 - idx * 50).toLocaleString('en-IN') + '.00',
+        entryPrem: '\u{20B9}' + (140 + (idx * 5) % 60) + '.00',
+        slPrem: '\u{20B9}' + (105 + (idx * 4) % 40) + '.00',
+        tgtPrem: '\u{20B9}' + (260 + (idx * 8) % 100) + '.00',
         exitTime: '01:45 PM',
         pts: (t2PtsVal > 0 ? '+' : '') + t2PtsVal + '.0 pts',
-        profit: (t2PtsVal > 0 ? '+' : '') + '₹' + (t2PtsVal * 30).toLocaleString('en-IN'),
+        profit: (t2PtsVal > 0 ? '+' : '') + '\u{20B9}' + (t2PtsVal * 30).toLocaleString('en-IN'),
+        capitalUsed: t2CapitalStr,
         status: t2Status
       },
       dayPts: (dayTotalPts > 0 ? '+' : '') + dayTotalPts + ' pts',
-      dayProfit: (dayTotalPts > 0 ? '+' : '') + '₹' + (dayTotalPts * 45).toLocaleString('en-IN'),
+      dayProfit: (dayTotalPts > 0 ? '+' : '') + '\u{20B9}' + (dayTotalPts * 45).toLocaleString('en-IN'),
       winRate: dayWinStr
     };
   });
@@ -1160,7 +1165,7 @@ function renderDailyJournal(ist) {
             '</div>' +
             '<div class="audit-trade-title">' + day.t1.asset + ' (' + day.t1.type + ')</div>' +
             '<div class="audit-trade-details-table">' +
-              '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Index Entry:</span><span class="audit-dtl-val">' + day.t1.entryIndex + '</span></div>' +
+              '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Capital Used:</span><span class="audit-dtl-val" style="color:var(--color-cyan);">' + day.t1.capitalUsed + '</span></div>' +
               '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Entry Prem:</span><span class="audit-dtl-val">' + day.t1.entryPrem + '</span></div>' +
               '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Stop Loss:</span><span class="audit-dtl-val" style="color:var(--color-red);">' + day.t1.slPrem + '</span></div>' +
               '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Exit Prem:</span><span class="audit-dtl-val" style="color:var(--color-green);">' + day.t1.tgtPrem + '</span></div>' +
@@ -1175,7 +1180,7 @@ function renderDailyJournal(ist) {
             '</div>' +
             '<div class="audit-trade-title">' + day.t2.asset + ' (' + day.t2.type + ')</div>' +
             '<div class="audit-trade-details-table">' +
-              '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Index Entry:</span><span class="audit-dtl-val">' + day.t2.entryIndex + '</span></div>' +
+              '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Capital Used:</span><span class="audit-dtl-val" style="color:var(--color-cyan);">' + day.t2.capitalUsed + '</span></div>' +
               '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Entry Prem:</span><span class="audit-dtl-val">' + day.t2.entryPrem + '</span></div>' +
               '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Stop Loss:</span><span class="audit-dtl-val" style="color:var(--color-red);">' + day.t2.slPrem + '</span></div>' +
               '<div class="audit-dtl-item"><span class="audit-dtl-lbl">Exit Prem:</span><span class="audit-dtl-val" style="color:var(--color-green);">' + day.t2.tgtPrem + '</span></div>' +
