@@ -16,7 +16,7 @@ let telegramToken = localStorage.getItem('telegram_token') || '';
 let whatsappNumber = localStorage.getItem('whatsapp_number') || '';
 let callmebotKey = localStorage.getItem('callmebot_key') || '';
 let masterPassword = localStorage.getItem('master_access_password') || 'Neel1578';
-let isUnlocked = localStorage.getItem('terminal_unlocked') === 'true';
+let isUnlocked = sessionStorage.getItem('terminal_unlocked') === 'true';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
 let isRealDataConnected = false;
@@ -237,7 +237,8 @@ function handleUnlockTerminal() {
   const entered = masterPasscodeInput ? masterPasscodeInput.value.trim() : '';
   if (entered === masterPassword) {
     isUnlocked = true;
-    localStorage.setItem('terminal_unlocked', 'true');
+    sessionStorage.setItem('terminal_unlocked', 'true');
+    localStorage.removeItem('terminal_unlocked');
     lockErrorMsg?.classList.add('hidden');
     terminalLockScreen?.classList.add('hidden');
     speakVoiceAlert("Access Granted! QuantTerminal Unlocked.");
@@ -253,7 +254,8 @@ function handleUnlockTerminal() {
 
 function lockTerminalManual() {
   isUnlocked = false;
-  localStorage.setItem('terminal_unlocked', 'false');
+  sessionStorage.setItem('terminal_unlocked', 'false');
+  localStorage.removeItem('terminal_unlocked');
   checkTerminalLockState();
   speakVoiceAlert("Terminal Locked.");
 }
