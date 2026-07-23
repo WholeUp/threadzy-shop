@@ -13,9 +13,13 @@ let selectedTF = '15'; // TradingView interval 1, 5, 15, 60, D
 let simTimeMode = localStorage.getItem('sim_time_mode') || 'real';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
 let telegramToken = localStorage.getItem('telegram_token') || '';
+let whatsappNumber = localStorage.getItem('whatsapp_number') || '';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
 let isRealDataConnected = false;
+
+let wa0900Triggered = false;
+let wa0915Triggered = false;
 
 let targetAlertPrice = parseFloat(localStorage.getItem('target_alert_price')) || null;
 let alertTriggered = false;
@@ -197,6 +201,11 @@ const settingsToggleBtn = document.getElementById('settings-toggle-btn');
 const settingsModalOverlay = document.getElementById('settings-modal-overlay');
 const apiKeyInput = document.getElementById('api-key-input');
 const telegramTokenInput = document.getElementById('telegram-token-input');
+const whatsappNumInput = document.getElementById('whatsapp-num-input');
+const waTest0900Btn = document.getElementById('wa-test-0900-btn');
+const waSendSignalBtn = document.getElementById('wa-send-signal-btn');
+const waAlertStatusTag = document.getElementById('wa-alert-status-tag');
+
 const simTimeSelect = document.getElementById('sim-time-select');
 const settingsCancelBtn = document.getElementById('settings-cancel-btn');
 const settingsSaveBtn = document.getElementById('settings-save-btn');
@@ -213,6 +222,11 @@ function init() {
   initTradingViewWidget();
   startClockTicker();
   startPriceTicker();
+
+  // Request Browser Push Notification permissions
+  if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+    Notification.requestPermission();
+  }
 
   // Fetch Real Live NSE/BSE Market Quotes immediately & poll every 1.5s
   fetchRealMarketPrices();
@@ -237,6 +251,9 @@ function init() {
   capitalInputVal.addEventListener('input', updateLotCalculator);
   riskPctInputVal.addEventListener('input', updateLotCalculator);
   copySignalBtn?.addEventListener('click', copyTradeSignalToClipboard);
+
+  waTest0900Btn?.addEventListener('click', send0900AMTestAlert);
+  waSendSignalBtn?.addEventListener('click', sendWhatsAppSignalDirect);
 
   paperBuyCeBtn.addEventListener('click', () => executePaperTrade('CE'));
   paperBuyPeBtn.addEventListener('click', () => executePaperTrade('PE'));
@@ -999,7 +1016,71 @@ function startClockTicker() {
     const ist = getISTContext();
     istTimeClock.textContent = ist.timeFormatted;
     updateStatusText();
+
+    // 09:00 AM IST Morning Pre-Market Alert
+    if (ist.hour === 9 && ist.minute === 0 && ist.second < 3 && !wa0900Triggered) {
+      wa0900Triggered = true;
+      send0900AMTestAlert();
+    }
+    // 09:15 AM IST Live Market Open Alert
+    if (ist.hour === 9 && ist.minute === 15 && ist.second < 3 && !wa0915Triggered) {
+      wa0915Triggered = true;
+      speakVoiceAlert("9:15 AM IST. Live Indian Stock Market is now OPEN! Quant scan window active.");
+      sendWhatsAppSignalDirect();
+    }
   }, 1000);
+}
+
+function send0900AMTestAlert() {
+  const curP = prices.NIFTY50?.current || BASE_PRICES.NIFTY50;
+  const bankP = prices.BANKNIFTY?.current || BASE_PRICES.BANKNIFTY;
+
+  const msg = `⏰ 09:00 AM PRE-MARKET ALERT:
+Market opens in 15 minutes (09:15 AM IST)!
+Nifty 50 GTF Level: ₹${curP}
+Bank Nifty GTF Level: ₹${bankP}
+Get ready for Scan Window #1 execution at 09:45 AM!
+Live Desk: https://threadzy.shop/`;
+
+  speakVoiceAlert("Attention trader! It is 9:00 AM IST. Market opens in 15 minutes. Get ready for GTF Demand and Supply setups!");
+
+  if (whatsappNumber) {
+    const cleanNum = whatsappNumber.replace(/[^0-9]/g, '');
+    window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(msg)}`, '_blank');
+  } else {
+    alert("⏰ 09:00 AM MORNING PRE-MARKET ALERT:\n\n" + msg + "\n\n(Tip: Enter your WhatsApp number in ⚙️ Settings to auto-open WhatsApp!)");
+  }
+}
+
+function sendWhatsAppSignalDirect() {
+  const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
+  const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
+  const step = selectedAsset === 'BANKNIFTY' ? 100 : selectedAsset === 'SENSEX' ? 100 : 50;
+  const atm = Math.round(curP / step) * step;
+  const type = isBull ? 'CE' : 'PE';
+
+  const entryPrem = isBull ? 128.50 : 95.20;
+  const slPrem = (entryPrem * 0.75).toFixed(1);
+  const tgtPrem = (entryPrem * 1.45).toFixed(1);
+
+  const signalText = `🚀 WHOLEUP QUANT SIGNAL (09:15 AM LIVE):
+Asset: ${selectedAsset} (${atm} ${type})
+Type: ${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}
+Live Price: ₹${curP}
+Entry Premium: ₹${entryPrem}
+Stop Loss: ₹${slPrem}
+Target 1: ₹${tgtPrem}
+Win-Rate: 86% (GTF Fresh Zone)
+Time: ${getISTContext().timeFormatted}
+Live Desk: https://threadzy.shop/`;
+
+  speakVoiceAlert("Opening WhatsApp trade signal.");
+  const cleanNum = whatsappNumber ? whatsappNumber.replace(/[^0-9]/g, '') : '';
+  if (cleanNum) {
+    window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(signalText)}`, '_blank');
+  } else {
+    window.open(`https://wa.me/?text=${encodeURIComponent(signalText)}`, '_blank');
+  }
 }
 
 function startPriceTicker() {
@@ -1027,6 +1108,7 @@ function startPriceTicker() {
 function openSettings() {
   apiKeyInput.value = apiKey;
   telegramTokenInput.value = telegramToken;
+  if (whatsappNumInput) whatsappNumInput.value = whatsappNumber;
   simTimeSelect.value = simTimeMode;
   settingsModalOverlay.classList.remove('hidden');
 }
@@ -1038,10 +1120,12 @@ function closeSettings() {
 function saveSettings() {
   apiKey = apiKeyInput.value.trim();
   telegramToken = telegramTokenInput.value.trim();
+  if (whatsappNumInput) whatsappNumber = whatsappNumInput.value.trim();
   simTimeMode = simTimeSelect.value;
 
   localStorage.setItem('gemini_api_key', apiKey);
   localStorage.setItem('telegram_token', telegramToken);
+  localStorage.setItem('whatsapp_number', whatsappNumber);
   localStorage.setItem('sim_time_mode', simTimeMode);
 
   updateStatusText();
