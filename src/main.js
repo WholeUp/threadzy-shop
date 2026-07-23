@@ -15,6 +15,8 @@ let apiKey = localStorage.getItem('gemini_api_key') || '';
 let telegramToken = localStorage.getItem('telegram_token') || '';
 let whatsappNumber = localStorage.getItem('whatsapp_number') || '';
 let callmebotKey = localStorage.getItem('callmebot_key') || '';
+let masterPassword = localStorage.getItem('master_access_password') || '7890';
+let isUnlocked = localStorage.getItem('terminal_unlocked') === 'true';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
 let isRealDataConnected = false;
@@ -209,14 +211,56 @@ const waSendSignalBtn = document.getElementById('wa-send-signal-btn');
 const waAlertStatusTag = document.getElementById('wa-alert-status-tag');
 
 const simTimeSelect = document.getElementById('sim-time-select');
+const masterPassSettingInput = document.getElementById('master-pass-setting-input');
 const settingsCancelBtn = document.getElementById('settings-cancel-btn');
 const settingsSaveBtn = document.getElementById('settings-save-btn');
+
+const terminalLockScreen = document.getElementById('terminal-lock-screen');
+const masterPasscodeInput = document.getElementById('master-passcode-input');
+const unlockTerminalBtn = document.getElementById('unlock-terminal-btn');
+const lockErrorMsg = document.getElementById('lock-error-msg');
+const lockTerminalBtn = document.getElementById('lock-terminal-btn');
 
 const simBanner = document.getElementById('simulation-banner');
 const simBannerText = document.getElementById('simulation-banner-text');
 
+function checkTerminalLockState() {
+  if (!isUnlocked) {
+    terminalLockScreen?.classList.remove('hidden');
+    setTimeout(() => masterPasscodeInput?.focus(), 100);
+  } else {
+    terminalLockScreen?.classList.add('hidden');
+  }
+}
+
+function handleUnlockTerminal() {
+  const entered = masterPasscodeInput ? masterPasscodeInput.value.trim() : '';
+  if (entered === masterPassword) {
+    isUnlocked = true;
+    localStorage.setItem('terminal_unlocked', 'true');
+    lockErrorMsg?.classList.add('hidden');
+    terminalLockScreen?.classList.add('hidden');
+    speakVoiceAlert("Access Granted! QuantTerminal Unlocked.");
+  } else {
+    lockErrorMsg?.classList.remove('hidden');
+    if (masterPasscodeInput) {
+      masterPasscodeInput.value = '';
+      masterPasscodeInput.focus();
+    }
+    speakVoiceAlert("Access Denied! Incorrect Password.");
+  }
+}
+
+function lockTerminalManual() {
+  isUnlocked = false;
+  localStorage.setItem('terminal_unlocked', 'false');
+  checkTerminalLockState();
+  speakVoiceAlert("Terminal Locked.");
+}
+
 // Init Engine
 function init() {
+  checkTerminalLockState();
   updateAudioUI();
   updateStatusText();
   renderTickerMarquee();
@@ -259,6 +303,12 @@ function init() {
 
   paperBuyCeBtn.addEventListener('click', () => executePaperTrade('CE'));
   paperBuyPeBtn.addEventListener('click', () => executePaperTrade('PE'));
+
+  unlockTerminalBtn?.addEventListener('click', handleUnlockTerminal);
+  masterPasscodeInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleUnlockTerminal();
+  });
+  lockTerminalBtn?.addEventListener('click', lockTerminalManual);
 
   settingsToggleBtn.addEventListener('click', openSettings);
   settingsCancelBtn.addEventListener('click', closeSettings);
@@ -1144,6 +1194,7 @@ function openSettings() {
   telegramTokenInput.value = telegramToken;
   if (whatsappNumInput) whatsappNumInput.value = whatsappNumber;
   if (callmebotKeyInput) callmebotKeyInput.value = callmebotKey;
+  if (masterPassSettingInput) masterPassSettingInput.value = masterPassword;
   simTimeSelect.value = simTimeMode;
   settingsModalOverlay.classList.remove('hidden');
 }
@@ -1157,6 +1208,10 @@ function saveSettings() {
   telegramToken = telegramTokenInput.value.trim();
   if (whatsappNumInput) whatsappNumber = whatsappNumInput.value.trim();
   if (callmebotKeyInput) callmebotKey = callmebotKeyInput.value.trim();
+  if (masterPassSettingInput && masterPassSettingInput.value.trim()) {
+    masterPassword = masterPassSettingInput.value.trim();
+    localStorage.setItem('master_access_password', masterPassword);
+  }
   simTimeMode = simTimeSelect.value;
 
   localStorage.setItem('gemini_api_key', apiKey);

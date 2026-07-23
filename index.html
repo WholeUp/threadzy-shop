@@ -69,6 +69,11 @@
             <button class="btn btn-secondary icon-only-btn" id="settings-toggle-btn" title="Configure Gemini AI & Telegram Bot">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </button>
+
+            <!-- Lock Terminal Button -->
+            <button class="btn btn-secondary icon-only-btn" id="lock-terminal-btn" title="Lock Software Terminal">
+              🔒
+            </button>
           </div>
         </header>
 
@@ -458,6 +463,11 @@
         </div>
 
         <div class="input-group">
+          <label class="input-label">🔒 Master Access Password (To Lock/Unlock Software)</label>
+          <input type="password" class="input-field" id="master-pass-setting-input" placeholder="Set your secret password (Default: 7890)">
+        </div>
+
+        <div class="input-group">
           <label class="input-label">Simulate Clock Time</label>
           <select class="input-field" id="sim-time-select">
             <option value="real">Real-Time Clock (IST)</option>
@@ -472,6 +482,25 @@
         <div class="modal-buttons">
           <button class="btn btn-secondary" id="settings-cancel-btn">Cancel</button>
           <button class="btn btn-primary" id="settings-save-btn">Save & Rescan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FULL TERMINAL SECURITY ACCESS LOCK SCREEN -->
+    <div id="terminal-lock-screen" class="lock-screen-overlay">
+      <div class="lock-card-glass">
+        <div class="lock-icon-glow">🔒</div>
+        <h2 class="lock-title">WholeUp <span class="accent-glow">QuantTerminal Pro</span></h2>
+        <p class="lock-subtitle">RESTRICTED PRIVATE ACCESS. ENTER AUTHORIZED PASSCODE TO UNLOCK.</p>
+        
+        <div class="lock-form-group">
+          <input type="password" id="master-passcode-input" class="lock-input" placeholder="Enter Access Password..." autocomplete="off">
+          <button id="unlock-terminal-btn" class="lock-unlock-btn">UNLOCK TERMINAL 🔓</button>
+        </div>
+        <div id="lock-error-msg" class="lock-error-msg hidden">❌ Incorrect Access Password! Access Denied.</div>
+        
+        <div class="lock-footer-note">
+          <span>Protected Security System</span>
         </div>
       </div>
     </div>
