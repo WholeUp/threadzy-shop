@@ -979,6 +979,46 @@ body {
 .trade-pnl-tag.win { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
 .trade-pnl-tag.loss { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
 
+/* News Warning Banner */
+.news-warning-banner {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #f59e0b;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  animation: newsPulse 2s ease-in-out infinite alternate;
+}
+.news-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 10px #f59e0b;
+}
+@keyframes newsPulse {
+  0% { border-color: rgba(245, 158, 11, 0.35); }
+  100% { border-color: rgba(245, 158, 11, 0.8); }
+}
+
+/* Theme Classes */
+body.theme-gold {
+  --color-cyan: #fbbf24;
+  --color-green: #f59e0b;
+  --accent-glow: #d97706;
+}
+body.theme-emerald {
+  --color-cyan: #34d399;
+  --color-green: #10b981;
+  --accent-glow: #059669;
+}
+
 /* Share Signal Button */
 .share-signal-btn {
   font-size: 0.7rem;

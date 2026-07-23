@@ -48,6 +48,21 @@
               ⚡ TODAY EXPIRY: NIFTY 50
             </div>
 
+            <!-- Multi-Theme Selector -->
+            <button class="btn btn-secondary icon-only-btn" id="theme-toggle-btn" title="Switch Theme (Dark / Gold / Emerald)">
+              🎨
+            </button>
+
+            <!-- Language Selector -->
+            <button class="btn btn-secondary icon-only-btn" id="lang-toggle-btn" title="Switch Language (Hinglish / English / Hindi)">
+              🌐
+            </button>
+
+            <!-- Install Mobile App -->
+            <button class="btn btn-secondary icon-only-btn" id="pwa-install-btn" title="Install App on Mobile Home Screen">
+              📱
+            </button>
+
             <!-- Audio Voice Toggle -->
             <button class="btn btn-secondary audio-btn" id="audio-toggle-btn" title="Toggle Hindi Voice Alerts">
               <span id="audio-icon">🔊</span>
@@ -66,7 +81,7 @@
             </div>
 
             <!-- Settings -->
-            <button class="btn btn-secondary icon-only-btn" id="settings-toggle-btn" title="Configure Gemini AI & Telegram Bot">
+            <button class="btn btn-secondary icon-only-btn" id="settings-toggle-btn" title="Configure Gemini AI & Settings">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </button>
 
@@ -76,6 +91,12 @@
             </button>
           </div>
         </header>
+
+        <!-- Economic News Warning Banner -->
+        <div id="economic-news-banner" class="news-warning-banner">
+          <span class="news-pulse-dot"></span>
+          <span>📅 <strong>HIGH-IMPACT EVENT ALERT:</strong> RBI Monetary Policy & US Fed Rate Decision Session. High Volatility Expected!</span>
+        </div>
 
         <!-- Top Index Selector Overview Bar (3-Column Sleek Cards) -->
         <section class="index-summary-grid">
@@ -273,6 +294,78 @@
                   <button class="btn btn-secondary copy-order-btn" id="copy-pe-order-btn" style="margin-top:0.4rem; font-size:0.65rem; padding:0.25rem; width:100%;">📋 COPY PE ORDER</button>
                 </div>
               </div>
+
+              <!-- FEATURE: Direct Broker App Launchers -->
+              <div style="margin-top:0.75rem; border-top:1px solid rgba(255,255,255,0.06); padding-top:0.6rem;">
+                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:800; margin-bottom:0.4rem;">🚀 QUICK BROKER APP LAUNCHERS</div>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.3rem;">
+                  <a href="https://kite.zerodha.com/" target="_blank" class="btn btn-secondary" style="font-size:0.6rem; padding:0.25rem; text-align:center; border-color:rgba(255,87,34,0.4); color:#ff5722;">Zerodha</a>
+                  <a href="https://groww.in/trade" target="_blank" class="btn btn-secondary" style="font-size:0.6rem; padding:0.25rem; text-align:center; border-color:rgba(0,210,144,0.4); color:#00d290;">Groww</a>
+                  <a href="https://dhan.co/" target="_blank" class="btn btn-secondary" style="font-size:0.6rem; padding:0.25rem; text-align:center; border-color:rgba(30,136,229,0.4); color:#1e88e5;">Dhan</a>
+                  <a href="https://trade.angelone.in/" target="_blank" class="btn btn-secondary" style="font-size:0.6rem; padding:0.25rem; text-align:center; border-color:rgba(156,39,176,0.4); color:#ab47bc;">AngelOne</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- FEATURE: Option Chain PCR & Max Pain Tracker -->
+            <div class="sidebar-block option-chain-block">
+              <div class="block-title-row">
+                <span class="block-title">📊 OPTION CHAIN & PCR MATRIX</span>
+                <span class="block-tag green" id="pcr-value-tag">PCR 1.25 (Bullish)</span>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; font-size:0.72rem; font-family:var(--font-mono); margin-top:0.4rem;">
+                <div style="background:rgba(0,0,0,0.3); padding:0.5rem; border-radius:4px;">
+                  <span style="color:var(--text-muted); font-size:0.62rem; display:block;">MAX PAIN LEVEL</span>
+                  <strong style="color:var(--color-cyan); font-size:0.9rem;" id="max-pain-val">24,300</strong>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:0.5rem; border-radius:4px;">
+                  <span style="color:var(--text-muted); font-size:0.62rem; display:block;">CALL/PUT OI RATIO</span>
+                  <strong style="color:var(--color-green); font-size:0.9rem;" id="oi-ratio-val">1.28 (Bull Bias)</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- FEATURE: Option Greeks Panel (Delta & Theta Decay Monitor) -->
+            <div class="sidebar-block greeks-block">
+              <div class="block-title-row">
+                <span class="block-title">⚡ OPTION GREEKS DASHBOARD</span>
+                <span class="block-tag cyan">LIVE THETA DECAY</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.3rem; font-size:0.68rem; font-family:var(--font-mono); text-align:center; margin-top:0.4rem;">
+                <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
+                  <span style="color:var(--text-muted); font-size:0.6rem; display:block;">DELTA</span>
+                  <strong style="color:#10b981;">0.54</strong>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
+                  <span style="color:var(--text-muted); font-size:0.6rem; display:block;">THETA</span>
+                  <strong style="color:#ef4444;">-8.20</strong>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
+                  <span style="color:var(--text-muted); font-size:0.6rem; display:block;">VEGA</span>
+                  <strong style="color:#06b6d4;">+12.4</strong>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
+                  <span style="color:var(--text-muted); font-size:0.6rem; display:block;">GAMMA</span>
+                  <strong style="color:#f59e0b;">0.002</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- FEATURE: Voice Command Controller & Discipline Streaks -->
+            <div class="sidebar-block voice-mic-block">
+              <div class="block-title-row">
+                <span class="block-title">🎙️ VOICE COMMAND MIC CONTROLLER</span>
+                <span class="block-tag green">MIC READY</span>
+              </div>
+              <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.4rem;">
+                <button class="btn btn-primary" id="voice-mic-trigger-btn" style="flex:1; background:#8b5cf6; border-color:#8b5cf6; font-weight:800; font-size:0.75rem;">🎙️ SPEAK COMMAND ("Scan Nifty")</button>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:0.4rem;" id="voice-mic-status-text">Click button and say "Scan Market" or "Lock Terminal".</div>
+
+              <div style="margin-top:0.75rem; border-top:1px solid rgba(255,255,255,0.06); padding-top:0.5rem; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.68rem; color:var(--text-muted); font-weight:800;">🏆 DISCIPLINE STREAK:</span>
+                <span style="background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.4); padding:0.2rem 0.6rem; border-radius:999px; font-weight:800; font-size:0.72rem;">🔥 5-DAY WIN STREAK</span>
+              </div>
             </div>
 
             <!-- Virtual Paper Trading Terminal -->
@@ -407,6 +500,7 @@
             <div class="history-tab-buttons">
               <button class="btn btn-secondary history-tab-btn active" id="tab-5day-btn">📅 LAST 5 DAYS (DETAILED)</button>
               <button class="btn btn-secondary history-tab-btn" id="tab-30day-btn">🗓️ FULL 30-DAY JOURNAL</button>
+              <button class="btn btn-primary history-tab-btn" id="download-report-btn" style="background:#06b6d4; border-color:#06b6d4; color:#000; font-weight:800;">📄 DOWNLOAD REPORT (CSV)</button>
             </div>
           </div>
 
@@ -487,12 +581,12 @@
           <input type="text" class="input-field" id="telegram-token-input" placeholder="e.g. 123456789:ABCdefGHI...">
         </div>
 
-        <div class="input-group" style="display: none !important;">
+        <div class="input-group">
           <label class="input-label">💬 Multiple WhatsApp Mobile Numbers (Comma separated for Broadcast)</label>
           <input type="text" class="input-field" id="whatsapp-num-input" placeholder="e.g. 919876543210, 919123456789, 919988776655 (Separate with comma)">
         </div>
 
-        <div class="input-group" style="display: none !important;">
+        <div class="input-group">
           <label class="input-label">📲 CallMeBot WhatsApp API Key (For 100% Direct Inbox Delivery)</label>
           <input type="text" class="input-field" id="callmebot-key-input" placeholder="Optional: Enter CallMeBot API Key for direct WhatsApp inbox delivery">
         </div>

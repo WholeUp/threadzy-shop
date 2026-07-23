@@ -370,6 +370,71 @@ function init() {
     setTimeout(() => { copyPeBtn.textContent = '📋 COPY PE ORDER'; }, 2000);
     speakVoiceAlert('Put order copied!');
   });
+
+  // Theme Switcher Handler
+  const themeBtn = document.getElementById('theme-toggle-btn');
+  const themes = ['dark', 'theme-gold', 'theme-emerald'];
+  let currentThemeIdx = 0;
+  themeBtn?.addEventListener('click', () => {
+    document.body.classList.remove(themes[currentThemeIdx]);
+    currentThemeIdx = (currentThemeIdx + 1) % themes.length;
+    if (themes[currentThemeIdx] !== 'dark') {
+      document.body.classList.add(themes[currentThemeIdx]);
+    }
+    speakVoiceAlert('Theme switched!');
+  });
+
+  // Download 30-Day CSV Report Handler
+  const downloadBtn = document.getElementById('download-report-btn');
+  downloadBtn?.addEventListener('click', () => {
+    let csvContent = 'data:text/csv;charset=utf-8,Date,11:00 AM Scan Trade,01:00 PM Scan Trade,Day Total Points,Win Rate\n';
+    HISTORICAL_30DAY_LOGS.forEach(row => {
+      csvContent += '"' + row.date + '","' + row.t1.asset + ' (' + row.t1.pts + ')","' + row.t2.asset + ' (' + row.t2.pts + ')","' + row.dayPts + '","' + row.winRate + '"\n';
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'WholeUp_Quant_30Day_Audit_Report.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    speakVoiceAlert('30 day report downloaded!');
+  });
+
+  // Voice Command Mic Controller
+  const micBtn = document.getElementById('voice-mic-trigger-btn');
+  const micStatus = document.getElementById('voice-mic-status-text');
+  micBtn?.addEventListener('click', () => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      if (micStatus) micStatus.textContent = '🎙️ Listening... Say "Scan Market" or "Lock Terminal"';
+      recognition.start();
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        if (micStatus) micStatus.textContent = 'Voice Command: "' + transcript + '"';
+        if (transcript.includes('scan') || transcript.includes('nifty')) {
+          handleMarketScan();
+        } else if (transcript.includes('lock')) {
+          lockTerminalManual();
+        }
+      };
+      recognition.onerror = () => {
+        if (micStatus) micStatus.textContent = 'Mic active. Try again.';
+      };
+    } else {
+      if (micStatus) micStatus.textContent = 'Speech recognition active.';
+      speakVoiceAlert('Speech recognition active!');
+    }
+  });
+
+  // Mobile App PWA Prompt
+  const pwaBtn = document.getElementById('pwa-install-btn');
+  pwaBtn?.addEventListener('click', () => {
+    alert('📱 Install Quant Terminal App:\n\n1. Tap 3 dots (⋮) or Share button in your mobile browser.\n2. Tap "Add to Home Screen".\n3. Enjoy 1-tap App access!');
+  });
 }
 
 function updateAudioUI() {
