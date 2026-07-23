@@ -220,21 +220,20 @@
                   <span>Sensex Lots:</span>
                   <strong style="color:var(--color-amber)" id="calc-sensex-lots">2 Lots (40 Qty)</strong>
                 </div>
-              </div>
-            </div>
-
-            <!-- WhatsApp Morning & Trade Alerts Block -->
-            <div class="sidebar-block whatsapp-alert-block">
-              <div class="block-title-row">
-                <span class="block-title">💬 WHATSAPP MORNING & TRADE ALERTS</span>
-                <span class="block-tag green" id="wa-alert-status-tag">ACTIVE (09:00 AM)</span>
-              </div>
-              <div style="font-size:0.7rem; color:var(--text-secondary); line-height:1.4;">
-                ⏰ <strong>Auto Schedules:</strong> 09:00 AM (Pre-Market Reminder) & 09:15 AM (Live Market Open Voice + Push Alert).
-              </div>
-              <div class="alert-input-row" style="margin-top:0.4rem;">
-                <button class="btn btn-secondary alert-set-btn" id="wa-test-0900-btn" style="flex:1;">📲 09:00 AM TEST</button>
-                <button class="btn btn-primary alert-set-btn" id="wa-send-signal-btn" style="flex:1; background:#25D366; border-color:#25D366; color:#000; font-weight:800;">💬 WHATSAPP SIGNAL</button>
+                <!-- WhatsApp Morning Alerts Sidebar Block (Hidden per user request) -->
+                <div class="sidebar-block whatsapp-alerts-block hidden" style="display: none !important;">
+                  <div class="block-title-row">
+                    <span class="block-title">💬 WHATSAPP MORNING & TRADE ALERTS</span>
+                    <span class="block-tag green" id="wa-alert-status-tag">ACTIVE (09:00 AM)</span>
+                  </div>
+                  <div style="font-size:0.7rem; color:var(--text-secondary); line-height:1.4;">
+                    ⏰ <strong>Auto Schedules:</strong> 09:00 AM (Pre-Market Reminder) & 09:15 AM (Live Market Open Voice + Push Alert).
+                  </div>
+                  <div class="alert-input-row" style="margin-top:0.4rem;">
+                    <button class="btn btn-secondary alert-set-btn" id="wa-test-0900-btn" style="flex:1;">📲 09:00 AM TEST</button>
+                    <button class="btn btn-primary alert-set-btn" id="wa-send-signal-btn" style="flex:1; background:#25D366; border-color:#25D366; color:#000; font-weight:800;">💬 WHATSAPP SIGNAL</button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -452,12 +451,12 @@
           <input type="text" class="input-field" id="telegram-token-input" placeholder="e.g. 123456789:ABCdefGHI...">
         </div>
 
-        <div class="input-group">
+        <div class="input-group" style="display: none !important;">
           <label class="input-label">💬 Multiple WhatsApp Mobile Numbers (Comma separated for Broadcast)</label>
           <input type="text" class="input-field" id="whatsapp-num-input" placeholder="e.g. 919876543210, 919123456789, 919988776655 (Separate with comma)">
         </div>
 
-        <div class="input-group">
+        <div class="input-group" style="display: none !important;">
           <label class="input-label">📲 CallMeBot WhatsApp API Key (For 100% Direct Inbox Delivery)</label>
           <input type="text" class="input-field" id="callmebot-key-input" placeholder="Optional: Enter CallMeBot API Key for direct WhatsApp inbox delivery">
         </div>
