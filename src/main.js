@@ -15,7 +15,7 @@ let apiKey = localStorage.getItem('gemini_api_key') || '';
 let telegramToken = localStorage.getItem('telegram_token') || '';
 let whatsappNumber = localStorage.getItem('whatsapp_number') || '';
 let callmebotKey = localStorage.getItem('callmebot_key') || '';
-let masterPassword = localStorage.getItem('master_access_password') || '7890';
+let masterPassword = localStorage.getItem('master_access_password') || 'Neel1578';
 let isUnlocked = localStorage.getItem('terminal_unlocked') === 'true';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
