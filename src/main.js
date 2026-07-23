@@ -1,10 +1,8 @@
-import './style.css';
-
-// Base Index prices
+// Base Index prices (Real NSE/BSE Initial Baseline)
 const BASE_PRICES = {
-  NIFTY50: 24350.80,
-  BANKNIFTY: 52300.20,
-  SENSEX: 79800.50
+  NIFTY50: 23870.00,
+  BANKNIFTY: 56586.40,
+  SENSEX: 76246.93
 };
 
 // Global State
@@ -15,6 +13,7 @@ let apiKey = localStorage.getItem('gemini_api_key') || '';
 let telegramToken = localStorage.getItem('telegram_token') || '';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
+let isRealDataConnected = false;
 
 let targetAlertPrice = parseFloat(localStorage.getItem('target_alert_price')) || null;
 let alertTriggered = false;
@@ -23,15 +22,15 @@ let userCapital = parseFloat(localStorage.getItem('user_capital')) || 500000;
 let userRiskPct = parseFloat(localStorage.getItem('user_risk_pct')) || 1.0;
 
 let outlook = JSON.parse(localStorage.getItem('market_outlook_cache')) || {
-  NIFTY50: { trend: 'BULLISH', reason: 'Global cues positive hain aur IT sector ke heavyweights (TCS, Infosys) key resistance breakouts ki taraf badh rahe hain. Demand Zone (24,280) strongly hold ho raha hai.' },
+  NIFTY50: { trend: 'BULLISH', reason: 'Global cues positive hain aur IT sector ke heavyweights (TCS, Infosys) key resistance breakouts ki taraf badh rahe hain. Demand Zone (23,820) strongly hold ho raha hai.' },
   BANKNIFTY: { trend: 'BEARISH', reason: 'RBI ke credit regulation tightening and margin pressures ki wajah se private banks key support levels break kar rahe hain.' },
   SENSEX: { trend: 'BULLISH', reason: 'Large-cap stocks low level par strong buying support dikha rahe hain aur domestic mutual funds inflow steady hai.' }
 };
 
 let prices = {
-  NIFTY50: { current: BASE_PRICES.NIFTY50, change: 0.28 },
-  BANKNIFTY: { current: BASE_PRICES.BANKNIFTY, change: -0.42 },
-  SENSEX: { current: BASE_PRICES.SENSEX, change: 0.19 }
+  NIFTY50: { current: BASE_PRICES.NIFTY50, change: -0.53 },
+  BANKNIFTY: { current: BASE_PRICES.BANKNIFTY, change: -0.95 },
+  SENSEX: { current: BASE_PRICES.SENSEX, change: -0.66 }
 };
 
 // Paper Trading State
@@ -213,6 +212,10 @@ function init() {
   startClockTicker();
   startPriceTicker();
 
+  // Fetch Real Live NSE/BSE Market Quotes immediately & poll every 4s
+  fetchRealMarketPrices();
+  setInterval(fetchRealMarketPrices, 4000);
+
   // Event Handlers
   audioToggleBtn.addEventListener('click', toggleAudio);
   selectCardNifty.addEventListener('click', () => switchAsset('NIFTY50'));
@@ -267,7 +270,7 @@ function updateStatusText() {
   const statusElem = document.querySelector('.status-indicator');
 
   if (!mStatus.isOpen) {
-    apiStatusText.textContent = mStatus.label;
+    apiStatusText.textContent = isRealDataConnected ? `NSE/BSE REAL FEED (${mStatus.label})` : mStatus.label;
     if (statusElem) {
       statusElem.style.background = 'rgba(239, 68, 68, 0.12)';
       statusElem.style.borderColor = 'rgba(239, 68, 68, 0.3)';
@@ -276,7 +279,7 @@ function updateStatusText() {
       if (dot) dot.style.backgroundColor = '#ef4444';
     }
   } else {
-    apiStatusText.textContent = apiKey ? 'GEMINI AI LIVE OPEN' : 'LIVE MARKET OPEN';
+    apiStatusText.textContent = isRealDataConnected ? '🟢 NSE/BSE REAL-TIME LIVE FEED' : (apiKey ? 'GEMINI AI LIVE OPEN' : 'LIVE MARKET OPEN');
     if (statusElem) {
       statusElem.style.background = 'rgba(16, 185, 129, 0.08)';
       statusElem.style.borderColor = 'rgba(16, 185, 129, 0.2)';
@@ -284,6 +287,43 @@ function updateStatusText() {
       const dot = statusElem.querySelector('.pulse-dot');
       if (dot) dot.style.backgroundColor = '#10b981';
     }
+  }
+}
+
+async function fetchRealMarketPrices() {
+  try {
+    const res = await fetch('/api/quotes');
+    if (!res.ok) return;
+    const data = await res.json();
+
+    if (data && data.success && data.prices) {
+      isRealDataConnected = true;
+      if (data.prices.NIFTY50?.current) {
+        prices.NIFTY50.current = data.prices.NIFTY50.current;
+        prices.NIFTY50.change = data.prices.NIFTY50.change;
+        BASE_PRICES.NIFTY50 = data.prices.NIFTY50.prevClose || data.prices.NIFTY50.current;
+      }
+      if (data.prices.BANKNIFTY?.current) {
+        prices.BANKNIFTY.current = data.prices.BANKNIFTY.current;
+        prices.BANKNIFTY.change = data.prices.BANKNIFTY.change;
+        BASE_PRICES.BANKNIFTY = data.prices.BANKNIFTY.prevClose || data.prices.BANKNIFTY.current;
+      }
+      if (data.prices.SENSEX?.current) {
+        prices.SENSEX.current = data.prices.SENSEX.current;
+        prices.SENSEX.change = data.prices.SENSEX.change;
+        BASE_PRICES.SENSEX = data.prices.SENSEX.prevClose || data.prices.SENSEX.current;
+      }
+
+      updateStatusText();
+      renderTickerCards();
+      renderOptionStrikeCalculator(getISTContext());
+      drawCandlestickCanvasChart();
+      renderPaperTradingUI();
+      checkPriceAlertsTrigger();
+      updateLotCalculator();
+    }
+  } catch (err) {
+    console.warn('Real market API notice:', err);
   }
 }
 
@@ -962,12 +1002,14 @@ function startPriceTicker() {
 
     if (!mStatus.isOpen) return;
 
-    Object.keys(prices).forEach(key => {
-      const isBull = outlook[key]?.trend === 'BULLISH';
-      const tick = (Math.random() - 0.48) * (prices[key].current * 0.0003);
-      prices[key].current = parseFloat((prices[key].current + tick).toFixed(2));
-      prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
-    });
+    if (!isRealDataConnected) {
+      Object.keys(prices).forEach(key => {
+        const tick = (Math.random() - 0.48) * (prices[key].current * 0.0003);
+        prices[key].current = parseFloat((prices[key].current + tick).toFixed(2));
+        prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
+      });
+    }
+
     renderTickerCards();
     drawCandlestickCanvasChart();
     renderPaperTradingUI();
