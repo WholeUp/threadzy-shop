@@ -1058,8 +1058,45 @@ function renderDemandSupplyMatrix() {
   demandSupplyCardsWrapper.innerHTML = html;
 }
 
+function updateTopLiveTradeBanner(isOpen, ist) {
+  const banner = document.getElementById('top-live-trade-banner');
+  if (!banner) return;
+
+  const statusTag = document.getElementById('banner-status-tag');
+  const confTag = document.getElementById('banner-confidence-tag');
+  const title = document.getElementById('banner-trade-title');
+  const pricesBox = document.getElementById('banner-price-levels-box');
+  const copyBtn = document.getElementById('banner-copy-trade-btn');
+
+  if (!isOpen) {
+    banner.className = 'top-live-signal-banner closed-state';
+    if (statusTag) statusTag.innerHTML = '🔴 MARKET CLOSED (3:30 PM IST)';
+    if (confTag) confTag.innerHTML = 'STANDBY MODE • NEXT LIVE SCAN AT 11:00 AM IST';
+    if (title) title.innerHTML = 'NSE / BSE Market Closed • Standing By';
+    if (pricesBox) pricesBox.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Real-time GTF AI Engine live signal unlocks tomorrow at <strong>11:00 AM IST</strong>.</span>';
+    if (copyBtn) {
+      copyBtn.innerHTML = '🔒 MARKET CLOSED';
+      copyBtn.className = 'btn btn-secondary banner-copy-btn';
+    }
+  } else {
+    banner.className = 'top-live-signal-banner';
+    if (statusTag) statusTag.innerHTML = '🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)';
+    if (confTag) confTag.innerHTML = '86.5% SURETY WIN RATE';
+    if (title) title.innerHTML = 'NIFTY 23800 CE (BUY CALL 🟢)';
+    if (pricesBox) pricesBox.innerHTML = '<span>BUY AT: <strong>₹128.50</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹96.40</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹193.50</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹257.00</strong></span>';
+    if (copyBtn) {
+      copyBtn.innerHTML = '📋 COPY LIVE TRADE';
+      copyBtn.className = 'btn btn-primary banner-copy-btn';
+      copyBtn.style.background = '#10b981';
+      copyBtn.style.borderColor = '#10b981';
+      copyBtn.style.color = '#000';
+    }
+  }
+}
+
 function renderIntradayDesk(ist) {
   const mStatus = getMarketStatus(ist);
+  updateTopLiveTradeBanner(mStatus.isOpen, ist);
 
   if (!mStatus.isOpen) {
     tradingMainDesk.innerHTML = `

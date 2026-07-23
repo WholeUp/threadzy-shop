@@ -89,22 +89,19 @@
         </div>
 
         <!-- TOP LIVE TRADE SIGNAL BANNER (Prominent Box) -->
-        <div id="top-live-trade-banner" class="top-live-signal-banner">
+        <div id="top-live-trade-banner" class="top-live-signal-banner closed-state">
           <div class="banner-title-row">
-            <span class="banner-badge green">🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)</span>
-            <span class="banner-confidence">86.5% SURETY WIN RATE</span>
+            <span class="banner-badge red" id="banner-status-tag">🔴 MARKET CLOSED (3:30 PM IST)</span>
+            <span class="banner-confidence" id="banner-confidence-tag">STANDBY MODE • NEXT LIVE SCAN AT 11:00 AM IST</span>
           </div>
           <div class="banner-content-grid">
             <div>
-              <span class="banner-strike-title" id="banner-trade-title">NIFTY 23800 CE (BUY CALL 🟢)</span>
-              <div class="banner-price-levels">
-                <span>BUY AT: <strong id="banner-entry-price">₹128.50</strong></span>
-                <span>STOP LOSS: <strong style="color:var(--color-red)" id="banner-sl-price">₹96.40</strong></span>
-                <span>TARGET 1: <strong style="color:var(--color-green)" id="banner-tgt1-price">₹193.50</strong></span>
-                <span>TARGET 2: <strong style="color:var(--color-cyan)" id="banner-tgt2-price">₹257.00</strong></span>
+              <span class="banner-strike-title" id="banner-trade-title">NSE / BSE Market Closed • Standing By</span>
+              <div class="banner-price-levels" id="banner-price-levels-box">
+                <span style="color:var(--text-muted); font-size:0.8rem;">Real-time GTF AI Engine live signal unlocks tomorrow at <strong>11:00 AM IST</strong>.</span>
               </div>
             </div>
-            <button class="btn btn-primary banner-copy-btn" id="banner-copy-trade-btn" style="background:#10b981; border-color:#10b981; color:#000; font-weight:800; padding:0.6rem 1.2rem; font-size:0.82rem;">📋 COPY LIVE TRADE</button>
+            <button class="btn btn-secondary banner-copy-btn" id="banner-copy-trade-btn" style="font-weight:800; padding:0.6rem 1.2rem; font-size:0.82rem;">🔒 MARKET CLOSED</button>
           </div>
         </div>
 
