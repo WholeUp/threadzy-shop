@@ -997,6 +997,11 @@ function renderIntradayDesk(ist) {
   const target1 = parseFloat((curP * (isBull ? 1.008 : 0.992)).toFixed(2));
   const stopLoss = parseFloat((curP * (isBull ? 0.996 : 1.004)).toFixed(2));
 
+  const target2 = parseFloat((curP * (isBull ? 1.015 : 0.985)).toFixed(2));
+  const step = selectedAsset === 'BANKNIFTY' ? 100 : selectedAsset === 'SENSEX' ? 100 : 50;
+  const atm = Math.round(curP / step) * step;
+  const type = isBull ? 'CE' : 'PE';
+
   tradingMainDesk.innerHTML = `
     <div class="scanning-logs-terminal">
       <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🎯 85% WIN-RATE ALGORITHM ACTIVE. Multi-Timeframe (15M+1H+1D) & Fresh Zone verified.</div>
@@ -1041,18 +1046,20 @@ function renderIntradayDesk(ist) {
           <span class="confidence-badge">WIN PROBABILITY: 88%</span>
         </div>
         <div class="trade-asset-name">
-          ${selectedAsset}
-          <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY / CALL' : 'SELL / PUT'}</span>
+          ${selectedAsset} ${atm} ${type}
+          <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
         </div>
         <div class="pnl-ticker-box">
-          <span>Result:</span>
+          <span>Result Status:</span>
           <span class="pnl-ticker-value" style="color:var(--color-green);">TARGET 1 MET (+42.50 pts) 🎯</span>
         </div>
-        <div class="trade-levels-box">
-          <div><span style="color:var(--text-muted)">Entry:</span> ₹${entry.toLocaleString('en-IN')}</div>
-          <div><span style="color:var(--text-muted)">Stop Loss:</span> ₹${stopLoss.toLocaleString('en-IN')}</div>
-          <div><span style="color:var(--text-muted)">Target 1:</span> ₹${target1.toLocaleString('en-IN')}</div>
-          <div><span style="color:var(--text-muted)">Next Signal Window:</span> <strong style="color:var(--color-cyan)">01:15 PM IST</strong></div>
+        <div class="trade-levels-box" style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; font-family:var(--font-mono); font-size:0.75rem;">
+          <div><span style="color:var(--text-muted)">Entry Index:</span> ₹${entry.toLocaleString('en-IN')}</div>
+          <div><span style="color:var(--text-muted)">Stop Loss (SL):</span> <strong style="color:var(--color-red)">₹${stopLoss.toLocaleString('en-IN')} (-25 pts)</strong></div>
+          <div><span style="color:var(--text-muted)">1st Target:</span> <strong style="color:var(--color-green)">₹${target1.toLocaleString('en-IN')} (+65 pts)</strong></div>
+          <div><span style="color:var(--text-muted)">2nd Target:</span> <strong style="color:var(--color-cyan)">₹${target2.toLocaleString('en-IN')} (+115 pts)</strong></div>
+          <div><span style="color:var(--text-muted)">₹1 Lakh Capital:</span> <strong style="color:var(--color-amber)">2 Lots (150 Qty)</strong></div>
+          <div><span style="color:var(--text-muted)">Next Window:</span> <strong style="color:var(--color-cyan)">01:15 PM IST</strong></div>
         </div>
       </div>
     </div>
