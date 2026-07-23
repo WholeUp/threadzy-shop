@@ -1007,6 +1007,61 @@ body {
   100% { border-color: rgba(245, 158, 11, 0.8); }
 }
 
+/* Top Live Signal Banner */
+.top-live-signal-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(6, 182, 212, 0.18) 100%);
+  border: 2px solid #10b981;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+  animation: bannerPulse 3s ease-in-out infinite alternate;
+}
+@keyframes bannerPulse {
+  0% { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+  100% { border-color: #06b6d4; box-shadow: 0 0 30px rgba(6, 182, 212, 0.4); }
+}
+.banner-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.banner-badge {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+.banner-badge.green { background: rgba(16, 185, 129, 0.25); color: #10b981; border: 1px solid #10b981; }
+.banner-confidence {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-cyan);
+  font-weight: 700;
+}
+.banner-content-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.banner-strike-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.banner-price-levels {
+  display: flex;
+  gap: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
 /* Theme Classes */
 body.theme-gold {
   --color-cyan: #fbbf24;

@@ -371,6 +371,19 @@ function init() {
     speakVoiceAlert('Put order copied!');
   });
 
+  const bannerCopyBtn = document.getElementById('banner-copy-trade-btn');
+  bannerCopyBtn?.addEventListener('click', () => {
+    const title = document.getElementById('banner-trade-title')?.textContent || '';
+    const buy = document.getElementById('banner-entry-price')?.textContent || '';
+    const sl = document.getElementById('banner-sl-price')?.textContent || '';
+    const tgt = document.getElementById('banner-tgt1-price')?.textContent || '';
+    const text = title + ' | BUY AT: ' + buy + ' | SL: ' + sl + ' | TARGET: ' + tgt;
+    navigator.clipboard.writeText(text);
+    bannerCopyBtn.textContent = '✅ COPIED!';
+    setTimeout(() => { bannerCopyBtn.textContent = '📋 COPY LIVE TRADE'; }, 2000);
+    speakVoiceAlert('Live trade signal copied!');
+  });
+
   // Theme Switcher Handler
   const themeBtn = document.getElementById('theme-toggle-btn');
   const themes = ['dark', 'theme-gold', 'theme-emerald'];
