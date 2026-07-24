@@ -1078,12 +1078,53 @@ function updateTopLiveTradeBanner(isOpen, ist) {
       copyBtn.innerHTML = '🔒 MARKET CLOSED';
       copyBtn.className = 'btn btn-secondary banner-copy-btn';
     }
-  } else {
+    return;
+  }
+
+  let timeMins = ist.hour * 60 + ist.minute;
+  if (simTimeMode === '930am') {
+    timeMins = 9 * 60 + 30;
+  } else if (simTimeMode === '1115am') {
+    timeMins = 11 * 60 + 15;
+  } else if (simTimeMode === '200pm') {
+    timeMins = 14 * 60;
+  }
+
+  const is11AMUnlocked = timeMins >= (11 * 60);
+  const is1PMUnlocked = timeMins >= (13 * 60);
+
+  if (!is11AMUnlocked) {
+    banner.className = 'top-live-signal-banner';
+    if (statusTag) statusTag.innerHTML = '🟢 LIVE MARKET OPEN (SCANNING IN PROGRESS)';
+    if (confTag) confTag.innerHTML = 'ANALYZING GTF DEMAND ZONES • 11:00 AM UNLOCK';
+    if (title) title.innerHTML = 'Scanning Nifty 50, BankNifty & Sensex GTF Zones...';
+    if (pricesBox) pricesBox.innerHTML = '<span style="color:var(--color-cyan); font-size:0.82rem;">Real-time GTF AI Engine is evaluating market momentum. First live trade signal unlocks at <strong>11:00 AM IST</strong> sharp.</span>';
+    if (copyBtn) {
+      copyBtn.innerHTML = '⏳ SCANNING (11:00 AM UNLOCK)';
+      copyBtn.className = 'btn btn-secondary banner-copy-btn';
+      copyBtn.style.background = 'rgba(6, 182, 212, 0.2)';
+      copyBtn.style.borderColor = '#06b6d4';
+      copyBtn.style.color = '#06b6d4';
+    }
+  } else if (is11AMUnlocked && !is1PMUnlocked) {
     banner.className = 'top-live-signal-banner';
     if (statusTag) statusTag.innerHTML = '🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)';
     if (confTag) confTag.innerHTML = '86.5% SURETY WIN RATE';
     if (title) title.innerHTML = 'NIFTY 23800 CE (BUY CALL 🟢)';
     if (pricesBox) pricesBox.innerHTML = '<span>BUY AT: <strong>₹128.50</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹96.40</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹193.50</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹257.00</strong></span>';
+    if (copyBtn) {
+      copyBtn.innerHTML = '📋 COPY LIVE TRADE';
+      copyBtn.className = 'btn btn-primary banner-copy-btn';
+      copyBtn.style.background = '#10b981';
+      copyBtn.style.borderColor = '#10b981';
+      copyBtn.style.color = '#000';
+    }
+  } else {
+    banner.className = 'top-live-signal-banner';
+    if (statusTag) statusTag.innerHTML = '🟢 LIVE SIGNAL ACTIVE (01:00 PM SCAN)';
+    if (confTag) confTag.innerHTML = '86.5% SURETY WIN RATE';
+    if (title) title.innerHTML = 'SENSEX 76000 CE (BUY PUT 🔴)';
+    if (pricesBox) pricesBox.innerHTML = '<span>BUY AT: <strong>₹140.00</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹105.00</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹260.00</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹340.00</strong></span>';
     if (copyBtn) {
       copyBtn.innerHTML = '📋 COPY LIVE TRADE';
       copyBtn.className = 'btn btn-primary banner-copy-btn';
@@ -1124,6 +1165,40 @@ function renderIntradayDesk(ist) {
     return;
   }
 
+  let timeMins = ist.hour * 60 + ist.minute;
+  if (simTimeMode === '930am') timeMins = 9 * 60 + 30;
+  else if (simTimeMode === '1115am') timeMins = 11 * 60 + 15;
+  else if (simTimeMode === '200pm') timeMins = 14 * 60;
+
+  const is11AMUnlocked = timeMins >= (11 * 60);
+
+  if (!is11AMUnlocked) {
+    tradingMainDesk.innerHTML = `
+      <div class="scanning-logs-terminal">
+        <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🟢 LIVE MARKET SCANNING IN PROGRESS (09:15 AM - 11:00 AM IST).</div>
+        <div class="log-line"><span class="log-time">[09:15]</span> Market Opened. GTF Demand & Supply Zones analyzing tick-by-tick.</div>
+        <div class="log-line"><span class="log-time">[09:20]</span> Evaluating Nifty 50, BankNifty & Sensex relative strength index.</div>
+      </div>
+
+      <div class="trades-grid">
+        <div class="trade-card" style="border-color: rgba(6, 182, 212, 0.4); background: rgba(6, 182, 212, 0.04);">
+          <div class="trade-card-header">
+            <span class="trade-time-tag" style="color:var(--color-cyan);">⏳ PRE-MARKET SCANNING IN PROGRESS</span>
+            <span class="confidence-badge" style="color:var(--color-cyan);">11:00 AM UNLOCK</span>
+          </div>
+          <div class="trade-asset-name">
+            NIFTY 50 / BANKNIFTY / SENSEX
+            <span class="trade-action-badge buy" style="background:rgba(6, 182, 212, 0.2); color:var(--color-cyan);">SCANNING</span>
+          </div>
+          <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.5;">
+            Real-time market momentum & institutional order flows are being evaluated. First high-surety trade signal unlocks at <strong>11:00 AM IST sharp</strong>.
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
   const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
   const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
 
@@ -1134,7 +1209,7 @@ function renderIntradayDesk(ist) {
   tradingMainDesk.innerHTML = `
     <div class="scanning-logs-terminal">
       <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🎯 85% WIN-RATE ALGORITHM ACTIVE. Multi-Timeframe (15M+1H+1D) & Fresh Zone verified.</div>
-      <div class="log-line"><span class="log-time">[09:45]</span> Scan Window 1 Execution: Nifty 50 Demand Zone (24,280) 0-Tests Fresh Zone hit.</div>
+      <div class="log-line"><span class="log-time">[11:00]</span> Scan Window 1 Execution: Nifty 50 Demand Zone (23,800) 0-Tests Fresh Zone hit.</div>
       <div class="log-line"><span class="log-time">[11:15]</span> Scan Window 1 Complete: Target 1 Met (+42.50 pts). Cool-off period active till 01:15 PM IST.</div>
     </div>
 
@@ -1171,7 +1246,7 @@ function renderIntradayDesk(ist) {
     <div class="trades-grid">
       <div class="trade-card">
         <div class="trade-card-header">
-          <span class="trade-time-tag">SCAN WINDOW #1 (11:00 AM) - COMPLETED</span>
+          <span class="trade-time-tag">SCAN WINDOW #1 (11:00 AM) - ACTIVE LIVE TRADE</span>
           <span class="confidence-badge">WIN PROBABILITY: 88%</span>
         </div>
         <div class="trade-asset-name">
