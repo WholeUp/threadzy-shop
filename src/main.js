@@ -1155,11 +1155,13 @@ function renderIntradayDesk(ist) {
   const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
   const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
 
-  const atmStrike = Math.round(curP / 50) * 50;
-  const baseEntryPrem = selectedAsset === 'NIFTY50' ? parseFloat((curP * 0.0031).toFixed(2)) : parseFloat((curP * 0.0035).toFixed(2)); // ~₹74.00 for Nifty
+  const strikeInterval = selectedAsset === 'NIFTY50' ? 50 : 100;
+  const atmStrike = Math.round(curP / strikeInterval) * strikeInterval;
+  const baseEntryPrem = selectedAsset === 'NIFTY50' ? parseFloat((curP * 0.0031).toFixed(2)) : selectedAsset === 'BANKNIFTY' ? parseFloat((curP * 0.0035).toFixed(2)) : parseFloat((curP * 0.0032).toFixed(2));
   const stopLossPrem = parseFloat((baseEntryPrem * 0.70).toFixed(2));
   const target1Prem = parseFloat((baseEntryPrem * 1.55).toFixed(2));
   const target2Prem = parseFloat((baseEntryPrem * 2.10).toFixed(2));
+
 
 
   tradingMainDesk.innerHTML = `
