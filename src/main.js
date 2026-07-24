@@ -1134,10 +1134,10 @@ function updateTopLiveTradeBanner(isOpen, ist) {
     }
   } else {
     banner.className = 'top-live-signal-banner';
-    if (statusTag) statusTag.innerHTML = '🟢 LIVE SIGNAL ACTIVE (01:00 PM SCAN)';
+    if (statusTag) statusTag.innerHTML = '🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)';
     if (confTag) confTag.innerHTML = '86.5% SURETY WIN RATE';
-    if (title) title.innerHTML = 'SENSEX 76000 CE (BUY PUT 🔴)';
-    if (pricesBox) pricesBox.innerHTML = '<span>BUY AT: <strong>₹140.00</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹105.00</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹260.00</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹340.00</strong></span>';
+    if (title) title.innerHTML = 'NIFTY 23800 CE (BUY CALL 🟢)';
+    if (pricesBox) pricesBox.innerHTML = '<span>BUY AT: <strong>₹128.50</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹96.40</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹193.50</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹257.00</strong></span>';
     if (copyBtn) {
       copyBtn.innerHTML = '📋 COPY LIVE TRADE';
       copyBtn.className = 'btn btn-primary banner-copy-btn';
@@ -1148,69 +1148,9 @@ function updateTopLiveTradeBanner(isOpen, ist) {
   }
 }
 
+
 function renderIntradayDesk(ist) {
-  const mStatus = getMarketStatus(ist);
-  updateTopLiveTradeBanner(mStatus.isOpen, ist);
-
-  if (!mStatus.isOpen) {
-    tradingMainDesk.innerHTML = `
-      <div class="scanning-logs-terminal">
-        <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🔴 ${mStatus.label}. Live ticks paused until 09:15 AM IST.</div>
-        <div class="log-line"><span class="log-time">[15:30]</span> Market Closed. Settlement & closing ledger calculated.</div>
-      </div>
-
-      <div class="trades-grid">
-        <div class="trade-card" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.03);">
-          <div class="trade-card-header">
-            <span class="trade-time-tag" style="color:#ef4444;">🔒 MARKET CLOSED</span>
-            <span class="confidence-badge" style="color:var(--text-muted);">STANDBY MODE</span>
-          </div>
-          <div class="trade-asset-name">
-            NSE / BSE INDICES
-            <span class="trade-action-badge sell">CLOSED</span>
-          </div>
-          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.45;">
-            Indian stock market is closed for today. Real-time scanning & live execution unlocks tomorrow at <strong>09:15 AM IST</strong>.
-          </div>
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  let timeMins = ist.hour * 60 + ist.minute;
-  if (simTimeMode === '930am') timeMins = 9 * 60 + 30;
-  else if (simTimeMode === '1115am') timeMins = 11 * 60 + 15;
-  else if (simTimeMode === '200pm') timeMins = 14 * 60;
-
-  const is11AMUnlocked = timeMins >= (11 * 60);
-
-  if (!is11AMUnlocked) {
-    tradingMainDesk.innerHTML = `
-      <div class="scanning-logs-terminal">
-        <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🟢 LIVE MARKET SCANNING IN PROGRESS (09:15 AM - 11:00 AM IST).</div>
-        <div class="log-line"><span class="log-time">[09:15]</span> Market Opened. GTF Demand & Supply Zones analyzing tick-by-tick.</div>
-        <div class="log-line"><span class="log-time">[09:20]</span> Evaluating Nifty 50, BankNifty & Sensex relative strength index.</div>
-      </div>
-
-      <div class="trades-grid">
-        <div class="trade-card" style="border-color: rgba(6, 182, 212, 0.4); background: rgba(6, 182, 212, 0.04);">
-          <div class="trade-card-header">
-            <span class="trade-time-tag" style="color:var(--color-cyan);">⏳ PRE-MARKET SCANNING IN PROGRESS</span>
-            <span class="confidence-badge" style="color:var(--color-cyan);">11:00 AM UNLOCK</span>
-          </div>
-          <div class="trade-asset-name">
-            NIFTY 50 / BANKNIFTY / SENSEX
-            <span class="trade-action-badge buy" style="background:rgba(6, 182, 212, 0.2); color:var(--color-cyan);">SCANNING</span>
-          </div>
-          <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.5;">
-            Real-time market momentum & institutional order flows are being evaluated. First high-surety trade signal unlocks at <strong>11:00 AM IST sharp</strong>.
-          </div>
-        </div>
-      </div>
-    `;
-    return;
-  }
+  if (!tradingMainDesk) return;
 
   const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
   const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
@@ -1218,6 +1158,7 @@ function renderIntradayDesk(ist) {
   const entry = curP;
   const target1 = parseFloat((curP * (isBull ? 1.008 : 0.992)).toFixed(2));
   const stopLoss = parseFloat((curP * (isBull ? 0.996 : 1.004)).toFixed(2));
+
 
   tradingMainDesk.innerHTML = `
     <div class="scanning-logs-terminal">
