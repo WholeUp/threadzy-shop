@@ -292,9 +292,9 @@ function init() {
     Notification.requestPermission();
   }
 
-  // Fetch Real Live NSE/BSE Market Quotes immediately & poll every 1.5s
+  // Fetch Real Live NSE/BSE Market Quotes immediately & poll every 1s
   fetchRealMarketPrices();
-  setInterval(fetchRealMarketPrices, 1500);
+  setInterval(fetchRealMarketPrices, 1000);
 
   // Event Handlers
   audioToggleBtn.addEventListener('click', toggleAudio);
