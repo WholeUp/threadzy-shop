@@ -1,4 +1,5 @@
 import './style.css';
+import { initSecurityProtection } from './security.js';
 
 // Base Index prices (Real NSE/BSE Initial Baseline)
 const BASE_PRICES = {
@@ -278,6 +279,7 @@ function lockTerminalManual() {
 
 // Init Engine
 function init() {
+  initSecurityProtection();
   checkTerminalLockState();
   updateAudioUI();
   updateStatusText();
