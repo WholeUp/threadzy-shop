@@ -1155,15 +1155,17 @@ function renderIntradayDesk(ist) {
   const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
   const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
 
-  const entry = curP;
-  const target1 = parseFloat((curP * (isBull ? 1.008 : 0.992)).toFixed(2));
-  const stopLoss = parseFloat((curP * (isBull ? 0.996 : 1.004)).toFixed(2));
+  const atmStrike = Math.round(curP / 50) * 50;
+  const baseEntryPrem = selectedAsset === 'NIFTY50' ? parseFloat((curP * 0.0031).toFixed(2)) : parseFloat((curP * 0.0035).toFixed(2)); // ~₹74.00 for Nifty
+  const stopLossPrem = parseFloat((baseEntryPrem * 0.70).toFixed(2));
+  const target1Prem = parseFloat((baseEntryPrem * 1.55).toFixed(2));
+  const target2Prem = parseFloat((baseEntryPrem * 2.10).toFixed(2));
 
 
   tradingMainDesk.innerHTML = `
     <div class="scanning-logs-terminal">
       <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🎯 85% WIN-RATE ALGORITHM ACTIVE. Multi-Timeframe (15M+1H+1D) & Fresh Zone verified.</div>
-      <div class="log-line"><span class="log-time">[11:00]</span> Scan Window 1 Execution: Nifty 50 Demand Zone (23,800) 0-Tests Fresh Zone hit.</div>
+      <div class="log-line"><span class="log-time">[11:00]</span> Scan Window 1 Execution: ${selectedAsset} Demand Zone 0-Tests Fresh Zone hit.</div>
       <div class="log-line"><span class="log-time">[11:15]</span> Scan Window 1 Active: Live Index Tick ₹${curP.toFixed(2)} | Real-time NSE Feed Connected.</div>
     </div>
 
@@ -1204,38 +1206,37 @@ function renderIntradayDesk(ist) {
           <span class="confidence-badge">WIN PROBABILITY: 88%</span>
         </div>
         <div class="trade-asset-name">
-          ${selectedAsset} ${selectedAsset === 'NIFTY50' ? '23800 CE' : '56100 CE'}
+          ${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}
           <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
         </div>
         <div class="pnl-ticker-box">
           <span>Target Progress:</span>
-          <span class="pnl-ticker-value" style="color:var(--color-green);">TARGET 1 IN PROGRESS (84%) 🎯</span>
+          <span class="pnl-ticker-value" style="color:var(--color-green);">TARGET 1 IN PROGRESS 🎯</span>
         </div>
         <div class="trade-levels-box">
-          <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹128.50</strong></div>
-          <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">₹96.40</strong></div>
-          <div><span style="color:var(--text-muted)">Target 1:</span> <strong style="color:var(--color-green)">₹193.50</strong></div>
-          <div><span style="color:var(--text-muted)">Target 2:</span> <strong style="color:var(--color-cyan)">₹257.00</strong></div>
+          <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹${baseEntryPrem.toFixed(2)}</strong></div>
+          <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">₹${stopLossPrem.toFixed(2)}</strong></div>
+          <div><span style="color:var(--text-muted)">Target 1:</span> <strong style="color:var(--color-green)">₹${target1Prem.toFixed(2)}</strong></div>
+          <div><span style="color:var(--text-muted)">Target 2:</span> <strong style="color:var(--color-cyan)">₹${target2Prem.toFixed(2)}</strong></div>
         </div>
 
         <!-- BROKER-STYLE REAL-TIME LIVE POSITION P&L CARD (1L CAPITAL BENCHMARK) -->
         ${(() => {
-          const entryPrem = 128.50;
-          const baseIdx = 23600.00;
-          const idxDiff = curP - baseIdx;
-          const ltp = Math.max(10, parseFloat((entryPrem + (idxDiff * 0.45)).toFixed(2)));
-          const diffPrem = parseFloat((ltp - entryPrem).toFixed(2));
+          const baseIdx = BASE_PRICES[selectedAsset] || curP;
+          const idxDiff = (curP - baseIdx) * (isBull ? 1 : -1);
+          const ltp = Math.max(5, parseFloat((baseEntryPrem + (idxDiff * 0.45)).toFixed(2)));
+          const diffPrem = parseFloat((ltp - baseEntryPrem).toFixed(2));
           const qty = selectedAsset === 'NIFTY50' ? 150 : selectedAsset === 'BANKNIFTY' ? 60 : 40; // 2 Lots (₹1L Capital)
           const pnl = Math.round(diffPrem * qty);
           const isPos = pnl >= 0;
-          const pnlPct = ((diffPrem / entryPrem) * 100).toFixed(1);
+          const pnlPct = ((diffPrem / baseEntryPrem) * 100).toFixed(1);
 
           return `
             <div class="broker-position-card" style="background:#090d16; border:1.5px solid ${isPos ? '#10b981' : '#ef4444'}; border-radius:12px; padding:1.15rem; margin-top:1rem; box-shadow:0 0 20px ${isPos ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)'};">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.65rem; margin-bottom:0.75rem;">
                 <div>
                   <span style="font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.05em; display:block;">LIVE PORTFOLIO POSITION (1 ACTIVE)</span>
-                  <span style="font-family:var(--font-heading); font-size:0.95rem; font-weight:800; color:#ffffff;">${selectedAsset} ${selectedAsset === 'NIFTY50' ? '23800 CE' : '56100 CE'}</span>
+                  <span style="font-family:var(--font-heading); font-size:0.95rem; font-weight:800; color:#ffffff;">${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}</span>
                 </div>
                 <span style="background:${isPos ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)'}; color:${isPos ? '#10b981' : '#ef4444'}; border:1px solid ${isPos ? 'rgba(16,185,129,0.4)' : 'rgba(239,68,68,0.4)'}; padding:0.3rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.75rem; font-family:var(--font-mono);">${isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴'}</span>
               </div>
@@ -1243,7 +1244,7 @@ function renderIntradayDesk(ist) {
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; font-family:var(--font-mono); font-size:0.78rem; margin-bottom:0.85rem; background:rgba(0,0,0,0.3); padding:0.65rem; border-radius:8px;">
                 <div><span style="color:var(--text-muted)">Capital (1L):</span> <strong style="color:var(--color-cyan)">₹1,00,000 (2 Lots)</strong></div>
                 <div><span style="color:var(--text-muted)">Qty Executed:</span> <strong>${qty} Qty</strong></div>
-                <div><span style="color:var(--text-muted)">Avg Buy Price:</span> <strong>₹128.50</strong></div>
+                <div><span style="color:var(--text-muted)">Avg Buy Price:</span> <strong>₹${baseEntryPrem.toFixed(2)}</strong></div>
                 <div><span style="color:var(--text-muted)">Live Option LTP:</span> <strong style="color:${isPos ? '#10b981' : '#ef4444'}">₹${ltp.toFixed(2)}</strong></div>
               </div>
 
@@ -1262,6 +1263,7 @@ function renderIntradayDesk(ist) {
         })()}
       </div>
     </div>
+
 
   `;
 }
