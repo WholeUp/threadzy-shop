@@ -49,14 +49,43 @@ export function initSecurityProtection() {
     }
   });
 
-  // 4. Anti-Tamper: Clear Sensitive Logs from Production Console
+  // 4. Anti-Iframe Framing (Clickjacking Protection)
+  if (window.top !== window.self) {
+    window.top.location.href = window.self.location.href;
+  }
+
+  // 5. Anti-Select & Anti-Drag (Prevent Signal Copying & Asset Theft)
+  document.addEventListener('selectstart', function (e) {
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener('dragstart', function (e) {
+    e.preventDefault();
+  });
+
+  // 6. Anti-Debugger Loop (Defeats DevTools Scrapers & Reverse Engineers)
+  setInterval(() => {
+    const startTime = performance.now();
+    debugger;
+    const endTime = performance.now();
+    if (endTime - startTime > 100) {
+      showSecurityToast('⚠️ DevTools Tampering Detected! Security Protocol Initiated.');
+    }
+  }, 2000);
+
+  // 7. Anti-Tamper: Clear Sensitive Logs from Production Console
   if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
     const noop = () => {};
     window.console.log = noop;
     window.console.debug = noop;
     window.console.info = noop;
+    window.console.warn = noop;
+    Object.freeze(window.console);
   }
 }
+
 
 function showSecurityToast(msg) {
   let toast = document.getElementById('security-toast-msg');

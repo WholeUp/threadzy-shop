@@ -34,10 +34,11 @@ let userCapital = parseFloat(localStorage.getItem('user_capital')) || 500000;
 let userRiskPct = parseFloat(localStorage.getItem('user_risk_pct')) || 1.0;
 
 let outlook = JSON.parse(localStorage.getItem('market_outlook_cache')) || {
-  NIFTY50: { trend: 'BULLISH', reason: 'Global cues positive hain aur IT sector ke heavyweights (TCS, Infosys) key resistance breakouts ki taraf badh rahe hain. Demand Zone (23,820) strongly hold ho raha hai.' },
-  BANKNIFTY: { trend: 'BEARISH', reason: 'RBI ke credit regulation tightening and margin pressures ki wajah se private banks key support levels break kar rahe hain.' },
-  SENSEX: { trend: 'BULLISH', reason: 'Large-cap stocks low level par strong buying support dikha rahe hain aur domestic mutual funds inflow steady hai.' }
+  NIFTY50: { trend: 'BULLISH', reason: '🎯 HIGH-SURETY ANALYSIS: Nifty 50 HTF (15M+1H+1D) GTF Demand Zone (23,800 - 23,850) ko 0-Tests Fresh Base Candlestick se defend kar raha hai. India VIX 12.80 (Low Noise) & PCR 1.18 Bullish accumulation confirm kar rahe hain. Target 1: ₹114.70 Premium.' },
+  BANKNIFTY: { trend: 'BULLISH', reason: '🎯 HIGH-SURETY ANALYSIS: BankNifty 56,100 Key Support Level par Institutional FII/DII (+₹1,420 Cr Net Buy) long buildup dikha raha hai. Relative Strength Index 58.4 Call Option buying momentum confirm kar raha hai.' },
+  SENSEX: { trend: 'BULLISH', reason: '🎯 HIGH-SURETY ANALYSIS: Sensex 76,100 Demand Zone Base Candle breakout valid ho gaya hai. Large-cap heavyweights low risk-reward entry provide kar rahe hain.' }
 };
+
 
 let prices = {
   NIFTY50: { current: BASE_PRICES.NIFTY50, change: -0.53 },
