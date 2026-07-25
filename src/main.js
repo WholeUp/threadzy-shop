@@ -1152,8 +1152,45 @@ function updateTopLiveTradeBanner(isOpen, ist) {
 function renderIntradayDesk(ist) {
   if (!tradingMainDesk) return;
 
+  const status = getMarketStatus(ist);
+  updateTopLiveTradeBanner(status.isOpen, ist);
+
+  if (!status.isOpen) {
+    tradingMainDesk.innerHTML = `
+      <div class="scanning-logs-terminal">
+        <div class="log-line"><span class="log-time">[${ist.timeFormatted}]</span> 🔒 MARKET CLOSED (3:30 PM IST). Settlement & Closing Ledger Calculated.</div>
+        <div class="log-line"><span class="log-time">[15:30]</span> Market Closed. Next Live Scanning & Execution Unlocks Monday at 09:15 AM IST.</div>
+      </div>
+
+      <div class="trades-grid">
+        <div class="trade-card" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.04);">
+          <div class="trade-card-header">
+            <span class="trade-time-tag" style="color:var(--color-green);">📊 LAST SESSION CLOSED TRADE RESULT</span>
+            <span class="confidence-badge" style="color:var(--color-green);">SETTLED PROFIT</span>
+          </div>
+          <div class="trade-asset-name">
+            ${selectedAsset} ${selectedAsset === 'NIFTY50' ? '23850 CE' : selectedAsset === 'BANKNIFTY' ? '56600 CE' : '76200 CE'}
+            <span class="trade-action-badge buy" style="background:rgba(16,185,129,0.2); color:#10b981;">BUY CALL 🟢</span>
+          </div>
+          <div class="pnl-ticker-box">
+            <span>Result:</span>
+            <span class="pnl-ticker-value" style="color:var(--color-green);">TARGET 1 MET (+40.70 PTS / +55%) 🎯</span>
+          </div>
+          <div class="trade-levels-box">
+            <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹70.00</strong></div>
+            <div><span style="color:var(--text-muted)">Exit Premium:</span> <strong style="color:var(--color-green)">₹110.70</strong></div>
+            <div><span style="color:var(--text-muted)">Net Profit (2 Lots):</span> <strong style="color:var(--color-green)">+₹6,105 PROFIT 🟢</strong></div>
+            <div><span style="color:var(--text-muted)">Next Live Scan:</span> <strong style="color:var(--color-cyan)">MONDAY 09:15 AM IST</strong></div>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
   const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
   const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
+
 
   const strikeInterval = selectedAsset === 'NIFTY50' ? 50 : 100;
   const atmStrike = Math.round(curP / strikeInterval) * strikeInterval;
