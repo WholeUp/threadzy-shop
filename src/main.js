@@ -1844,42 +1844,26 @@ async function handleMarketScan() {
 
   await new Promise(r => setTimeout(r, 1000));
 
-  // Compute accurate multi-timeframe GTF chart analysis based on live price & candlestick patterns
+  // Compute high-surety Master Trader GTF analysis based on live candles & chart patterns
   const calcDeterministicTrend = (asset) => {
     const p = prices[asset]?.current || BASE_PRICES[asset];
     const change = prices[asset]?.change || 0;
     const formattedPrice = `₹${p.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+    const isBull = change >= 0;
 
-    if (asset === 'BANKNIFTY') {
-      const isPos = change >= 0;
-      return {
-        trend: isPos ? 'BULLISH' : 'BEARISH',
-        pattern: isPos ? '15M Bullish Piercing Line + FII Cash Inflow' : '15M Supply Resistance + Profit Booking',
-        rrRatio: '1 : 2.90',
-        volumeSpike: '1.85x Avg Vol',
-        reason: isPos 
-          ? `🎯 HIGH-PRECISION GTF ANALYSIS: BankNifty at ${formattedPrice} (${change >= 0 ? '+' : ''}${change}%) confirmed 15M Bullish Piercing Line at 56,600 Fresh Demand Zone. Institutional FII Net Buying (+₹1,420 Cr) & 1.85x Volume Spike validate 89% win-rate Call setup.`
-          : `🎯 HIGH-PRECISION GTF ANALYSIS: BankNifty at ${formattedPrice} (${change}%) is testing 56,863 Supply Zone. Private banking profit-booking creating temporary resistance.`
-      };
-    } else if (asset === 'SENSEX') {
-      return {
-        trend: 'BULLISH',
-        pattern: '1H Rally-Base-Rally (RBR) Breakout',
-        rrRatio: '1 : 3.10',
-        volumeSpike: '2.10x Avg Vol',
-        reason: `🎯 HIGH-PRECISION GTF ANALYSIS: Sensex at ${formattedPrice} (${change >= 0 ? '+' : ''}${change}%) confirmed 1H Rally-Base-Rally pattern. Fresh Demand Zone (75,527 - 75,831) holding with 2.10x Volume expansion. R:R 1:3.10 Call target unlocked.`
-      };
-    } else {
-      // Nifty 50
-      return {
-        trend: 'BULLISH',
-        pattern: '15M Bullish Engulfing + 0-Tests Fresh Base',
-        rrRatio: '1 : 2.85',
-        volumeSpike: '1.92x Avg Vol',
-        reason: `🎯 HIGH-PRECISION GTF ANALYSIS: Nifty 50 at ${formattedPrice} (${change >= 0 ? '+' : ''}${change}%) confirmed 15M Bullish Engulfing at 0-Tests Fresh Demand Zone (23,681 - 23,696). India VIX 12.80 (Low Noise) & 1.92x Volume Spike validate 88% win-rate Call accumulation.`
-      };
-    }
+    const patternInfo = analyzeMasterTraderChart(latestCandlesCache[asset], isBull, asset);
+
+    return {
+      trend: isBull ? 'BULLISH' : 'BEARISH',
+      pattern: patternInfo.name,
+      shortPattern: patternInfo.shortName,
+      rrRatio: patternInfo.rrRatio,
+      surety: patternInfo.surety,
+      explanation: patternInfo.explanation,
+      reason: `🎯 HIGH-PRECISION MASTER TRADER ANALYSIS: ${asset} at ${formattedPrice} (${change >= 0 ? '+' : ''}${change}%) confirmed ${patternInfo.name}. ${patternInfo.explanation} R:R ${patternInfo.rrRatio} | Historical Win Probability: ${patternInfo.surety}.`
+    };
   };
+
 
   outlook = {
     NIFTY50: calcDeterministicTrend('NIFTY50'),
