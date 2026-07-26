@@ -1234,8 +1234,9 @@ function renderIntradayDesk(ist) {
         </div>
         <div class="pnl-ticker-box">
           <span>Status:</span>
-          <span class="pnl-ticker-value" style="color:var(--color-green);">TARGET 1 MET (+40.70 PTS) 🎯</span>
+          <span class="pnl-ticker-value" style="color:${status.isOpen ? 'var(--color-green)' : 'var(--text-muted)'};">${status.isOpen ? 'LIVE SIGNAL ACTIVE ⚡' : 'STANDBY FOR LIVE MARKET (11:00 AM) ⏳'}</span>
         </div>
+
         <div class="trade-levels-box">
           <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹${baseEntryPrem.toFixed(2)}</strong></div>
           <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">₹${stopLossPrem.toFixed(2)}</strong></div>
@@ -1301,8 +1302,9 @@ function renderIntradayDesk(ist) {
         </div>
         <div class="pnl-ticker-box">
           <span>Status:</span>
-          <span class="pnl-ticker-value" style="color:var(--color-cyan);">AFTERNOON BREAKOUT ACTIVE ⚡</span>
+          <span class="pnl-ticker-value" style="color:${status.isOpen ? 'var(--color-cyan)' : 'var(--text-muted)'};">${status.isOpen ? 'AFTERNOON BREAKOUT ACTIVE ⚡' : 'STANDBY FOR AFTERNOON BREAKOUT (01:15 PM) ⏳'}</span>
         </div>
+
         <div class="trade-levels-box">
           <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹${(baseEntryPrem * 1.15).toFixed(2)}</strong></div>
           <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.82).toFixed(2)}</strong></div>
