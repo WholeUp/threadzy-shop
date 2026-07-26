@@ -1262,7 +1262,7 @@ function renderIntradayDesk(ist) {
           <div><span style="color:var(--text-muted)">Target 2:</span> <strong style="color:var(--color-cyan)">₹${target2Prem.toFixed(2)}</strong></div>
         </div>
 
-        <!-- BROKER-STYLE REAL-TIME LIVE POSITION P&L CARD (1L CAPITAL BENCHMARK) -->
+        <!-- DHAN PRO STYLE REAL-TIME LIVE POSITION P&L CARD (1L CAPITAL BENCHMARK) -->
         ${(() => {
           const baseIdx = BASE_PRICES[selectedAsset] || curP;
           const idxDiff = (curP - baseIdx) * (isBull ? 1 : -1);
@@ -1274,35 +1274,39 @@ function renderIntradayDesk(ist) {
           const pnlPct = ((diffPrem / baseEntryPrem) * 100).toFixed(1);
 
           return `
-            <div class="broker-position-card" style="background:#090d16; border:1.5px solid ${isPos ? '#10b981' : '#ef4444'}; border-radius:12px; padding:1.15rem; margin-top:1rem; box-shadow:0 0 20px ${isPos ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)'};">
-              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.65rem; margin-bottom:0.75rem;">
+            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; margin-top:1.1rem; box-shadow:0 12px 30px ${isPos ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; backdrop-filter: blur(12px); transition: all 0.3s ease;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
                 <div>
-                  <span style="font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.05em; display:block;">LIVE PORTFOLIO POSITION (1 ACTIVE)</span>
-                  <span style="font-family:var(--font-heading); font-size:0.95rem; font-weight:800; color:#ffffff;">${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}</span>
+                  <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
+                    <span style="width:7px; height:7px; border-radius:50%; background:${isPos ? '#10b981' : '#ef4444'}; display:inline-block; box-shadow: 0 0 8px ${isPos ? '#10b981' : '#ef4444'}; animation: pulse 1.5s infinite;"></span>
+                    DHAN PRO REAL-TIME POSITION (1 ACTIVE)
+                  </div>
+                  <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}</span>
                 </div>
-                <span style="background:${isPos ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)'}; color:${isPos ? '#10b981' : '#ef4444'}; border:1px solid ${isPos ? 'rgba(16,185,129,0.4)' : 'rgba(239,68,68,0.4)'}; padding:0.3rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.75rem; font-family:var(--font-mono);">${isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴'}</span>
+                <span style="background:${isPos ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${isPos ? '#10b981' : '#ef4444'}; border:1px solid ${isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono); letter-spacing:0.04em;">${isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴'}</span>
               </div>
 
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; font-family:var(--font-mono); font-size:0.78rem; margin-bottom:0.85rem; background:rgba(0,0,0,0.3); padding:0.65rem; border-radius:8px;">
-                <div><span style="color:var(--text-muted)">Capital (1L):</span> <strong style="color:var(--color-cyan)">₹1,00,000 (2 Lots)</strong></div>
-                <div><span style="color:var(--text-muted)">Qty Executed:</span> <strong>${qty} Qty</strong></div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; font-family:var(--font-mono); font-size:0.8rem; margin-bottom:0.95rem; background:rgba(0,0,0,0.35); padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.04);">
+                <div><span style="color:var(--text-muted)">Capital (1L Benchmark):</span> <strong style="color:var(--color-cyan)">₹1,00,000 (2 Lots)</strong></div>
+                <div><span style="color:var(--text-muted)">Executed Qty:</span> <strong>${qty} Qty</strong></div>
                 <div><span style="color:var(--text-muted)">Avg Buy Price:</span> <strong>₹${baseEntryPrem.toFixed(2)}</strong></div>
-                <div><span style="color:var(--text-muted)">Live Option LTP:</span> <strong style="color:${isPos ? '#10b981' : '#ef4444'}">₹${ltp.toFixed(2)}</strong></div>
+                <div><span style="color:var(--text-muted)">Live Option LTP:</span> <strong style="color:${isPos ? '#10b981' : '#ef4444'}; transition: color 0.3s ease;">₹${ltp.toFixed(2)}</strong></div>
               </div>
 
-              <div style="background:rgba(0,0,0,0.5); border:1px solid ${isPos ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}; border-radius:8px; padding:0.85rem; display:flex; justify-content:space-between; align-items:center;">
+              <div style="background:rgba(0,0,0,0.55); border:1px solid ${isPos ? 'rgba(16,185,129,0.35)' : 'rgba(239,68,68,0.35)'}; border-radius:10px; padding:0.95rem 1.1rem; display:flex; justify-content:space-between; align-items:center; box-shadow: inset 0 0 15px rgba(0,0,0,0.5);">
                 <div>
-                  <span style="font-size:0.65rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); display:block;">REAL-TIME UNREALIZED P&L</span>
-                  <span style="font-size:0.72rem; color:${isPos ? '#10b981' : '#ef4444'}; font-weight:700; font-family:var(--font-mono);">${isPos ? '+' : ''}₹${diffPrem.toFixed(2)} (${isPos ? '+' : ''}${pnlPct}%)</span>
+                  <span style="font-size:0.66rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); display:block; letter-spacing:0.04em;">REAL-TIME UNREALIZED P&L</span>
+                  <span style="font-size:0.78rem; color:${isPos ? '#10b981' : '#ef4444'}; font-weight:800; font-family:var(--font-mono); transition: color 0.3s ease;">${isPos ? '+' : ''}₹${diffPrem.toFixed(2)} (${isPos ? '+' : ''}${pnlPct}%)</span>
                 </div>
 
                 <div style="text-align:right;">
-                  <span style="font-family:var(--font-mono); font-size:1.5rem; font-weight:900; color:${isPos ? '#10b981' : '#ef4444'}; text-shadow:0 0 12px ${isPos ? 'rgba(16,185,129,0.4)' : 'rgba(239,68,68,0.4)'};">${isPos ? '+' : ''}₹${pnl.toLocaleString('en-IN')}</span>
+                  <span style="font-family:var(--font-mono); font-size:1.65rem; font-weight:900; color:${isPos ? '#10b981' : '#ef4444'}; text-shadow:0 0 16px ${isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; transition: color 0.3s ease, text-shadow 0.3s ease;">${isPos ? '+' : ''}₹${pnl.toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>
           `;
         })()}
+
       </div>
     </div>
 
