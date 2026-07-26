@@ -335,8 +335,9 @@ function init() {
   waTest0900Btn?.addEventListener('click', send0900AMTestAlert);
   waSendSignalBtn?.addEventListener('click', sendWhatsAppSignalDirect);
 
-  paperBuyCeBtn.addEventListener('click', () => executePaperTrade('CE'));
-  paperBuyPeBtn.addEventListener('click', () => executePaperTrade('PE'));
+  paperBuyCeBtn?.addEventListener('click', () => executePaperTrade('CE'));
+  paperBuyPeBtn?.addEventListener('click', () => executePaperTrade('PE'));
+
 
   unlockTerminalBtn?.addEventListener('click', handleUnlockTerminal);
   masterPasscodeInput?.addEventListener('keydown', (e) => {
@@ -921,8 +922,8 @@ function renderOptionStrikeCalculator(ist) {
   peSlVal.textContent = `₹${(pePrem * 0.75).toFixed(1)}`;
   peTgtVal.textContent = `₹${(pePrem * 1.45).toFixed(1)}`;
 
-  paperCeSub.textContent = `₹${cePrem} Premium`;
-  paperPeSub.textContent = `₹${pePrem} Premium`;
+  if (paperCeSub) paperCeSub.textContent = `₹${cePrem} Premium`;
+  if (paperPeSub) paperPeSub.textContent = `₹${pePrem} Premium`;
 }
 
 function executePaperTrade(type) {
@@ -968,10 +969,11 @@ function closePaperTrade() {
 }
 
 function renderPaperTradingUI() {
+  if (!paperWalletBal) return;
   paperWalletBal.textContent = `₹${Math.round(paperWallet).toLocaleString('en-IN')}`;
 
   if (!paperActiveTrade) {
-    paperActivePosBox.innerHTML = `<span style="color:var(--text-muted); font-size:0.72rem;">No active paper positions. Click BUY CE or BUY PE to execute virtual trade.</span>`;
+    if (paperActivePosBox) paperActivePosBox.innerHTML = `<span style="color:var(--text-muted); font-size:0.72rem;">No active paper positions. Click BUY CE or BUY PE to execute virtual trade.</span>`;
     return;
   }
 
@@ -980,37 +982,46 @@ function renderPaperTradingUI() {
   const pnlRupees = Math.round(diff * 50);
   const pnlPct = ((diff / paperActiveTrade.indexEntry) * 100).toFixed(2);
 
-  paperActivePosBox.innerHTML = `
-    <div class="pos-card-inner">
-      <div class="pos-title-row">
-        <span class="pos-symbol-name">${paperActiveTrade.asset} ${paperActiveTrade.strike} ${paperActiveTrade.type}</span>
-        <span class="pos-pnl-val ${pnlRupees >= 0 ? 'pos' : 'neg'}">${pnlRupees >= 0 ? '+' : ''}₹${pnlRupees} (${pnlPct}%)</span>
+  if (paperActivePosBox) {
+    paperActivePosBox.innerHTML = `
+      <div class="pos-card-inner">
+        <div class="pos-title-row">
+          <span class="pos-symbol-name">${paperActiveTrade.asset} ${paperActiveTrade.strike} ${paperActiveTrade.type}</span>
+          <span class="pos-pnl-val ${pnlRupees >= 0 ? 'pos' : 'neg'}">${pnlRupees >= 0 ? '+' : ''}₹${pnlRupees} (${pnlPct}%)</span>
+        </div>
+        <div style="font-size:0.65rem; color:var(--text-muted);">Entry: ₹${paperActiveTrade.entryPrice} | Executed: ${paperActiveTrade.time}</div>
+        <button class="btn-close-pos" id="close-paper-pos-btn">CLOSE POSITION</button>
       </div>
-      <div style="font-size:0.65rem; color:var(--text-muted);">Entry: ₹${paperActiveTrade.entryPrice} | Executed: ${paperActiveTrade.time}</div>
-      <button class="btn-close-pos" id="close-paper-pos-btn">CLOSE POSITION</button>
-    </div>
-  `;
+    `;
+  }
 
   document.getElementById('close-paper-pos-btn')?.addEventListener('click', closePaperTrade);
 }
 
 function renderConfluenceMeter(ist) {
+  if (!confluenceBigScore) return;
   const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
   const score = isBull ? 84 : 32;
 
-  confluenceBigScore.textContent = score;
-  confluenceBigScore.style.color = isBull ? '#10b981' : '#ef4444';
-  confluenceBarFill.style.width = `${score}%`;
-  confluenceBarFill.style.background = isBull ? 'linear-gradient(90deg, #06b6d4, #10b981)' : 'linear-gradient(90deg, #f59e0b, #ef4444)';
+  if (confluenceBigScore) {
+    confluenceBigScore.textContent = score;
+    confluenceBigScore.style.color = isBull ? '#10b981' : '#ef4444';
+  }
+  if (confluenceBarFill) {
+    confluenceBarFill.style.width = `${score}%`;
+    confluenceBarFill.style.background = isBull ? 'linear-gradient(90deg, #06b6d4, #10b981)' : 'linear-gradient(90deg, #f59e0b, #ef4444)';
+  }
+  if (confluenceSignalTag) {
+    confluenceSignalTag.textContent = isBull ? 'STRONG BUY SIGNAL' : 'SELL PRESSURE SIGNAL';
+    confluenceSignalTag.className = `block-tag ${isBull ? 'green' : 'red'}`;
+  }
 
-  confluenceSignalTag.textContent = isBull ? 'STRONG BUY SIGNAL' : 'SELL PRESSURE SIGNAL';
-  confluenceSignalTag.className = `block-tag ${isBull ? 'green' : 'red'}`;
-
-  indRsiVal.textContent = isBull ? '58.4 (Bullish Momentum)' : '34.2 (Bearish Unwinding)';
-  indEmaVal.textContent = isBull ? 'Bullish Cross (9/21 EMA)' : 'Bearish Cross (9/21 EMA)';
-  indMacdVal.textContent = isBull ? '+14.2 Above Signal Line' : '-18.5 Below Signal Line';
-  indBbVal.textContent = isBull ? 'Upper Band Expansion' : 'Below Lower Band Support';
+  if (indRsiVal) indRsiVal.textContent = isBull ? '58.4 (Bullish Momentum)' : '34.2 (Bearish Unwinding)';
+  if (indEmaVal) indEmaVal.textContent = isBull ? 'Bullish Cross (9/21 EMA)' : 'Bearish Cross (9/21 EMA)';
+  if (indMacdVal) indMacdVal.textContent = isBull ? '+14.2 Above Signal Line' : '-18.5 Below Signal Line';
+  if (indBbVal) indBbVal.textContent = isBull ? 'Upper Band Expansion' : 'Below Lower Band Support';
 }
+
 
 function renderSectorHeatmap(ist) {
   if (!sectorGridWrapper) return;
