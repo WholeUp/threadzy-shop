@@ -309,6 +309,8 @@ function init() {
   // Fetch Real Live NSE/BSE Market Quotes immediately & poll every 1s
   fetchRealMarketPrices();
   setInterval(fetchRealMarketPrices, 1000);
+  window.addEventListener('resize', drawCandlestickCanvasChart);
+
 
   // Event Handlers
   audioToggleBtn.addEventListener('click', toggleAudio);
