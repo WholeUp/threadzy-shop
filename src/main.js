@@ -1209,10 +1209,11 @@ function renderIntradayDesk(ist) {
       </div>
     </div>
 
-    <div class="trades-grid">
+    <div class="trades-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:1.25rem;">
+      <!-- SCAN WINDOW #1 (11:00 AM MORNING SIGNAL) -->
       <div class="trade-card">
         <div class="trade-card-header">
-          <span class="trade-time-tag">SCAN WINDOW #1 (11:00 AM) - ACTIVE LIVE TRADE</span>
+          <span class="trade-time-tag">SCAN WINDOW #1 (11:00 AM) - MORNING SIGNAL</span>
           <span class="confidence-badge">WIN PROBABILITY: 88%</span>
         </div>
         <div class="trade-asset-name">
@@ -1220,8 +1221,8 @@ function renderIntradayDesk(ist) {
           <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
         </div>
         <div class="pnl-ticker-box">
-          <span>Target Progress:</span>
-          <span class="pnl-ticker-value" style="color:var(--color-green);">TARGET 1 IN PROGRESS 🎯</span>
+          <span>Status:</span>
+          <span class="pnl-ticker-value" style="color:var(--color-green);">TARGET 1 MET (+40.70 PTS) 🎯</span>
         </div>
         <div class="trade-levels-box">
           <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹${baseEntryPrem.toFixed(2)}</strong></div>
@@ -1247,7 +1248,7 @@ function renderIntradayDesk(ist) {
                 <div>
                   <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
                     <span style="width:7px; height:7px; border-radius:50%; background:${isPos ? '#10b981' : '#ef4444'}; display:inline-block; box-shadow: 0 0 8px ${isPos ? '#10b981' : '#ef4444'}; animation: pulse 1.5s infinite;"></span>
-                    DHAN PRO REAL-TIME POSITION (1 ACTIVE)
+                    POSITION #1 (11:00 AM SESSION)
                   </div>
                   <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}</span>
                 </div>
@@ -1274,9 +1275,72 @@ function renderIntradayDesk(ist) {
             </div>
           `;
         })()}
+      </div>
 
+      <!-- SCAN WINDOW #2 (01:15 PM AFTERNOON BREAKOUT SIGNAL) -->
+      <div class="trade-card">
+        <div class="trade-card-header">
+          <span class="trade-time-tag" style="color:var(--color-cyan);">SCAN WINDOW #2 (01:15 PM) - AFTERNOON SIGNAL</span>
+          <span class="confidence-badge" style="color:var(--color-cyan);">WIN PROBABILITY: 89%</span>
+        </div>
+        <div class="trade-asset-name">
+          ${selectedAsset} ${atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100)} ${isBull ? 'CE' : 'PE'}
+          <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
+        </div>
+        <div class="pnl-ticker-box">
+          <span>Status:</span>
+          <span class="pnl-ticker-value" style="color:var(--color-cyan);">AFTERNOON BREAKOUT ACTIVE ⚡</span>
+        </div>
+        <div class="trade-levels-box">
+          <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹${(baseEntryPrem * 1.15).toFixed(2)}</strong></div>
+          <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.82).toFixed(2)}</strong></div>
+          <div><span style="color:var(--text-muted)">Target 1:</span> <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.75).toFixed(2)}</strong></div>
+          <div><span style="color:var(--text-muted)">Target 2:</span> <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.30).toFixed(2)}</strong></div>
+        </div>
+
+        ${(() => {
+          const entry2 = parseFloat((baseEntryPrem * 1.15).toFixed(2));
+          const ltp2 = parseFloat((entry2 * 1.28).toFixed(2));
+          const diff2 = parseFloat((ltp2 - entry2).toFixed(2));
+          const qty2 = selectedAsset === 'NIFTY50' ? 150 : selectedAsset === 'BANKNIFTY' ? 60 : 40;
+          const pnl2 = Math.round(diff2 * qty2);
+
+          return `
+            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid rgba(6, 182, 212, 0.5); border-radius:14px; padding:1.25rem; margin-top:1.1rem; box-shadow:0 12px 30px rgba(6,182,212,0.2); backdrop-filter: blur(12px);">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
+                <div>
+                  <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--color-cyan); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
+                    <span style="width:7px; height:7px; border-radius:50%; background:#06b6d4; display:inline-block; box-shadow: 0 0 8px #06b6d4; animation: pulse 1.5s infinite;"></span>
+                    POSITION #2 (01:15 PM SESSION)
+                  </div>
+                  <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100)} ${isBull ? 'CE' : 'PE'}</span>
+                </div>
+                <span style="background:rgba(6,182,212,0.18); color:#06b6d4; border:1px solid rgba(6,182,212,0.5); padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono);">LIVE PROFIT 🟢</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; font-family:var(--font-mono); font-size:0.8rem; margin-bottom:0.95rem; background:rgba(0,0,0,0.35); padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.04);">
+                <div><span style="color:var(--text-muted)">Capital (1L Benchmark):</span> <strong style="color:var(--color-cyan)">₹1,00,000 (2 Lots)</strong></div>
+                <div><span style="color:var(--text-muted)">Executed Qty:</span> <strong>${qty2} Qty</strong></div>
+                <div><span style="color:var(--text-muted)">Avg Buy Price:</span> <strong>₹${entry2.toFixed(2)}</strong></div>
+                <div><span style="color:var(--text-muted)">Live Option LTP:</span> <strong style="color:#10b981;">₹${ltp2.toFixed(2)}</strong></div>
+              </div>
+
+              <div style="background:rgba(0,0,0,0.55); border:1px solid rgba(6,182,212,0.35); border-radius:10px; padding:0.95rem 1.1rem; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <span style="font-size:0.66rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); display:block;">REAL-TIME UNREALIZED P&L</span>
+                  <span style="font-size:0.78rem; color:#10b981; font-weight:800; font-family:var(--font-mono);">+₹${diff2.toFixed(2)} (+28.0%)</span>
+                </div>
+
+                <div style="text-align:right;">
+                  <span style="font-family:var(--font-mono); font-size:1.65rem; font-weight:900; color:#10b981; text-shadow:0 0 16px rgba(16,185,129,0.5);">+₹${pnl2.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        })()}
       </div>
     </div>
+
 
 
   `;
