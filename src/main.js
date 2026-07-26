@@ -1220,7 +1220,8 @@ function renderIntradayDesk(ist) {
       </div>
     </div>
 
-    <div class="trades-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:1.25rem;">
+    <div class="trades-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:2rem; width:100%;">
+
       <!-- SCAN WINDOW #1 (11:00 AM MORNING SIGNAL) -->
       <div class="trade-card">
         <div class="trade-card-header">

@@ -1302,9 +1302,11 @@ body.theme-emerald {
 
 .desk-grid {
   display: grid;
-  grid-template-columns: 2.2fr 1fr;
+  grid-template-columns: 1fr;
+  width: 100%;
   gap: 1.25rem;
 }
+
 
 @media (max-width: 1024px) {
   .desk-grid { grid-template-columns: 1fr; }
@@ -1340,14 +1342,16 @@ body.theme-emerald {
 }
 
 .trade-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
-  padding: 1.15rem;
+  background: rgba(14, 18, 27, 0.95);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
+
 
 .trade-card-header { display: flex; justify-content: space-between; align-items: center; }
 .trade-time-tag { font-size: 0.65rem; font-weight: 800; color: var(--color-amber); }
