@@ -1458,13 +1458,16 @@ function renderIntradayDesk(ist) {
         ${(() => {
           const entry2 = parseFloat((baseEntryPrem * 1.15).toFixed(2));
           const baseIdx = BASE_PRICES[selectedAsset] || curP;
-          const idxDiff = (curP - baseIdx) * (isBull ? 1 : -1);
-          const ltp2 = Math.max(5, parseFloat((entry2 + (idxDiff * 0.45)).toFixed(2)));
+          // Position #2 Afternoon Breakout baseline offset (entered at 01:15 PM)
+          const offset = isBull ? (selectedAsset === 'NIFTY50' ? 22 : 65) : (selectedAsset === 'NIFTY50' ? -22 : -65);
+          const idxDiff2 = (curP - (baseIdx + offset)) * (isBull ? 1 : -1);
+          const ltp2 = Math.max(5, parseFloat((entry2 + (idxDiff2 * 0.52)).toFixed(2)));
           const diff2 = parseFloat((ltp2 - entry2).toFixed(2));
           const qty2 = selectedAsset === 'NIFTY50' ? 150 : selectedAsset === 'BANKNIFTY' ? 60 : 40;
           const pnl2 = Math.round(diff2 * qty2);
           const isPos2 = pnl2 >= 0;
           const pnlPct2 = ((diff2 / entry2) * 100).toFixed(1);
+
 
           return `
             <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; margin-top:1.1rem; box-shadow:0 12px 30px ${isPos2 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; backdrop-filter: blur(12px);">
