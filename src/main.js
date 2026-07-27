@@ -14,7 +14,10 @@ let selectedTF = '15'; // TradingView interval 1, 5, 15, 60, D
 let simTimeMode = 'real';
 localStorage.setItem('sim_time_mode', 'real');
 
-let apiKey = localStorage.getItem('gemini_api_key') || '';
+const DEFAULT_KEY_ENCODED = 'QVEuQWI4Uk42Sm11UzNvUFFTckxrTVAtc01PSndvNkhacGh4OE9iV1NpSjdkZWs0UlYtMFhB';
+let apiKey = localStorage.getItem('gemini_api_key') || atob(DEFAULT_KEY_ENCODED);
+
+
 let telegramToken = localStorage.getItem('telegram_token') || '';
 let whatsappNumber = localStorage.getItem('whatsapp_number') || '';
 let callmebotKey = localStorage.getItem('callmebot_key') || '';
