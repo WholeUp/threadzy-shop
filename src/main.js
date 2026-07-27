@@ -1375,19 +1375,6 @@ function renderIntradayDesk(ist) {
           ${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}
           <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
         </div>
-        <div class="pnl-ticker-box">
-          <span>Status:</span>
-          <span class="pnl-ticker-value" style="color:${status.isOpen ? 'var(--color-green)' : 'var(--text-muted)'};">${status.isOpen ? 'LIVE SIGNAL ACTIVE ⚡' : 'STANDBY FOR LIVE MARKET (11:00 AM) ⏳'}</span>
-        </div>
-
-        <div class="trade-levels-box">
-          <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹${baseEntryPrem.toFixed(2)}</strong></div>
-          <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">₹${stopLossPrem.toFixed(2)}</strong></div>
-          <div><span style="color:var(--text-muted)">Target 1:</span> <strong style="color:var(--color-green)">₹${target1Prem.toFixed(2)}</strong></div>
-          <div><span style="color:var(--text-muted)">Target 2:</span> <strong style="color:var(--color-cyan)">₹${target2Prem.toFixed(2)}</strong></div>
-        </div>
-
-        <!-- DHAN PRO STYLE REAL-TIME LIVE POSITION P&L CARD (1L CAPITAL BENCHMARK) -->
         ${(() => {
           const baseIdx = BASE_PRICES[selectedAsset] || curP;
           const idxDiff = (curP - baseIdx) * (isBull ? 1 : -1);
@@ -1398,8 +1385,18 @@ function renderIntradayDesk(ist) {
           const isPos = pnl >= 0;
           const pnlPct = ((diffPrem / baseEntryPrem) * 100).toFixed(1);
 
+          const isTarget2Hit = ltp >= target2Prem;
+          const isTarget1Hit = ltp >= target1Prem;
+
+          const statusBadgeText = !status.isOpen ? 'STANDBY FOR LIVE MARKET (11:00 AM) ⏳' : isTarget2Hit ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'LIVE SIGNAL ACTIVE ⚡';
+          const posPillTag = isTarget2Hit ? 'TARGET 2 MET 🚀' : isTarget1Hit ? 'TARGET 1 MET 🟢' : isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
+
           return `
-            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; margin-top:1.1rem; box-shadow:0 12px 30px ${isPos ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; backdrop-filter: blur(12px); transition: all 0.3s ease;">
+            <div style="font-family:var(--font-mono); font-size:0.8rem; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#10b981; padding:0.5rem 0.75rem; border-radius:8px; margin-bottom:0.75rem; font-weight:800;">
+              Status: ${statusBadgeText}
+            </div>
+
+            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${isTarget2Hit ? '#10b981' : isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; box-shadow:0 12px 30px ${isPos ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; backdrop-filter: blur(12px); transition: all 0.3s ease;">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
                 <div>
                   <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
@@ -1408,7 +1405,7 @@ function renderIntradayDesk(ist) {
                   </div>
                   <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}</span>
                 </div>
-                <span style="background:${isPos ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${isPos ? '#10b981' : '#ef4444'}; border:1px solid ${isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono); letter-spacing:0.04em;">${isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴'}</span>
+                <span style="background:${isTarget2Hit ? 'rgba(16,185,129,0.3)' : isPos ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${isPos ? '#10b981' : '#ef4444'}; border:1px solid ${isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono); letter-spacing:0.04em;">${posPillTag}</span>
               </div>
 
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; font-family:var(--font-mono); font-size:0.8rem; margin-bottom:0.95rem; background:rgba(0,0,0,0.35); padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.04);">
@@ -1443,10 +1440,6 @@ function renderIntradayDesk(ist) {
           ${selectedAsset} ${atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100)} ${isBull ? 'CE' : 'PE'}
           <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
         </div>
-        <div class="pnl-ticker-box">
-          <span>Status:</span>
-          <span class="pnl-ticker-value" style="color:${status.isOpen ? 'var(--color-cyan)' : 'var(--text-muted)'};">${status.isOpen ? 'AFTERNOON BREAKOUT ACTIVE ⚡' : 'STANDBY FOR AFTERNOON BREAKOUT (01:15 PM) ⏳'}</span>
-        </div>
 
         <div class="trade-levels-box">
           <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹${(baseEntryPrem * 1.15).toFixed(2)}</strong></div>
@@ -1457,8 +1450,9 @@ function renderIntradayDesk(ist) {
 
         ${(() => {
           const entry2 = parseFloat((baseEntryPrem * 1.15).toFixed(2));
+          const target1Prem2 = parseFloat((baseEntryPrem * 1.75).toFixed(2));
+          const target2Prem2 = parseFloat((baseEntryPrem * 2.30).toFixed(2));
           const baseIdx = BASE_PRICES[selectedAsset] || curP;
-          // Position #2 Afternoon Breakout baseline offset (entered at 01:15 PM)
           const offset = isBull ? (selectedAsset === 'NIFTY50' ? 22 : 65) : (selectedAsset === 'NIFTY50' ? -22 : -65);
           const idxDiff2 = (curP - (baseIdx + offset)) * (isBull ? 1 : -1);
           const ltp2 = Math.max(5, parseFloat((entry2 + (idxDiff2 * 0.52)).toFixed(2)));
@@ -1468,9 +1462,18 @@ function renderIntradayDesk(ist) {
           const isPos2 = pnl2 >= 0;
           const pnlPct2 = ((diff2 / entry2) * 100).toFixed(1);
 
+          const isTarget2Hit2 = ltp2 >= target2Prem2;
+          const isTarget1Hit2 = ltp2 >= target1Prem2;
+
+          const statusBadgeText2 = !status.isOpen ? 'STANDBY FOR AFTERNOON BREAKOUT (01:15 PM) ⏳' : isTarget2Hit2 ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl2.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit2 ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'AFTERNOON BREAKOUT ACTIVE ⚡';
+          const posPillTag2 = isTarget2Hit2 ? 'TARGET 2 MET 🚀' : isTarget1Hit2 ? 'TARGET 1 MET 🟢' : isPos2 ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
 
           return `
-            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; margin-top:1.1rem; box-shadow:0 12px 30px ${isPos2 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; backdrop-filter: blur(12px);">
+            <div style="font-family:var(--font-mono); font-size:0.8rem; background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.3); color:#06b6d4; padding:0.5rem 0.75rem; border-radius:8px; margin-bottom:0.75rem; font-weight:800;">
+              Status: ${statusBadgeText2}
+            </div>
+
+            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${isTarget2Hit2 ? '#06b6d4' : isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; box-shadow:0 12px 30px ${isPos2 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; backdrop-filter: blur(12px);">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
                 <div>
                   <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
@@ -1479,7 +1482,7 @@ function renderIntradayDesk(ist) {
                   </div>
                   <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100)} ${isBull ? 'CE' : 'PE'}</span>
                 </div>
-                <span style="background:${isPos2 ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${isPos2 ? '#10b981' : '#ef4444'}; border:1px solid ${isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono);">${isPos2 ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴'}</span>
+                <span style="background:${isTarget2Hit2 ? 'rgba(6,182,212,0.3)' : isPos2 ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${isTarget2Hit2 ? '#06b6d4' : isPos2 ? '#10b981' : '#ef4444'}; border:1px solid ${isTarget2Hit2 ? 'rgba(6,182,212,0.5)' : isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono);">${posPillTag2}</span>
               </div>
 
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; font-family:var(--font-mono); font-size:0.8rem; margin-bottom:0.95rem; background:rgba(0,0,0,0.35); padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.04);">
@@ -1502,6 +1505,7 @@ function renderIntradayDesk(ist) {
             </div>
           `;
         })()}
+
 
       </div>
     </div>
