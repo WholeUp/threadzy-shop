@@ -1288,13 +1288,13 @@ function updateTopLiveTradeBanner(isOpen, ist) {
   }
 
   // Live Market Open: Banner #2 (01:15 PM Afternoon Breakout Signal)
-  const entry2 = parseFloat((baseEntryPrem * 1.15).toFixed(2));
+  const entry2 = selectedAsset === 'NIFTY50' ? 98.50 : parseFloat((baseEntryPrem * 1.15).toFixed(2));
   const strike2 = atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100);
   banner1pm.className = 'top-live-signal-banner';
   if (statusTag1pm) statusTag1pm.innerHTML = '⚡ LIVE SIGNAL ACTIVE (01:15 PM SCAN)';
   if (confTag1pm) confTag1pm.innerHTML = '91.2% SURETY WIN RATE';
   if (title1pm) title1pm.innerHTML = `${selectedAsset} ${strike2} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
-  if (pricesBox1pm) pricesBox1pm.innerHTML = `<span>BUY AT: <strong>₹${entry2.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.82).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.75).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.30).toFixed(2)}</strong></span>`;
+  if (pricesBox1pm) pricesBox1pm.innerHTML = `<span>BUY AT: <strong>₹${entry2.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(entry2 * 0.72).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(entry2 * 1.50).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(entry2 * 1.95).toFixed(2)}</strong></span>`;
   if (copyBtn1pm) {
     copyBtn1pm.innerHTML = '📋 COPY TRADE (01:15 PM)';
     copyBtn1pm.className = 'btn btn-primary banner-copy-btn';
@@ -1303,6 +1303,7 @@ function updateTopLiveTradeBanner(isOpen, ist) {
     copyBtn1pm.style.color = '#000';
   }
 }
+
 
 
 
@@ -1451,11 +1452,11 @@ function renderIntradayDesk(ist) {
         </div>
 
         ${(() => {
-          const entry2 = parseFloat((baseEntryPrem * 1.15).toFixed(2));
-          const target1Prem2 = parseFloat((baseEntryPrem * 1.75).toFixed(2));
-          const target2Prem2 = parseFloat((baseEntryPrem * 2.30).toFixed(2));
+          const entry2 = selectedAsset === 'NIFTY50' ? 98.50 : parseFloat((baseEntryPrem * 1.15).toFixed(2));
+          const target1Prem2 = parseFloat((entry2 * 1.50).toFixed(2));
+          const target2Prem2 = parseFloat((entry2 * 1.95).toFixed(2));
           const baseIdx = BASE_PRICES[selectedAsset] || curP;
-          const offset = isBull ? (selectedAsset === 'NIFTY50' ? 22 : 65) : (selectedAsset === 'NIFTY50' ? -22 : -65);
+          const offset = isBull ? (selectedAsset === 'NIFTY50' ? 42 : 65) : (selectedAsset === 'NIFTY50' ? -42 : -65);
           const idxDiff2 = (curP - (baseIdx + offset)) * (isBull ? 1 : -1);
           const ltp2 = Math.max(5, parseFloat((entry2 + (idxDiff2 * 0.52)).toFixed(2)));
           const diff2 = parseFloat((ltp2 - entry2).toFixed(2));
@@ -1463,6 +1464,7 @@ function renderIntradayDesk(ist) {
           const pnl2 = Math.round(diff2 * qty2);
           const isPos2 = pnl2 >= 0;
           const pnlPct2 = ((diff2 / entry2) * 100).toFixed(1);
+
 
           const isTarget2Hit2 = ltp2 >= target2Prem2;
           const isTarget1Hit2 = ltp2 >= target1Prem2;
