@@ -1233,39 +1233,9 @@ function renderDemandSupplyMatrix() {
 }
 
 function updateTopLiveTradeBanner(isOpen, ist) {
-  const banner = document.getElementById('top-live-trade-banner');
-  if (!banner) return;
-
-  const statusTag = document.getElementById('banner-status-tag');
-  const confTag = document.getElementById('banner-confidence-tag');
-  const title = document.getElementById('banner-trade-title');
-  const pricesBox = document.getElementById('banner-price-levels-box');
-  const copyBtn = document.getElementById('banner-copy-trade-btn');
-
-  if (!isOpen) {
-    banner.className = 'top-live-signal-banner closed-state';
-    if (statusTag) statusTag.innerHTML = '🔴 MARKET CLOSED (3:30 PM IST)';
-    if (confTag) confTag.innerHTML = 'STANDBY MODE • NEXT LIVE SCAN AT 11:00 AM IST';
-    if (title) title.innerHTML = 'NSE / BSE Market Closed • Standing By';
-    if (pricesBox) pricesBox.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Real-time GTF AI Engine live signal unlocks tomorrow at <strong>11:00 AM IST</strong>.</span>';
-    if (copyBtn) {
-      copyBtn.innerHTML = '🔒 MARKET CLOSED';
-      copyBtn.className = 'btn btn-secondary banner-copy-btn';
-    }
-    return;
-  }
-
-  let timeMins = ist.hour * 60 + ist.minute;
-  if (simTimeMode === '930am') {
-    timeMins = 9 * 60 + 30;
-  } else if (simTimeMode === '1115am') {
-    timeMins = 11 * 60 + 15;
-  } else if (simTimeMode === '200pm') {
-    timeMins = 14 * 60;
-  }
-
-  const is11AMUnlocked = timeMins >= (11 * 60);
-  const is1PMUnlocked = timeMins >= (13 * 60);
+  const banner11am = document.getElementById('top-live-trade-banner-11am');
+  const banner1pm = document.getElementById('top-live-trade-banner-1pm');
+  if (!banner11am || !banner1pm) return;
 
   const isBull = outlook[selectedAsset]?.trend === 'BULLISH';
   const curP = prices[selectedAsset]?.current || BASE_PRICES[selectedAsset];
@@ -1273,50 +1243,66 @@ function updateTopLiveTradeBanner(isOpen, ist) {
   const atmStrike = Math.round(curP / strikeInterval) * strikeInterval;
   const baseEntryPrem = selectedAsset === 'NIFTY50' ? parseFloat((curP * 0.0031).toFixed(2)) : selectedAsset === 'BANKNIFTY' ? parseFloat((curP * 0.0035).toFixed(2)) : parseFloat((curP * 0.0032).toFixed(2));
 
-  if (!is11AMUnlocked) {
-    banner.className = 'top-live-signal-banner';
-    if (statusTag) statusTag.innerHTML = '🟢 LIVE MARKET OPEN (SCANNING IN PROGRESS)';
-    if (confTag) confTag.innerHTML = 'ANALYZING GTF DEMAND ZONES • 11:00 AM UNLOCK';
-    if (title) title.innerHTML = `Scanning ${selectedAsset} GTF Zones...`;
-    if (pricesBox) pricesBox.innerHTML = '<span style="color:var(--color-cyan); font-size:0.82rem;">Real-time GTF AI Engine is evaluating market momentum. First live trade signal unlocks at <strong>11:00 AM IST</strong> sharp.</span>';
-    if (copyBtn) {
-      copyBtn.innerHTML = '⏳ SCANNING (11:00 AM UNLOCK)';
-      copyBtn.className = 'btn btn-secondary banner-copy-btn';
-      copyBtn.style.background = 'rgba(6, 182, 212, 0.2)';
-      copyBtn.style.borderColor = '#06b6d4';
-      copyBtn.style.color = '#06b6d4';
-    }
-  } else if (is11AMUnlocked && !is1PMUnlocked) {
-    banner.className = 'top-live-signal-banner';
-    if (statusTag) statusTag.innerHTML = '🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)';
-    if (confTag) confTag.innerHTML = '88.5% SURETY WIN RATE';
-    if (title) title.innerHTML = `${selectedAsset} ${atmStrike} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
-    if (pricesBox) pricesBox.innerHTML = `<span>BUY AT: <strong>₹${baseEntryPrem.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.70).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.55).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.10).toFixed(2)}</strong></span>`;
-    if (copyBtn) {
-      copyBtn.innerHTML = '📋 COPY LIVE TRADE (11:00 AM)';
-      copyBtn.className = 'btn btn-primary banner-copy-btn';
-      copyBtn.style.background = '#10b981';
-      copyBtn.style.borderColor = '#10b981';
-      copyBtn.style.color = '#000';
-    }
-  } else {
-    // 01:15 PM Afternoon Breakout Session Active
-    const entry2 = parseFloat((baseEntryPrem * 1.15).toFixed(2));
-    const strike2 = atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100);
-    banner.className = 'top-live-signal-banner';
-    if (statusTag) statusTag.innerHTML = '🟢 LIVE SIGNAL ACTIVE (01:15 PM SCAN)';
-    if (confTag) confTag.innerHTML = '91.2% SURETY WIN RATE';
-    if (title) title.innerHTML = `${selectedAsset} ${strike2} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
-    if (pricesBox) pricesBox.innerHTML = `<span>BUY AT: <strong>₹${entry2.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.82).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.75).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.30).toFixed(2)}</strong></span>`;
-    if (copyBtn) {
-      copyBtn.innerHTML = '📋 COPY LIVE TRADE (01:15 PM)';
-      copyBtn.className = 'btn btn-primary banner-copy-btn';
-      copyBtn.style.background = '#06b6d4';
-      copyBtn.style.borderColor = '#06b6d4';
-      copyBtn.style.color = '#000';
-    }
+  const statusTag11am = document.getElementById('banner-status-tag-11am');
+  const confTag11am = document.getElementById('banner-confidence-tag-11am');
+  const title11am = document.getElementById('banner-trade-title-11am');
+  const pricesBox11am = document.getElementById('banner-price-levels-box-11am');
+  const copyBtn11am = document.getElementById('banner-copy-trade-btn-11am');
+
+  const statusTag1pm = document.getElementById('banner-status-tag-1pm');
+  const confTag1pm = document.getElementById('banner-confidence-tag-1pm');
+  const title1pm = document.getElementById('banner-trade-title-1pm');
+  const pricesBox1pm = document.getElementById('banner-price-levels-box-1pm');
+  const copyBtn1pm = document.getElementById('banner-copy-trade-btn-1pm');
+
+  if (!isOpen) {
+    banner11am.className = 'top-live-signal-banner closed-state';
+    banner1pm.className = 'top-live-signal-banner closed-state';
+    if (statusTag11am) statusTag11am.innerHTML = '🔴 MARKET CLOSED (3:30 PM IST)';
+    if (confTag11am) confTag11am.innerHTML = 'STANDBY MODE • MORNING SCAN AT 11:00 AM IST';
+    if (title11am) title11am.innerHTML = 'NSE / BSE Market Closed • Standing By';
+    if (pricesBox11am) pricesBox11am.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Real-time GTF AI Engine live signal unlocks at <strong>11:00 AM IST</strong>.</span>';
+    if (copyBtn11am) { copyBtn11am.innerHTML = '🔒 MARKET CLOSED'; copyBtn11am.className = 'btn btn-secondary banner-copy-btn'; }
+
+    if (statusTag1pm) statusTag1pm.innerHTML = '🔴 MARKET CLOSED (3:30 PM IST)';
+    if (confTag1pm) confTag1pm.innerHTML = 'STANDBY MODE • AFTERNOON SCAN AT 01:15 PM IST';
+    if (title1pm) title1pm.innerHTML = 'NSE / BSE Market Closed • Standing By';
+    if (pricesBox1pm) pricesBox1pm.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Real-time GTF AI Engine breakout signal unlocks at <strong>01:15 PM IST</strong>.</span>';
+    if (copyBtn1pm) { copyBtn1pm.innerHTML = '🔒 MARKET CLOSED'; copyBtn1pm.className = 'btn btn-secondary banner-copy-btn'; }
+    return;
+  }
+
+  // Live Market Open: Banner #1 (11:00 AM Morning Scan Signal)
+  banner11am.className = 'top-live-signal-banner';
+  if (statusTag11am) statusTag11am.innerHTML = '🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)';
+  if (confTag11am) confTag11am.innerHTML = '88.5% SURETY WIN RATE';
+  if (title11am) title11am.innerHTML = `${selectedAsset} ${atmStrike} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
+  if (pricesBox11am) pricesBox11am.innerHTML = `<span>BUY AT: <strong>₹${baseEntryPrem.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.70).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.55).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.10).toFixed(2)}</strong></span>`;
+  if (copyBtn11am) {
+    copyBtn11am.innerHTML = '📋 COPY TRADE (11:00 AM)';
+    copyBtn11am.className = 'btn btn-primary banner-copy-btn';
+    copyBtn11am.style.background = '#10b981';
+    copyBtn11am.style.borderColor = '#10b981';
+    copyBtn11am.style.color = '#000';
+  }
+
+  // Live Market Open: Banner #2 (01:15 PM Afternoon Breakout Signal)
+  const entry2 = parseFloat((baseEntryPrem * 1.15).toFixed(2));
+  const strike2 = atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100);
+  banner1pm.className = 'top-live-signal-banner';
+  if (statusTag1pm) statusTag1pm.innerHTML = '⚡ LIVE SIGNAL ACTIVE (01:15 PM SCAN)';
+  if (confTag1pm) confTag1pm.innerHTML = '91.2% SURETY WIN RATE';
+  if (title1pm) title1pm.innerHTML = `${selectedAsset} ${strike2} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
+  if (pricesBox1pm) pricesBox1pm.innerHTML = `<span>BUY AT: <strong>₹${entry2.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.82).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.75).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.30).toFixed(2)}</strong></span>`;
+  if (copyBtn1pm) {
+    copyBtn1pm.innerHTML = '📋 COPY TRADE (01:15 PM)';
+    copyBtn1pm.className = 'btn btn-primary banner-copy-btn';
+    copyBtn1pm.style.background = '#06b6d4';
+    copyBtn1pm.style.borderColor = '#06b6d4';
+    copyBtn1pm.style.color = '#000';
   }
 }
+
 
 
 

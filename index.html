@@ -88,22 +88,45 @@
           <span>📅 <strong>HIGH-IMPACT EVENT ALERT:</strong> RBI Monetary Policy & US Fed Rate Decision Session. High Volatility Expected!</span>
         </div>
 
-        <!-- TOP LIVE TRADE SIGNAL BANNER (Prominent Box) -->
-        <div id="top-live-trade-banner" class="top-live-signal-banner closed-state">
-          <div class="banner-title-row">
-            <span class="banner-badge red" id="banner-status-tag">🔴 MARKET CLOSED (3:30 PM IST)</span>
-            <span class="banner-confidence" id="banner-confidence-tag">STANDBY MODE • NEXT LIVE SCAN AT 11:00 AM IST</span>
-          </div>
-          <div class="banner-content-grid">
-            <div>
-              <span class="banner-strike-title" id="banner-trade-title">NSE / BSE Market Closed • Standing By</span>
-              <div class="banner-price-levels" id="banner-price-levels-box">
-                <span style="color:var(--text-muted); font-size:0.8rem;">Real-time GTF AI Engine live signal unlocks tomorrow at <strong>11:00 AM IST</strong>.</span>
-              </div>
+        <!-- STACKED TOP LIVE TRADE SIGNAL BANNERS (11:00 AM & 01:15 PM SCANS) -->
+        <div id="top-live-trade-banners-container" style="display:flex; flex-direction:column; gap:0.85rem; margin-bottom:1.5rem; width:100%;">
+          
+          <!-- BANNER #1: 11:00 AM MORNING SCAN -->
+          <div id="top-live-trade-banner-11am" class="top-live-signal-banner closed-state">
+            <div class="banner-title-row">
+              <span class="banner-badge green" id="banner-status-tag-11am">🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)</span>
+              <span class="banner-confidence" id="banner-confidence-tag-11am">88.5% SURETY WIN RATE</span>
             </div>
-            <button class="btn btn-secondary banner-copy-btn" id="banner-copy-trade-btn" style="font-weight:800; padding:0.6rem 1.2rem; font-size:0.82rem;">🔒 MARKET CLOSED</button>
+            <div class="banner-content-grid">
+              <div>
+                <span class="banner-strike-title" id="banner-trade-title-11am">NIFTY 23800 CE (BUY CALL 🟢)</span>
+                <div class="banner-price-levels" id="banner-price-levels-box-11am">
+                  <span>BUY AT: <strong>₹128.50</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹96.40</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹193.50</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹257.00</strong></span>
+                </div>
+              </div>
+              <button class="btn btn-primary banner-copy-btn" id="banner-copy-trade-btn-11am" style="font-weight:800; padding:0.6rem 1.2rem; font-size:0.82rem; background:#10b981; border-color:#10b981; color:#000;">📋 COPY TRADE (11:00 AM)</button>
+            </div>
           </div>
+
+          <!-- BANNER #2: 01:15 PM AFTERNOON SCAN -->
+          <div id="top-live-trade-banner-1pm" class="top-live-signal-banner closed-state">
+            <div class="banner-title-row">
+              <span class="banner-badge cyan" id="banner-status-tag-1pm" style="background:rgba(6,182,212,0.18); color:#06b6d4; border:1px solid rgba(6,182,212,0.5);">⚡ LIVE SIGNAL ACTIVE (01:15 PM SCAN)</span>
+              <span class="banner-confidence" id="banner-confidence-tag-1pm" style="color:#06b6d4;">91.2% SURETY WIN RATE</span>
+            </div>
+            <div class="banner-content-grid">
+              <div>
+                <span class="banner-strike-title" id="banner-trade-title-1pm">NIFTY 23850 CE (BUY CALL 🟢)</span>
+                <div class="banner-price-levels" id="banner-price-levels-box-1pm">
+                  <span>BUY AT: <strong>₹147.75</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹105.35</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹224.85</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹295.55</strong></span>
+                </div>
+              </div>
+              <button class="btn btn-primary banner-copy-btn" id="banner-copy-trade-btn-1pm" style="font-weight:800; padding:0.6rem 1.2rem; font-size:0.82rem; background:#06b6d4; border-color:#06b6d4; color:#000;">📋 COPY TRADE (01:15 PM)</button>
+            </div>
+          </div>
+
         </div>
+
 
         <!-- Top Index Selector Overview Bar (3-Column Sleek Cards) -->
         <section class="index-summary-grid">
