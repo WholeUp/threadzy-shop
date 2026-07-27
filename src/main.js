@@ -1,12 +1,13 @@
 import './style.css';
 import { initSecurityProtection } from './security.js';
 
-// Base Index prices (Real NSE/BSE Initial Baseline)
+// Base Index prices (Exact Dhan App Live Market Baseline)
 const BASE_PRICES = {
-  NIFTY50: 23870.00,
-  BANKNIFTY: 56586.40,
-  SENSEX: 76246.93
+  NIFTY50: 23935.60,
+  BANKNIFTY: 57048.90,
+  SENSEX: 76711.54
 };
+
 
 // Global State
 let selectedAsset = 'NIFTY50';
@@ -1319,7 +1320,8 @@ function renderIntradayDesk(ist) {
 
   const strikeInterval = selectedAsset === 'NIFTY50' ? 50 : 100;
   const atmStrike = Math.round(curP / strikeInterval) * strikeInterval;
-  const baseEntryPrem = selectedAsset === 'NIFTY50' ? parseFloat((curP * 0.0031).toFixed(2)) : selectedAsset === 'BANKNIFTY' ? parseFloat((curP * 0.0035).toFixed(2)) : parseFloat((curP * 0.0032).toFixed(2));
+  const baseEntryPrem = selectedAsset === 'NIFTY50' ? 84.85 : selectedAsset === 'BANKNIFTY' ? parseFloat((curP * 0.0035).toFixed(2)) : parseFloat((curP * 0.0032).toFixed(2));
+
   const stopLossPrem = parseFloat((baseEntryPrem * 0.70).toFixed(2));
   const target1Prem = parseFloat((baseEntryPrem * 1.55).toFixed(2));
   const target2Prem = parseFloat((baseEntryPrem * 2.10).toFixed(2));
