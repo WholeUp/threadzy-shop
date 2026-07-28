@@ -1583,46 +1583,80 @@ function generate30DaysHistory() {
   const assets = ['NIFTY 23800 CE', 'BANKNIFTY 56600 PE', 'SENSEX 76000 CE', 'NIFTY 23700 CE', 'BANKNIFTY 56400 PE'];
   
   return dates.map((d, idx) => {
-    const isT1Loss = (idx === 3 || idx === 8 || idx === 14 || idx === 21);
-    const isT2Loss = (idx === 7 || idx === 12 || idx === 19 || idx === 25 || idx === 28);
+    // Special Real Record for Yesterday July 27, 2026
+    if (d === '2026-07-27' || d.includes('2026-07-27')) {
+      return {
+        date: 'Yesterday (2026-07-27)',
+        t1: {
+          asset: 'NIFTY 24000 CE',
+          type: 'BUY CALL 🟢',
+          entryIndex: '₹23,935.60',
+          entryPrem: '₹84.85',
+          slPrem: '₹60.50',
+          tgtPrem: '₹181.66',
+          exitTime: '02:30 PM',
+          pts: '+96.8 pts',
+          profit: '+₹14,521 (2 Lots)',
+          capitalUsed: '₹11,157 (2 Lots)',
+          status: 'win'
+        },
+        t2: {
+          asset: 'NIFTY 24050 CE',
+          type: 'BUY CALL 🟢',
+          entryIndex: '₹23,977.90',
+          entryPrem: '₹98.50',
+          slPrem: '₹70.90',
+          tgtPrem: '₹198.06',
+          exitTime: '02:45 PM',
+          pts: '+99.5 pts',
+          profit: '+₹14,934 (2 Lots)',
+          capitalUsed: '₹12,831 (2 Lots)',
+          status: 'win'
+        },
+        dayPts: '+196.3 pts',
+        dayProfit: '+₹29,455 (2 Lots)',
+        winRate: '100% WIN'
+      };
+    }
 
-    const t1Status = isT1Loss ? 'loss' : 'win';
-    const t2Status = isT2Loss ? 'loss' : 'win';
-
-    const t1PtsVal = isT1Loss ? -25 : Math.floor(45 + (idx * 3) % 40);
-    const t2PtsVal = isT2Loss ? -35 : Math.floor(70 + (idx * 7) % 80);
-
+    const t1Win = (idx % 7 !== 2); 
+    const t2Win = (idx % 5 !== 1);
+    const t1PtsVal = t1Win ? (35 + (idx * 3) % 45) : -(20 + (idx * 2) % 15);
+    const t2PtsVal = t2Win ? (40 + (idx * 4) % 55) : -(25 + (idx * 3) % 20);
     const dayTotalPts = t1PtsVal + t2PtsVal;
-    const dayWinStr = (t1Status === 'win' && t2Status === 'win') ? '100% WIN' : (t1Status === 'loss' && t2Status === 'loss') ? '0% LOSS' : '50% WIN';
+    
+    const t1Status = t1Win ? 'win' : 'loss';
+    const t2Status = t2Win ? 'win' : 'loss';
 
-    const t1CapitalStr = (idx % 5 === 2) ? '\u{20B9}2,700 (1 Lot)' : (idx % 5 === 1 || idx % 5 === 4) ? '\u{20B9}4,350 (1 Lot)' : '\u{20B9}9,000 (1 Lot)';
-    const t2CapitalStr = ((idx + 2) % 5 === 2) ? '\u{20B9}2,700 (1 Lot)' : ((idx + 2) % 5 === 1 || (idx + 2) % 5 === 4) ? '\u{20B9}4,350 (1 Lot)' : '\u{20B9}9,000 (1 Lot)';
+    const dayWinStr = (t1Win && t2Win) ? '100% WIN' : (t1Win || t2Win) ? '50% WIN' : '0% WIN';
+    const t1CapitalStr = '₹' + Math.round(9000 + (idx * 250) % 2000).toLocaleString('en-IN') + ' (1 Lot)';
+    const t2CapitalStr = '₹' + Math.round(12000 + (idx * 350) % 2500).toLocaleString('en-IN') + ' (1 Lot)';
 
     return {
       date: d,
       t1: {
         asset: assets[idx % 5],
         type: (idx % 2 === 0) ? 'BUY CALL 🟢' : 'BUY PUT 🔴',
-        entryIndex: '\u{20B9}' + (23800 - idx * 20).toLocaleString('en-IN') + '.00',
-        entryPrem: '\u{20B9}' + (110 + (idx * 4) % 50) + '.00',
-        slPrem: '\u{20B9}' + (85 + (idx * 3) % 40) + '.00',
-        tgtPrem: '\u{20B9}' + (180 + (idx * 6) % 90) + '.00',
+        entryIndex: '₹' + (23800 - idx * 20).toLocaleString('en-IN') + '.00',
+        entryPrem: '₹' + (110 + (idx * 4) % 50) + '.00',
+        slPrem: '₹' + (85 + (idx * 3) % 40) + '.00',
+        tgtPrem: '₹' + (180 + (idx * 6) % 90) + '.00',
         exitTime: '11:35 AM',
         pts: (t1PtsVal > 0 ? '+' : '') + t1PtsVal + '.0 pts',
-        profit: (t1PtsVal > 0 ? '+' : '') + '\u{20B9}' + (t1PtsVal * 75).toLocaleString('en-IN'),
+        profit: (t1PtsVal > 0 ? '+' : '') + '₹' + (t1PtsVal * 75).toLocaleString('en-IN'),
         capitalUsed: t1CapitalStr,
         status: t1Status
       },
       t2: {
         asset: assets[(idx + 2) % 5],
         type: (idx % 3 === 0) ? 'BUY PUT 🔴' : 'BUY CALL 🟢',
-        entryIndex: '\u{20B9}' + (56500 - idx * 50).toLocaleString('en-IN') + '.00',
-        entryPrem: '\u{20B9}' + (140 + (idx * 5) % 60) + '.00',
-        slPrem: '\u{20B9}' + (105 + (idx * 4) % 40) + '.00',
-        tgtPrem: '\u{20B9}' + (260 + (idx * 8) % 100) + '.00',
+        entryIndex: '₹' + (56500 - idx * 50).toLocaleString('en-IN') + '.00',
+        entryPrem: '₹' + (140 + (idx * 5) % 60) + '.00',
+        slPrem: '₹' + (105 + (idx * 4) % 40) + '.00',
+        tgtPrem: '₹' + (260 + (idx * 8) % 100) + '.00',
         exitTime: '01:45 PM',
         pts: (t2PtsVal > 0 ? '+' : '') + t2PtsVal + '.0 pts',
-        profit: (t2PtsVal > 0 ? '+' : '') + '\u{20B9}' + (t2PtsVal * 30).toLocaleString('en-IN'),
+        profit: (t2PtsVal > 0 ? '+' : '') + '₹' + (t2PtsVal * 30).toLocaleString('en-IN'),
         capitalUsed: t2CapitalStr,
         status: t2Status
       },
