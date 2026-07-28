@@ -1854,15 +1854,18 @@ function sendWhatsAppSignalDirect() {
 function startPriceTicker() {
   setInterval(() => {
     const ist = getISTContext();
+    const mStatus = getMarketStatus(ist);
 
-    // Real-Time Live Ticker Fluctuation for Dhan Pro Position Cards & Charts
-    Object.keys(prices).forEach(key => {
-      const isBull = outlook[key]?.trend === 'BULLISH';
-      const bias = isBull ? 0.42 : 0.58;
-      const tick = (Math.random() - bias) * (prices[key].current * 0.0007);
-      prices[key].current = parseFloat((prices[key].current + tick).toFixed(2));
-      prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
-    });
+    // CRITICAL FIX: IF MARKET IS CLOSED (AFTER 3:30 PM IST, BEFORE 9:15 AM IST, OR WEEKEND), DO NOT FLUTUATE PRICES WITH RANDOM TICKS!
+    if (mStatus.isOpen) {
+      Object.keys(prices).forEach(key => {
+        const isBull = outlook[key]?.trend === 'BULLISH';
+        const bias = isBull ? 0.42 : 0.58;
+        const tick = (Math.random() - bias) * (prices[key].current * 0.0007);
+        prices[key].current = parseFloat((prices[key].current + tick).toFixed(2));
+        prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
+      });
+    }
 
     renderTickerCards();
     drawCandlestickCanvasChart();

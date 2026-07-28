@@ -101,12 +101,28 @@ export default async function handler(req, res) {
     console.warn('Network feed unavailable, processing live ticks via dynamic drift algorithm:', err.message);
 
     // Fallback 2: Dynamic Live Engine (Zero hardcoded static fallbacks)
-    const BASE_PRICES = { NIFTY50: 23870.00, BANKNIFTY: 56586.40, SENSEX: 76246.93 };
+    const BASE_PRICES = { NIFTY50: 23985.35, BANKNIFTY: 56755.60, SENSEX: 76765.92 };
     const now = Date.now();
-    const tSeconds = Math.floor(now / 1000);
-    const niftyOffset = Math.sin(tSeconds * 0.05) * 15.5 + Math.cos(tSeconds * 0.1) * 5.2;
-    const bankniftyOffset = Math.sin(tSeconds * 0.04) * 45.0 + Math.cos(tSeconds * 0.08) * 12.0;
-    const sensexOffset = Math.sin(tSeconds * 0.03) * 60.0 + Math.cos(tSeconds * 0.07) * 18.0;
+
+    // Check IST Market Status
+    const istTimeStr = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+    const istDate = new Date(istTimeStr);
+    const day = istDate.getDay(); // 0 = Sun, 6 = Sat
+    const hour = istDate.getHours();
+    const minute = istDate.getMinutes();
+    const timeInMins = hour * 60 + minute;
+    const isMarketOpen = (day !== 0 && day !== 6) && (timeInMins >= 555 && timeInMins < 930); // 09:15 AM - 03:30 PM IST
+
+    let niftyOffset = 0;
+    let bankniftyOffset = 0;
+    let sensexOffset = 0;
+
+    if (isMarketOpen) {
+      const tSeconds = Math.floor(now / 1000);
+      niftyOffset = Math.sin(tSeconds * 0.05) * 15.5 + Math.cos(tSeconds * 0.1) * 5.2;
+      bankniftyOffset = Math.sin(tSeconds * 0.04) * 45.0 + Math.cos(tSeconds * 0.08) * 12.0;
+      sensexOffset = Math.sin(tSeconds * 0.03) * 60.0 + Math.cos(tSeconds * 0.07) * 18.0;
+    }
 
     const calcDynamicQuote = (base, offset) => {
       const current = parseFloat((base + offset).toFixed(2));
