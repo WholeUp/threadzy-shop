@@ -65,15 +65,7 @@ export function initSecurityProtection() {
     e.preventDefault();
   });
 
-  // 6. Anti-Debugger Loop (Defeats DevTools Scrapers & Reverse Engineers)
-  setInterval(() => {
-    const startTime = performance.now();
-    debugger;
-    const endTime = performance.now();
-    if (endTime - startTime > 100) {
-      showSecurityToast('⚠️ DevTools Tampering Detected! Security Protocol Initiated.');
-    }
-  }, 2000);
+
 
   // 7. Anti-Tamper: Clear Sensitive Logs from Production Console
   if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {

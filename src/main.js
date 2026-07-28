@@ -1418,7 +1418,8 @@ function renderIntradayDesk(ist) {
           <span class="confidence-badge">WIN PROBABILITY: 88%</span>
         </div>
         ${(() => {
-          const is11amUnlocked = status.isOpen && (ist.hour > 11 || (ist.hour === 11 && ist.minute >= 0));
+          // 11:00 AM Trade is unlocked if current time is after 11:00 AM IST OR market is closed after 3:30 PM
+          const is11amUnlocked = (ist.hour > 11 || (ist.hour === 11 && ist.minute >= 0)) || ist.hour >= 15 || !status.isOpen;
 
           const baseIdx = BASE_PRICES[selectedAsset] || curP;
           const idxDiff = (curP - baseIdx) * (isBull ? 1 : -1);
@@ -1432,8 +1433,8 @@ function renderIntradayDesk(ist) {
           const isTarget2Hit = ltp >= target2Prem;
           const isTarget1Hit = ltp >= target1Prem;
 
-          const statusBadgeText = !status.isOpen ? 'MARKET CLOSED (3:30 PM IST) 🔒' : !is11amUnlocked ? 'STANDBY FOR MORNING SIGNAL (11:00 AM IST) ⏳' : isTarget2Hit ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'LIVE SIGNAL ACTIVE ⚡';
-          const posPillTag = !is11amUnlocked ? 'STANDBY ⏳' : isTarget2Hit ? 'TARGET 2 MET 🚀' : isTarget1Hit ? 'TARGET 1 MET 🟢' : isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
+          const statusBadgeText = !status.isOpen ? 'MARKET CLOSED (3:30 PM IST) • FINAL DAY P&L SECURED 🔒' : !is11amUnlocked ? 'STANDBY FOR MORNING SIGNAL (11:00 AM IST) ⏳' : isTarget2Hit ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'LIVE SIGNAL ACTIVE ⚡';
+          const posPillTag = !status.isOpen ? (isPos ? 'CLOSED (PROFIT) 🔒' : 'CLOSED (LOSS) 🔒') : !is11amUnlocked ? 'STANDBY ⏳' : isTarget2Hit ? 'TARGET 2 MET 🚀' : isTarget1Hit ? 'TARGET 1 MET 🟢' : isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
 
           return `
             <div class="trade-asset-name">
@@ -1456,7 +1457,7 @@ function renderIntradayDesk(ist) {
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
                 <div>
                   <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
-                    <span style="width:7px; height:7px; border-radius:50%; background:${is11amUnlocked ? (isPos ? '#10b981' : '#ef4444') : '#eab308'}; display:inline-block; box-shadow: 0 0 8px ${is11amUnlocked ? (isPos ? '#10b981' : '#ef4444') : '#eab308'}; animation: pulse 1.5s infinite;"></span>
+                    <span style="width:7px; height:7px; border-radius:50%; background:${is11amUnlocked ? (isPos ? '#10b981' : '#ef4444') : '#eab308'}; display:inline-block; box-shadow: 0 0 8px ${is11amUnlocked ? (isPos ? '#10b981' : '#ef4444') : '#eab308'};"></span>
                     POSITION #1 (11:00 AM SESSION)
                   </div>
                   <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}</span>
@@ -1495,7 +1496,8 @@ function renderIntradayDesk(ist) {
         </div>
 
         ${(() => {
-          const is1pmUnlocked = status.isOpen && (ist.hour > 13 || (ist.hour === 13 && ist.minute >= 15));
+          // 01:15 PM Trade is unlocked if current time is after 01:15 PM IST OR market is closed after 3:30 PM
+          const is1pmUnlocked = (ist.hour > 13 || (ist.hour === 13 && ist.minute >= 15)) || ist.hour >= 15 || !status.isOpen;
           const entry2 = selectedAsset === 'NIFTY50' ? 98.50 : parseFloat((baseEntryPrem * 1.15).toFixed(2));
           const slPrem2 = parseFloat((entry2 * 0.72).toFixed(2));
           const target1Prem2 = parseFloat((entry2 * 1.50).toFixed(2));
@@ -1513,8 +1515,8 @@ function renderIntradayDesk(ist) {
           const isTarget2Hit2 = ltp2 >= target2Prem2;
           const isTarget1Hit2 = ltp2 >= target1Prem2;
 
-          const statusBadgeText2 = !status.isOpen ? 'MARKET CLOSED (3:30 PM IST) 🔒' : !is1pmUnlocked ? 'STANDBY FOR AFTERNOON BREAKOUT (01:15 PM IST) ⏳' : isTarget2Hit2 ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl2.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit2 ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'AFTERNOON BREAKOUT ACTIVE ⚡';
-          const posPillTag2 = !is1pmUnlocked ? 'STANDBY ⏳' : isTarget2Hit2 ? 'TARGET 2 MET 🚀' : isTarget1Hit2 ? 'TARGET 1 MET 🟢' : isPos2 ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
+          const statusBadgeText2 = !status.isOpen ? 'MARKET CLOSED (3:30 PM IST) • FINAL DAY P&L SECURED 🔒' : !is1pmUnlocked ? 'STANDBY FOR AFTERNOON BREAKOUT (01:15 PM IST) ⏳' : isTarget2Hit2 ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl2.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit2 ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'AFTERNOON BREAKOUT ACTIVE ⚡';
+          const posPillTag2 = !status.isOpen ? (isPos2 ? 'CLOSED (PROFIT) 🔒' : 'CLOSED (LOSS) 🔒') : !is1pmUnlocked ? 'STANDBY ⏳' : isTarget2Hit2 ? 'TARGET 2 MET 🚀' : isTarget1Hit2 ? 'TARGET 1 MET 🟢' : isPos2 ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
 
           return `
             <div class="trade-asset-name">
@@ -1538,7 +1540,7 @@ function renderIntradayDesk(ist) {
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
                 <div>
                   <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
-                    <span style="width:7px; height:7px; border-radius:50%; background:${is1pmUnlocked ? (isPos2 ? '#10b981' : '#ef4444') : '#eab308'}; display:inline-block; box-shadow: 0 0 8px ${is1pmUnlocked ? (isPos2 ? '#10b981' : '#ef4444') : '#eab308'}; animation: pulse 1.5s infinite;"></span>
+                    <span style="width:7px; height:7px; border-radius:50%; background:${is1pmUnlocked ? (isPos2 ? '#10b981' : '#ef4444') : '#eab308'}; display:inline-block; box-shadow: 0 0 8px ${is1pmUnlocked ? (isPos2 ? '#10b981' : '#ef4444') : '#eab308'};"></span>
                     POSITION #2 (01:15 PM SESSION)
                   </div>
                   <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100)} ${isBull ? 'CE' : 'PE'}</span>
