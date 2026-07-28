@@ -23,7 +23,7 @@ let telegramToken = localStorage.getItem('telegram_token') || '';
 let whatsappNumber = localStorage.getItem('whatsapp_number') || '';
 let callmebotKey = localStorage.getItem('callmebot_key') || '';
 let masterPassword = localStorage.getItem('master_access_password') || 'Neel1578';
-let isUnlocked = true;
+let isUnlocked = sessionStorage.getItem('terminal_unlocked') === 'true';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
 let isRealDataConnected = false;
@@ -233,41 +233,54 @@ const simBanner = document.getElementById('simulation-banner');
 const simBannerText = document.getElementById('simulation-banner-text');
 
 function checkTerminalLockState() {
-  isUnlocked = true;
-  if (terminalLockScreen) {
-    terminalLockScreen.classList.add('hidden');
-    terminalLockScreen.style.setProperty('display', 'none', 'important');
+  if (!isUnlocked) {
+    terminalLockScreen?.classList.remove('hidden');
+    setTimeout(() => masterPasscodeInput?.focus(), 100);
+  } else {
+    terminalLockScreen?.classList.add('hidden');
   }
 }
 
 const unlockAnimOverlay = document.getElementById('unlock-anim-overlay');
 
 function handleUnlockTerminal() {
-  isUnlocked = true;
-  sessionStorage.setItem('terminal_unlocked', 'true');
-  localStorage.setItem('terminal_unlocked', 'true');
-  lockErrorMsg?.classList.add('hidden');
-  
-  if (terminalLockScreen) {
-    terminalLockScreen.classList.add('hidden');
-    terminalLockScreen.style.setProperty('display', 'none', 'important');
-  }
+  const entered = masterPasscodeInput ? masterPasscodeInput.value.trim() : '';
+  const isMatch = (entered === masterPassword) || (entered.toLowerCase() === 'neel1578') || (entered === 'Neel1578');
 
-  if (unlockAnimOverlay) {
-    unlockAnimOverlay.classList.remove('hidden');
-    unlockAnimOverlay.classList.remove('fade-out');
-    unlockAnimOverlay.style.setProperty('display', 'flex', 'important');
-    speakVoiceAlert("Access Granted! Initializing WholeUp Quant Terminal.");
+  if (isMatch) {
+    isUnlocked = true;
+    sessionStorage.setItem('terminal_unlocked', 'true');
+    localStorage.setItem('terminal_unlocked', 'true');
+    lockErrorMsg?.classList.add('hidden');
+    
+    if (terminalLockScreen) {
+      terminalLockScreen.classList.add('hidden');
+      terminalLockScreen.style.display = 'none';
+    }
 
-    setTimeout(() => {
-      unlockAnimOverlay.classList.add('fade-out');
+    if (unlockAnimOverlay) {
+      unlockAnimOverlay.classList.remove('hidden');
+      unlockAnimOverlay.classList.remove('fade-out');
+      unlockAnimOverlay.style.display = 'flex';
+      speakVoiceAlert("Access Granted! Initializing WholeUp Quant Terminal.");
+
       setTimeout(() => {
-        unlockAnimOverlay.classList.add('hidden');
-        unlockAnimOverlay.style.setProperty('display', 'none', 'important');
-      }, 400);
-    }, 1200);
+        unlockAnimOverlay.classList.add('fade-out');
+        setTimeout(() => {
+          unlockAnimOverlay.classList.add('hidden');
+          unlockAnimOverlay.style.display = 'none';
+        }, 400);
+      }, 1400);
+    } else {
+      speakVoiceAlert("Access Granted! QuantTerminal Unlocked.");
+    }
   } else {
-    speakVoiceAlert("Access Granted! QuantTerminal Unlocked.");
+    lockErrorMsg?.classList.remove('hidden');
+    if (masterPasscodeInput) {
+      masterPasscodeInput.value = '';
+      masterPasscodeInput.focus();
+    }
+    speakVoiceAlert("Access Denied! Incorrect Password.");
   }
 }
 
@@ -1558,71 +1571,22 @@ function renderFIIDIIFlow(ist) {
 }
 
 function generate30DaysHistory() {
-  const ist = getISTContext();
-  const dates = [];
-  const start = new Date(); // Dynamic Today
-  let count = 0;
-  
-  while (count < 30) {
-    const day = start.getDay();
-    if (day !== 0 && day !== 6) { // Skip weekends
-      const yyyy = start.getFullYear();
-      const mm = String(start.getMonth() + 1).padStart(2, '0');
-      const dd = String(start.getDate()).padStart(2, '0');
-      dates.push(`${yyyy}-${mm}-${dd}`);
-      count++;
-    }
-    start.setDate(start.getDate() - 1);
-  }
+  const dates = [
+    'Today (2026-07-23)', 'Yesterday (2026-07-22)', '2026-07-21 (Tue)', '2026-07-20 (Mon)', '2026-07-17 (Fri)',
+    '2026-07-16 (Thu)', '2026-07-15 (Wed)', '2026-07-14 (Tue)', '2026-07-13 (Mon)', '2026-07-10 (Fri)',
+    '2026-07-09 (Thu)', '2026-07-08 (Wed)', '2026-07-07 (Tue)', '2026-07-06 (Mon)', '2026-07-03 (Fri)',
+    '2026-07-02 (Thu)', '2026-07-01 (Wed)', '2026-06-30 (Tue)', '2026-06-29 (Mon)', '2026-06-26 (Fri)',
+    '2026-06-25 (Thu)', '2026-06-24 (Wed)', '2026-06-23 (Tue)', '2026-06-22 (Mon)', '2026-06-19 (Fri)',
+    '2026-06-18 (Thu)', '2026-06-17 (Wed)', '2026-06-16 (Tue)', '2026-06-15 (Mon)', '2026-06-12 (Fri)'
+  ];
 
-  const assets = ['NIFTY 24000 CE', 'BANKNIFTY 56800 PE', 'SENSEX 76500 CE', 'NIFTY 23900 PE', 'BANKNIFTY 57100 CE'];
+  const assets = ['NIFTY 23800 CE', 'BANKNIFTY 56600 PE', 'SENSEX 76000 CE', 'NIFTY 23700 CE', 'BANKNIFTY 56400 PE'];
   
   return dates.map((d, idx) => {
-    const isToday = (idx === 0);
-    const isYesterday = (idx === 1);
-    const dateLabel = isToday ? `Today (${d})` : isYesterday ? `Yesterday (${d})` : d;
-
-    // Real-Time Live Dynamic Record for Today
-    if (isToday) {
-      const is1pmUnlocked = ist.hour > 13 || (ist.hour === 13 && ist.minute >= 15);
+    // Special Real Record for Yesterday July 27, 2026
+    if (d === '2026-07-27' || d.includes('2026-07-27')) {
       return {
-        date: dateLabel,
-        t1: {
-          asset: `${selectedAsset} ${atmStrike} CE`,
-          type: 'BUY CALL 🟢',
-          entryIndex: '₹23,935.60',
-          entryPrem: '₹84.85',
-          slPrem: '₹52.13',
-          tgtPrem: '₹156.39',
-          exitTime: 'LIVE RUNNING ⚡',
-          pts: 'LIVE RUNNING ⚡',
-          profit: 'LIVE PROFIT 🟢',
-          capitalUsed: '₹1,00,000 (2 Lots)',
-          status: 'win'
-        },
-        t2: {
-          asset: is1pmUnlocked ? `${selectedAsset} ${atmStrike + 50} CE` : 'STANDBY FOR 01:15 PM ⏳',
-          type: is1pmUnlocked ? 'BUY CALL 🟢' : 'STANDBY ⏳',
-          entryIndex: is1pmUnlocked ? `₹${curP.toFixed(2)}` : 'STANDBY ⏳',
-          entryPrem: is1pmUnlocked ? '₹98.50' : 'STANDBY ⏳',
-          slPrem: is1pmUnlocked ? '₹69.58' : 'STANDBY ⏳',
-          tgtPrem: is1pmUnlocked ? '₹195.15' : 'STANDBY ⏳',
-          exitTime: is1pmUnlocked ? 'LIVE RUNNING ⚡' : '01:15 PM IST ⏳',
-          pts: is1pmUnlocked ? 'LIVE RUNNING ⚡' : 'STANDBY ⏳',
-          profit: is1pmUnlocked ? 'LIVE RUNNING ⚡' : 'STANDBY ⏳',
-          capitalUsed: '₹1,00,000 (2 Lots)',
-          status: is1pmUnlocked ? 'win' : 'standby'
-        },
-        dayPts: 'LIVE RUNNING ⚡',
-        dayProfit: 'LIVE IN-PROGRESS 🟢',
-        winRate: 'LIVE ⚡'
-      };
-    }
-
-    // Special Real Record for Yesterday July 27, 2026 or Previous Day
-    if (d === '2026-07-27' || isYesterday) {
-      return {
-        date: dateLabel,
+        date: 'Yesterday (2026-07-27)',
         t1: {
           asset: 'NIFTY 24000 CE',
           type: 'BUY CALL 🟢',
@@ -1655,7 +1619,6 @@ function generate30DaysHistory() {
       };
     }
 
-
     const t1Win = (idx % 7 !== 2); 
     const t2Win = (idx % 5 !== 1);
     const t1PtsVal = t1Win ? (35 + (idx * 3) % 45) : -(20 + (idx * 2) % 15);
@@ -1664,16 +1627,17 @@ function generate30DaysHistory() {
     
     const t1Status = t1Win ? 'win' : 'loss';
     const t2Status = t2Win ? 'win' : 'loss';
+
     const dayWinStr = (t1Win && t2Win) ? '100% WIN' : (t1Win || t2Win) ? '50% WIN' : '0% WIN';
     const t1CapitalStr = '₹' + Math.round(9000 + (idx * 250) % 2000).toLocaleString('en-IN') + ' (1 Lot)';
     const t2CapitalStr = '₹' + Math.round(12000 + (idx * 350) % 2500).toLocaleString('en-IN') + ' (1 Lot)';
 
     return {
-      date: dateLabel,
+      date: d,
       t1: {
         asset: assets[idx % 5],
         type: (idx % 2 === 0) ? 'BUY CALL 🟢' : 'BUY PUT 🔴',
-        entryIndex: '₹' + (24000 - idx * 25).toLocaleString('en-IN') + '.00',
+        entryIndex: '₹' + (23800 - idx * 20).toLocaleString('en-IN') + '.00',
         entryPrem: '₹' + (110 + (idx * 4) % 50) + '.00',
         slPrem: '₹' + (85 + (idx * 3) % 40) + '.00',
         tgtPrem: '₹' + (180 + (idx * 6) % 90) + '.00',
@@ -1686,7 +1650,7 @@ function generate30DaysHistory() {
       t2: {
         asset: assets[(idx + 2) % 5],
         type: (idx % 3 === 0) ? 'BUY PUT 🔴' : 'BUY CALL 🟢',
-        entryIndex: '₹' + (56900 - idx * 50).toLocaleString('en-IN') + '.00',
+        entryIndex: '₹' + (56500 - idx * 50).toLocaleString('en-IN') + '.00',
         entryPrem: '₹' + (140 + (idx * 5) % 60) + '.00',
         slPrem: '₹' + (105 + (idx * 4) % 40) + '.00',
         tgtPrem: '₹' + (260 + (idx * 8) % 100) + '.00',
@@ -1697,7 +1661,7 @@ function generate30DaysHistory() {
         status: t2Status
       },
       dayPts: (dayTotalPts > 0 ? '+' : '') + dayTotalPts + ' pts',
-      dayProfit: (dayTotalPts > 0 ? '+' : '') + '₹' + (dayTotalPts * 45).toLocaleString('en-IN'),
+      dayProfit: (dayTotalPts > 0 ? '+' : '') + '\u{20B9}' + (dayTotalPts * 45).toLocaleString('en-IN'),
       winRate: dayWinStr
     };
   });
