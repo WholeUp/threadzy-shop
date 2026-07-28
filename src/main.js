@@ -3,9 +3,9 @@ import { initSecurityProtection } from './security.js';
 
 // Base Index prices (Exact Dhan App Live Market Baseline)
 const BASE_PRICES = {
-  NIFTY50: 23935.60,
-  BANKNIFTY: 57048.90,
-  SENSEX: 76711.54
+  NIFTY50: 23985.35,
+  BANKNIFTY: 56755.60,
+  SENSEX: 76765.92
 };
 
 
@@ -45,9 +45,9 @@ let outlook = JSON.parse(localStorage.getItem('market_outlook_cache')) || {
 
 
 let prices = {
-  NIFTY50: { current: BASE_PRICES.NIFTY50, change: -0.53 },
-  BANKNIFTY: { current: BASE_PRICES.BANKNIFTY, change: -0.95 },
-  SENSEX: { current: BASE_PRICES.SENSEX, change: -0.66 }
+  NIFTY50: { current: BASE_PRICES.NIFTY50, change: -0.04 },
+  BANKNIFTY: { current: BASE_PRICES.BANKNIFTY, change: -0.58 },
+  SENSEX: { current: BASE_PRICES.SENSEX, change: -0.09 }
 };
 
 // Paper Trading State
@@ -517,6 +517,24 @@ function updateStatusText() {
 }
 
 async function fetchRealMarketPrices() {
+  const ist = getISTContext();
+  const mStatus = getMarketStatus(ist);
+
+  // If market is CLOSED (3:30 PM IST onwards or Weekends), LOCK PRICES to exact closing values!
+  if (!mStatus.isOpen) {
+    prices.NIFTY50.current = 23985.35;
+    prices.NIFTY50.change = -0.04;
+    prices.BANKNIFTY.current = 56755.60;
+    prices.BANKNIFTY.change = -0.58;
+    prices.SENSEX.current = 76765.92;
+    prices.SENSEX.change = -0.09;
+
+    updateStatusText();
+    renderTickerCards();
+    drawCandlestickCanvasChart();
+    return;
+  }
+
   try {
     const res = await fetch('/api/quotes');
     if (!res.ok) return;
