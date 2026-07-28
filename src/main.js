@@ -1273,36 +1273,59 @@ function updateTopLiveTradeBanner(isOpen, ist) {
     return;
   }
 
-  // Live Market Open: Banner #1 (11:00 AM Morning Scan Signal)
-  banner11am.className = 'top-live-signal-banner';
-  if (statusTag11am) statusTag11am.innerHTML = '🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)';
-  if (confTag11am) confTag11am.innerHTML = '88.5% SURETY WIN RATE';
-  if (title11am) title11am.innerHTML = `${selectedAsset} ${atmStrike} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
-  if (pricesBox11am) pricesBox11am.innerHTML = `<span>BUY AT: <strong>₹${baseEntryPrem.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.70).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.55).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.10).toFixed(2)}</strong></span>`;
-  if (copyBtn11am) {
-    copyBtn11am.innerHTML = '📋 COPY TRADE (11:00 AM)';
-    copyBtn11am.className = 'btn btn-primary banner-copy-btn';
-    copyBtn11am.style.background = '#10b981';
-    copyBtn11am.style.borderColor = '#10b981';
-    copyBtn11am.style.color = '#000';
+  const is11amUnlocked = isOpen && (ist.hour > 11 || (ist.hour === 11 && ist.minute >= 0));
+  const is1pmUnlocked = isOpen && (ist.hour > 13 || (ist.hour === 13 && ist.minute >= 15));
+
+  // Live Market Banner #1 (11:00 AM Morning Scan Signal)
+  if (!is11amUnlocked) {
+    banner11am.className = 'top-live-signal-banner closed-state';
+    if (statusTag11am) statusTag11am.innerHTML = '⏳ STANDBY MODE (11:00 AM SCAN)';
+    if (confTag11am) confTag11am.innerHTML = 'MORNING SIGNAL UNLOCKS AT 11:00 AM IST';
+    if (title11am) title11am.innerHTML = 'Scan Window #1 • Standing By For 11:00 AM IST';
+    if (pricesBox11am) pricesBox11am.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Real-time GTF AI Engine 88% surety signal unlocks at <strong>11:00 AM IST</strong>.</span>';
+    if (copyBtn11am) { copyBtn11am.innerHTML = '⏳ UNLOCKS AT 11:00 AM'; copyBtn11am.className = 'btn btn-secondary banner-copy-btn'; }
+  } else {
+    banner11am.className = 'top-live-signal-banner';
+    if (statusTag11am) statusTag11am.innerHTML = '🟢 LIVE SIGNAL ACTIVE (11:00 AM SCAN)';
+    if (confTag11am) confTag11am.innerHTML = '88.5% SURETY WIN RATE';
+    if (title11am) title11am.innerHTML = `${selectedAsset} ${atmStrike} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
+    if (pricesBox11am) pricesBox11am.innerHTML = `<span>BUY AT: <strong>₹${baseEntryPrem.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.70).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.55).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.10).toFixed(2)}</strong></span>`;
+    if (copyBtn11am) {
+      copyBtn11am.innerHTML = '📋 COPY TRADE (11:00 AM)';
+      copyBtn11am.className = 'btn btn-primary banner-copy-btn';
+      copyBtn11am.style.background = '#10b981';
+      copyBtn11am.style.borderColor = '#10b981';
+      copyBtn11am.style.color = '#000';
+    }
   }
 
-  // Live Market Open: Banner #2 (01:15 PM Afternoon Breakout Signal)
+  // Live Market Banner #2 (01:15 PM Afternoon Breakout Signal)
   const entry2 = selectedAsset === 'NIFTY50' ? 98.50 : parseFloat((baseEntryPrem * 1.15).toFixed(2));
   const strike2 = atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100);
-  banner1pm.className = 'top-live-signal-banner';
-  if (statusTag1pm) statusTag1pm.innerHTML = '⚡ LIVE SIGNAL ACTIVE (01:15 PM SCAN)';
-  if (confTag1pm) confTag1pm.innerHTML = '91.2% SURETY WIN RATE';
-  if (title1pm) title1pm.innerHTML = `${selectedAsset} ${strike2} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
-  if (pricesBox1pm) pricesBox1pm.innerHTML = `<span>BUY AT: <strong>₹${entry2.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(entry2 * 0.72).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(entry2 * 1.50).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(entry2 * 1.95).toFixed(2)}</strong></span>`;
-  if (copyBtn1pm) {
-    copyBtn1pm.innerHTML = '📋 COPY TRADE (01:15 PM)';
-    copyBtn1pm.className = 'btn btn-primary banner-copy-btn';
-    copyBtn1pm.style.background = '#06b6d4';
-    copyBtn1pm.style.borderColor = '#06b6d4';
-    copyBtn1pm.style.color = '#000';
+
+  if (!is1pmUnlocked) {
+    banner1pm.className = 'top-live-signal-banner closed-state';
+    if (statusTag1pm) statusTag1pm.innerHTML = '⏳ STANDBY MODE (01:15 PM SCAN)';
+    if (confTag1pm) confTag1pm.innerHTML = 'AFTERNOON SIGNAL UNLOCKS AT 01:15 PM IST';
+    if (title1pm) title1pm.innerHTML = 'Scan Window #2 • Standing By For 01:15 PM IST';
+    if (pricesBox1pm) pricesBox1pm.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">Real-time GTF AI Engine 91% breakout signal unlocks at <strong>01:15 PM IST</strong>.</span>';
+    if (copyBtn1pm) { copyBtn1pm.innerHTML = '⏳ UNLOCKS AT 01:15 PM'; copyBtn1pm.className = 'btn btn-secondary banner-copy-btn'; }
+  } else {
+    banner1pm.className = 'top-live-signal-banner';
+    if (statusTag1pm) statusTag1pm.innerHTML = '⚡ LIVE SIGNAL ACTIVE (01:15 PM SCAN)';
+    if (confTag1pm) confTag1pm.innerHTML = '91.2% SURETY WIN RATE';
+    if (title1pm) title1pm.innerHTML = `${selectedAsset} ${strike2} ${isBull ? 'CE (BUY CALL 🟢)' : 'PE (BUY PUT 🔴)'}`;
+    if (pricesBox1pm) pricesBox1pm.innerHTML = `<span>BUY AT: <strong>₹${entry2.toFixed(2)}</strong></span><span>STOP LOSS: <strong style="color:var(--color-red)">₹${(entry2 * 0.72).toFixed(2)}</strong></span><span>TARGET 1: <strong style="color:var(--color-green)">₹${(entry2 * 1.50).toFixed(2)}</strong></span><span>TARGET 2: <strong style="color:var(--color-cyan)">₹${(entry2 * 1.95).toFixed(2)}</strong></span>`;
+    if (copyBtn1pm) {
+      copyBtn1pm.innerHTML = '📋 COPY TRADE (01:15 PM)';
+      copyBtn1pm.className = 'btn btn-primary banner-copy-btn';
+      copyBtn1pm.style.background = '#06b6d4';
+      copyBtn1pm.style.borderColor = '#06b6d4';
+      copyBtn1pm.style.color = '#000';
+    }
   }
 }
+
 
 
 
@@ -1379,6 +1402,8 @@ function renderIntradayDesk(ist) {
           <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
         </div>
         ${(() => {
+          const is11amUnlocked = status.isOpen && (ist.hour > 11 || (ist.hour === 11 && ist.minute >= 0));
+
           const baseIdx = BASE_PRICES[selectedAsset] || curP;
           const idxDiff = (curP - baseIdx) * (isBull ? 1 : -1);
           const ltp = Math.max(5, parseFloat((baseEntryPrem + (idxDiff * 0.45)).toFixed(2)));
@@ -1391,41 +1416,41 @@ function renderIntradayDesk(ist) {
           const isTarget2Hit = ltp >= target2Prem;
           const isTarget1Hit = ltp >= target1Prem;
 
-          const statusBadgeText = !status.isOpen ? 'STANDBY FOR LIVE MARKET (11:00 AM) ⏳' : isTarget2Hit ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'LIVE SIGNAL ACTIVE ⚡';
-          const posPillTag = isTarget2Hit ? 'TARGET 2 MET 🚀' : isTarget1Hit ? 'TARGET 1 MET 🟢' : isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
+          const statusBadgeText = !status.isOpen ? 'MARKET CLOSED (3:30 PM IST) 🔒' : !is11amUnlocked ? 'STANDBY FOR MORNING SIGNAL (11:00 AM IST) ⏳' : isTarget2Hit ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'LIVE SIGNAL ACTIVE ⚡';
+          const posPillTag = !is11amUnlocked ? 'STANDBY ⏳' : isTarget2Hit ? 'TARGET 2 MET 🚀' : isTarget1Hit ? 'TARGET 1 MET 🟢' : isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
 
           return `
-            <div style="font-family:var(--font-mono); font-size:0.8rem; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#10b981; padding:0.5rem 0.75rem; border-radius:8px; margin-bottom:0.75rem; font-weight:800;">
+            <div style="font-family:var(--font-mono); font-size:0.8rem; background:${is11amUnlocked ? 'rgba(16,185,129,0.12)' : 'rgba(234,179,8,0.12)'}; border:1px solid ${is11amUnlocked ? 'rgba(16,185,129,0.3)' : 'rgba(234,179,8,0.3)'}; color:${is11amUnlocked ? '#10b981' : '#eab308'}; padding:0.5rem 0.75rem; border-radius:8px; margin-bottom:0.75rem; font-weight:800;">
               Status: ${statusBadgeText}
             </div>
 
-            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${isTarget2Hit ? '#10b981' : isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; box-shadow:0 12px 30px ${isPos ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; backdrop-filter: blur(12px); transition: all 0.3s ease;">
+            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${!is11amUnlocked ? 'rgba(234,179,8,0.3)' : isTarget2Hit ? '#10b981' : isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; box-shadow:0 12px 30px ${is11amUnlocked ? (isPos ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)') : 'rgba(234,179,8,0.1)'}; backdrop-filter: blur(12px); transition: all 0.3s ease;">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
                 <div>
                   <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
-                    <span style="width:7px; height:7px; border-radius:50%; background:${isPos ? '#10b981' : '#ef4444'}; display:inline-block; box-shadow: 0 0 8px ${isPos ? '#10b981' : '#ef4444'}; animation: pulse 1.5s infinite;"></span>
+                    <span style="width:7px; height:7px; border-radius:50%; background:${is11amUnlocked ? (isPos ? '#10b981' : '#ef4444') : '#eab308'}; display:inline-block; box-shadow: 0 0 8px ${is11amUnlocked ? (isPos ? '#10b981' : '#ef4444') : '#eab308'}; animation: pulse 1.5s infinite;"></span>
                     POSITION #1 (11:00 AM SESSION)
                   </div>
                   <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}</span>
                 </div>
-                <span style="background:${isTarget2Hit ? 'rgba(16,185,129,0.3)' : isPos ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${isPos ? '#10b981' : '#ef4444'}; border:1px solid ${isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono); letter-spacing:0.04em;">${posPillTag}</span>
+                <span style="background:${!is11amUnlocked ? 'rgba(234,179,8,0.2)' : isTarget2Hit ? 'rgba(16,185,129,0.3)' : isPos ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${!is11amUnlocked ? '#eab308' : isPos ? '#10b981' : '#ef4444'}; border:1px solid ${!is11amUnlocked ? 'rgba(234,179,8,0.5)' : isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono); letter-spacing:0.04em;">${posPillTag}</span>
               </div>
 
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; font-family:var(--font-mono); font-size:0.8rem; margin-bottom:0.95rem; background:rgba(0,0,0,0.35); padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.04);">
                 <div><span style="color:var(--text-muted)">Capital (1L Benchmark):</span> <strong style="color:var(--color-cyan)">₹1,00,000 (2 Lots)</strong></div>
                 <div><span style="color:var(--text-muted)">Executed Qty:</span> <strong>${qty} Qty</strong></div>
                 <div><span style="color:var(--text-muted)">Avg Buy Price:</span> <strong>₹${baseEntryPrem.toFixed(2)}</strong></div>
-                <div><span style="color:var(--text-muted)">Live Option LTP:</span> <strong style="color:${isPos ? '#10b981' : '#ef4444'}; transition: color 0.3s ease;">₹${ltp.toFixed(2)}</strong></div>
+                <div><span style="color:var(--text-muted)">Live Option LTP:</span> <strong style="color:${!is11amUnlocked ? '#eab308' : isPos ? '#10b981' : '#ef4444'}; transition: color 0.3s ease;">${is11amUnlocked ? '₹' + ltp.toFixed(2) : 'STANDBY ⏳'}</strong></div>
               </div>
 
-              <div style="background:rgba(0,0,0,0.55); border:1px solid ${isPos ? 'rgba(16,185,129,0.35)' : 'rgba(239,68,68,0.35)'}; border-radius:10px; padding:0.95rem 1.1rem; display:flex; justify-content:space-between; align-items:center; box-shadow: inset 0 0 15px rgba(0,0,0,0.5);">
+              <div style="background:rgba(0,0,0,0.55); border:1px solid ${!is11amUnlocked ? 'rgba(234,179,8,0.3)' : isPos ? 'rgba(16,185,129,0.35)' : 'rgba(239,68,68,0.35)'}; border-radius:10px; padding:0.95rem 1.1rem; display:flex; justify-content:space-between; align-items:center; box-shadow: inset 0 0 15px rgba(0,0,0,0.5);">
                 <div>
                   <span style="font-size:0.66rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); display:block; letter-spacing:0.04em;">REAL-TIME UNREALIZED P&L</span>
-                  <span style="font-size:0.78rem; color:${isPos ? '#10b981' : '#ef4444'}; font-weight:800; font-family:var(--font-mono); transition: color 0.3s ease;">${isPos ? '+' : ''}₹${diffPrem.toFixed(2)} (${isPos ? '+' : ''}${pnlPct}%)</span>
+                  <span style="font-size:0.78rem; color:${!is11amUnlocked ? '#eab308' : isPos ? '#10b981' : '#ef4444'}; font-weight:800; font-family:var(--font-mono); transition: color 0.3s ease;">${is11amUnlocked ? (isPos ? '+' : '') + '₹' + diffPrem.toFixed(2) + ' (' + (isPos ? '+' : '') + pnlPct + '%)' : 'SIGNAL UNLOCKS AT 11:00 AM'}</span>
                 </div>
 
                 <div style="text-align:right;">
-                  <span style="font-family:var(--font-mono); font-size:1.65rem; font-weight:900; color:${isPos ? '#10b981' : '#ef4444'}; text-shadow:0 0 16px ${isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; transition: color 0.3s ease, text-shadow 0.3s ease;">${isPos ? '+' : ''}₹${pnl.toLocaleString('en-IN')}</span>
+                  <span style="font-family:var(--font-mono); font-size:1.65rem; font-weight:900; color:${!is11amUnlocked ? '#eab308' : isPos ? '#10b981' : '#ef4444'}; text-shadow:0 0 16px ${!is11amUnlocked ? 'rgba(234,179,8,0.4)' : isPos ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; transition: color 0.3s ease, text-shadow 0.3s ease;">${is11amUnlocked ? (isPos ? '+' : '') + '₹' + pnl.toLocaleString('en-IN') : '₹0.00'}</span>
                 </div>
               </div>
             </div>
@@ -1452,6 +1477,7 @@ function renderIntradayDesk(ist) {
         </div>
 
         ${(() => {
+          const is1pmUnlocked = status.isOpen && (ist.hour > 13 || (ist.hour === 13 && ist.minute >= 15));
           const entry2 = selectedAsset === 'NIFTY50' ? 98.50 : parseFloat((baseEntryPrem * 1.15).toFixed(2));
           const target1Prem2 = parseFloat((entry2 * 1.50).toFixed(2));
           const target2Prem2 = parseFloat((entry2 * 1.95).toFixed(2));
@@ -1465,59 +1491,54 @@ function renderIntradayDesk(ist) {
           const isPos2 = pnl2 >= 0;
           const pnlPct2 = ((diff2 / entry2) * 100).toFixed(1);
 
-
           const isTarget2Hit2 = ltp2 >= target2Prem2;
           const isTarget1Hit2 = ltp2 >= target1Prem2;
 
-          const statusBadgeText2 = !status.isOpen ? 'STANDBY FOR AFTERNOON BREAKOUT (01:15 PM) ⏳' : isTarget2Hit2 ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl2.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit2 ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'AFTERNOON BREAKOUT ACTIVE ⚡';
-          const posPillTag2 = isTarget2Hit2 ? 'TARGET 2 MET 🚀' : isTarget1Hit2 ? 'TARGET 1 MET 🟢' : isPos2 ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
+          const statusBadgeText2 = !status.isOpen ? 'MARKET CLOSED (3:30 PM IST) 🔒' : !is1pmUnlocked ? 'STANDBY FOR AFTERNOON BREAKOUT (01:15 PM IST) ⏳' : isTarget2Hit2 ? '🎯 TARGET 2 MET - PROFIT SECURED (+₹' + pnl2.toLocaleString('en-IN') + ') 🚀' : isTarget1Hit2 ? '🎯 TARGET 1 MET - TRAILING SL ACTIVE ⚡' : 'AFTERNOON BREAKOUT ACTIVE ⚡';
+          const posPillTag2 = !is1pmUnlocked ? 'STANDBY ⏳' : isTarget2Hit2 ? 'TARGET 2 MET 🚀' : isTarget1Hit2 ? 'TARGET 1 MET 🟢' : isPos2 ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
 
           return `
-            <div style="font-family:var(--font-mono); font-size:0.8rem; background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.3); color:#06b6d4; padding:0.5rem 0.75rem; border-radius:8px; margin-bottom:0.75rem; font-weight:800;">
+            <div style="font-family:var(--font-mono); font-size:0.8rem; background:${is1pmUnlocked ? 'rgba(6,182,212,0.12)' : 'rgba(234,179,8,0.12)'}; border:1px solid ${is1pmUnlocked ? 'rgba(6,182,212,0.3)' : 'rgba(234,179,8,0.3)'}; color:${is1pmUnlocked ? '#06b6d4' : '#eab308'}; padding:0.5rem 0.75rem; border-radius:8px; margin-bottom:0.75rem; font-weight:800;">
               Status: ${statusBadgeText2}
             </div>
 
-            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${isTarget2Hit2 ? '#06b6d4' : isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; box-shadow:0 12px 30px ${isPos2 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; backdrop-filter: blur(12px);">
+            <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${!is1pmUnlocked ? 'rgba(234,179,8,0.3)' : isTarget2Hit2 ? '#06b6d4' : isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; box-shadow:0 12px 30px ${is1pmUnlocked ? (isPos2 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)') : 'rgba(234,179,8,0.1)'}; backdrop-filter: blur(12px);">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
                 <div>
                   <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); letter-spacing:0.06em; margin-bottom:0.25rem;">
-                    <span style="width:7px; height:7px; border-radius:50%; background:${isPos2 ? '#10b981' : '#ef4444'}; display:inline-block; box-shadow: 0 0 8px ${isPos2 ? '#10b981' : '#ef4444'}; animation: pulse 1.5s infinite;"></span>
+                    <span style="width:7px; height:7px; border-radius:50%; background:${is1pmUnlocked ? (isPos2 ? '#10b981' : '#ef4444') : '#eab308'}; display:inline-block; box-shadow: 0 0 8px ${is1pmUnlocked ? (isPos2 ? '#10b981' : '#ef4444') : '#eab308'}; animation: pulse 1.5s infinite;"></span>
                     POSITION #2 (01:15 PM SESSION)
                   </div>
                   <span style="font-family:var(--font-heading); font-size:1.05rem; font-weight:900; color:#ffffff; letter-spacing:0.02em;">${selectedAsset} ${atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100)} ${isBull ? 'CE' : 'PE'}</span>
                 </div>
-                <span style="background:${isTarget2Hit2 ? 'rgba(6,182,212,0.3)' : isPos2 ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${isTarget2Hit2 ? '#06b6d4' : isPos2 ? '#10b981' : '#ef4444'}; border:1px solid ${isTarget2Hit2 ? 'rgba(6,182,212,0.5)' : isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono);">${posPillTag2}</span>
+                <span style="background:${!is1pmUnlocked ? 'rgba(234,179,8,0.2)' : isTarget2Hit2 ? 'rgba(6,182,212,0.3)' : isPos2 ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'}; color:${!is1pmUnlocked ? '#eab308' : isTarget2Hit2 ? '#06b6d4' : isPos2 ? '#10b981' : '#ef4444'}; border:1px solid ${!is1pmUnlocked ? 'rgba(234,179,8,0.5)' : isTarget2Hit2 ? 'rgba(6,182,212,0.5)' : isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; padding:0.35rem 0.85rem; border-radius:8px; font-weight:900; font-size:0.78rem; font-family:var(--font-mono);">${posPillTag2}</span>
               </div>
 
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; font-family:var(--font-mono); font-size:0.8rem; margin-bottom:0.95rem; background:rgba(0,0,0,0.35); padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.04);">
                 <div><span style="color:var(--text-muted)">Capital (1L Benchmark):</span> <strong style="color:var(--color-cyan)">₹1,00,000 (2 Lots)</strong></div>
                 <div><span style="color:var(--text-muted)">Executed Qty:</span> <strong>${qty2} Qty</strong></div>
                 <div><span style="color:var(--text-muted)">Avg Buy Price:</span> <strong>₹${entry2.toFixed(2)}</strong></div>
-                <div><span style="color:var(--text-muted)">Live Option LTP:</span> <strong style="color:${isPos2 ? '#10b981' : '#ef4444'}; transition: color 0.3s ease;">₹${ltp2.toFixed(2)}</strong></div>
+                <div><span style="color:var(--text-muted)">Live Option LTP:</span> <strong style="color:${!is1pmUnlocked ? '#eab308' : isPos2 ? '#10b981' : '#ef4444'}; transition: color 0.3s ease;">${is1pmUnlocked ? '₹' + ltp2.toFixed(2) : 'STANDBY ⏳'}</strong></div>
               </div>
 
-              <div style="background:rgba(0,0,0,0.55); border:1px solid ${isPos2 ? 'rgba(16,185,129,0.35)' : 'rgba(239,68,68,0.35)'}; border-radius:10px; padding:0.95rem 1.1rem; display:flex; justify-content:space-between; align-items:center;">
+              <div style="background:rgba(0,0,0,0.55); border:1px solid ${!is1pmUnlocked ? 'rgba(234,179,8,0.3)' : isPos2 ? 'rgba(16,185,129,0.35)' : 'rgba(239,68,68,0.35)'}; border-radius:10px; padding:0.95rem 1.1rem; display:flex; justify-content:space-between; align-items:center;">
                 <div>
                   <span style="font-size:0.66rem; color:var(--text-muted); font-weight:800; font-family:var(--font-mono); display:block;">REAL-TIME UNREALIZED P&L</span>
-                  <span style="font-size:0.78rem; color:${isPos2 ? '#10b981' : '#ef4444'}; font-weight:800; font-family:var(--font-mono); transition: color 0.3s ease;">${isPos2 ? '+' : ''}₹${diff2.toFixed(2)} (${isPos2 ? '+' : ''}${pnlPct2}%)</span>
+                  <span style="font-size:0.78rem; color:${!is1pmUnlocked ? '#eab308' : isPos2 ? '#10b981' : '#ef4444'}; font-weight:800; font-family:var(--font-mono); transition: color 0.3s ease;">${is1pmUnlocked ? (isPos2 ? '+' : '') + '₹' + diff2.toFixed(2) + ' (' + (isPos2 ? '+' : '') + pnlPct2 + '%)' : 'SIGNAL UNLOCKS AT 01:15 PM'}</span>
                 </div>
 
                 <div style="text-align:right;">
-                  <span style="font-family:var(--font-mono); font-size:1.65rem; font-weight:900; color:${isPos2 ? '#10b981' : '#ef4444'}; text-shadow:0 0 16px ${isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; transition: color 0.3s ease, text-shadow 0.3s ease;">${isPos2 ? '+' : ''}₹${pnl2.toLocaleString('en-IN')}</span>
+                  <span style="font-family:var(--font-mono); font-size:1.65rem; font-weight:900; color:${!is1pmUnlocked ? '#eab308' : isPos2 ? '#10b981' : '#ef4444'}; text-shadow:0 0 16px ${!is1pmUnlocked ? 'rgba(234,179,8,0.4)' : isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; transition: color 0.3s ease, text-shadow 0.3s ease;">${is1pmUnlocked ? (isPos2 ? '+' : '') + '₹' + pnl2.toLocaleString('en-IN') : '₹0.00'}</span>
                 </div>
               </div>
             </div>
           `;
         })()}
-
-
       </div>
     </div>
-
-
-
   `;
 }
+
 
 function renderFIIDIIFlow(ist) {
   fiiDiiSidebarSection.innerHTML = (
