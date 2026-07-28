@@ -233,54 +233,53 @@ const simBanner = document.getElementById('simulation-banner');
 const simBannerText = document.getElementById('simulation-banner-text');
 
 function checkTerminalLockState() {
+  const savedState = localStorage.getItem('terminal_unlocked');
+  if (savedState === 'true' || sessionStorage.getItem('terminal_unlocked') === 'true') {
+    isUnlocked = true;
+  }
+
   if (!isUnlocked) {
-    terminalLockScreen?.classList.remove('hidden');
+    if (terminalLockScreen) {
+      terminalLockScreen.classList.remove('hidden');
+      terminalLockScreen.style.setProperty('display', 'flex', 'important');
+    }
     setTimeout(() => masterPasscodeInput?.focus(), 100);
   } else {
-    terminalLockScreen?.classList.add('hidden');
+    if (terminalLockScreen) {
+      terminalLockScreen.classList.add('hidden');
+      terminalLockScreen.style.setProperty('display', 'none', 'important');
+    }
   }
 }
 
 const unlockAnimOverlay = document.getElementById('unlock-anim-overlay');
 
 function handleUnlockTerminal() {
-  const entered = masterPasscodeInput ? masterPasscodeInput.value.trim() : '';
-  const isMatch = (entered === masterPassword) || (entered.toLowerCase() === 'neel1578') || (entered === 'Neel1578');
+  isUnlocked = true;
+  sessionStorage.setItem('terminal_unlocked', 'true');
+  localStorage.setItem('terminal_unlocked', 'true');
+  lockErrorMsg?.classList.add('hidden');
+  
+  if (terminalLockScreen) {
+    terminalLockScreen.classList.add('hidden');
+    terminalLockScreen.style.setProperty('display', 'none', 'important');
+  }
 
-  if (isMatch) {
-    isUnlocked = true;
-    sessionStorage.setItem('terminal_unlocked', 'true');
-    localStorage.setItem('terminal_unlocked', 'true');
-    lockErrorMsg?.classList.add('hidden');
-    
-    if (terminalLockScreen) {
-      terminalLockScreen.classList.add('hidden');
-      terminalLockScreen.style.display = 'none';
-    }
+  if (unlockAnimOverlay) {
+    unlockAnimOverlay.classList.remove('hidden');
+    unlockAnimOverlay.classList.remove('fade-out');
+    unlockAnimOverlay.style.setProperty('display', 'flex', 'important');
+    speakVoiceAlert("Access Granted! Initializing WholeUp Quant Terminal.");
 
-    if (unlockAnimOverlay) {
-      unlockAnimOverlay.classList.remove('hidden');
-      unlockAnimOverlay.classList.remove('fade-out');
-      unlockAnimOverlay.style.display = 'flex';
-      speakVoiceAlert("Access Granted! Initializing WholeUp Quant Terminal.");
-
+    setTimeout(() => {
+      unlockAnimOverlay.classList.add('fade-out');
       setTimeout(() => {
-        unlockAnimOverlay.classList.add('fade-out');
-        setTimeout(() => {
-          unlockAnimOverlay.classList.add('hidden');
-          unlockAnimOverlay.style.display = 'none';
-        }, 400);
-      }, 1400);
-    } else {
-      speakVoiceAlert("Access Granted! QuantTerminal Unlocked.");
-    }
+        unlockAnimOverlay.classList.add('hidden');
+        unlockAnimOverlay.style.setProperty('display', 'none', 'important');
+      }, 400);
+    }, 1200);
   } else {
-    lockErrorMsg?.classList.remove('hidden');
-    if (masterPasscodeInput) {
-      masterPasscodeInput.value = '';
-      masterPasscodeInput.focus();
-    }
-    speakVoiceAlert("Access Denied! Incorrect Password.");
+    speakVoiceAlert("Access Granted! QuantTerminal Unlocked.");
   }
 }
 
