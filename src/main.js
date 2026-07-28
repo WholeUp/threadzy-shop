@@ -85,18 +85,20 @@ function getISTContext() {
 }
 
 function getMarketStatus(ist) {
-  if (simTimeMode !== 'real') {
-    if (simTimeMode === 'weekend') return { isOpen: false, reason: 'WEEKEND_CLOSED', label: 'MARKET CLOSED (WEEKEND)' };
-    if (simTimeMode === '400pm') return { isOpen: false, reason: 'AFTER_HOURS_CLOSED', label: 'MARKET CLOSED (3:30 PM IST)' };
-    return { isOpen: true, reason: 'SIMULATED_OPEN', label: 'SIMULATED MARKET OPEN' };
-  }
-
   const day = ist.day;
   const hour = ist.hour;
   const minute = ist.minute;
 
-  if (day === 0 || day === 6) {
+  if (simTimeMode === 'weekend' || day === 0 || day === 6) {
     return { isOpen: false, reason: 'WEEKEND_CLOSED', label: 'MARKET CLOSED (WEEKEND)' };
+  }
+  if (simTimeMode === '400pm') {
+    return { isOpen: false, reason: 'AFTER_HOURS_CLOSED', label: 'MARKET CLOSED (3:30 PM IST)' };
+  }
+
+  // If simulation is set for daytime testing
+  if (simTimeMode === '930am' || simTimeMode === '1115am' || simTimeMode === '200pm') {
+    return { isOpen: true, reason: 'SIMULATED_OPEN', label: 'SIMULATED MARKET OPEN' };
   }
 
   const timeInMinutes = hour * 60 + minute;
@@ -1874,16 +1876,18 @@ function startPriceTicker() {
     const ist = getISTContext();
     const mStatus = getMarketStatus(ist);
 
-    // CRITICAL FIX: IF MARKET IS CLOSED (AFTER 3:30 PM IST, BEFORE 9:15 AM IST, OR WEEKEND), DO NOT FLUTUATE PRICES WITH RANDOM TICKS!
-    if (mStatus.isOpen) {
-      Object.keys(prices).forEach(key => {
-        const isBull = outlook[key]?.trend === 'BULLISH';
-        const bias = isBull ? 0.42 : 0.58;
-        const tick = (Math.random() - bias) * (prices[key].current * 0.0007);
-        prices[key].current = parseFloat((prices[key].current + tick).toFixed(2));
-        prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
-      });
+    // CRITICAL FIX: IF MARKET IS CLOSED (AFTER 3:30 PM IST, BEFORE 9:15 AM IST, OR WEEKEND), STOP ALL TICKING & RE-RENDERS!
+    if (!mStatus.isOpen) {
+      return;
     }
+
+    Object.keys(prices).forEach(key => {
+      const isBull = outlook[key]?.trend === 'BULLISH';
+      const bias = isBull ? 0.42 : 0.58;
+      const tick = (Math.random() - bias) * (prices[key].current * 0.0007);
+      prices[key].current = parseFloat((prices[key].current + tick).toFixed(2));
+      prices[key].change = parseFloat((prices[key].change + (tick / BASE_PRICES[key]) * 100).toFixed(2));
+    });
 
     renderTickerCards();
     drawCandlestickCanvasChart();
