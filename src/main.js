@@ -1397,10 +1397,6 @@ function renderIntradayDesk(ist) {
           <span class="trade-time-tag">SCAN WINDOW #1 (11:00 AM) - MORNING SIGNAL</span>
           <span class="confidence-badge">WIN PROBABILITY: 88%</span>
         </div>
-        <div class="trade-asset-name">
-          ${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}
-          <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
-        </div>
         ${(() => {
           const is11amUnlocked = status.isOpen && (ist.hour > 11 || (ist.hour === 11 && ist.minute >= 0));
 
@@ -1420,6 +1416,18 @@ function renderIntradayDesk(ist) {
           const posPillTag = !is11amUnlocked ? 'STANDBY ⏳' : isTarget2Hit ? 'TARGET 2 MET 🚀' : isTarget1Hit ? 'TARGET 1 MET 🟢' : isPos ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
 
           return `
+            <div class="trade-asset-name">
+              ${selectedAsset} ${atmStrike} ${isBull ? 'CE' : 'PE'}
+              <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
+            </div>
+
+            <div class="trade-levels-box" style="margin-bottom:0.85rem;">
+              <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>${is11amUnlocked ? '₹' + baseEntryPrem.toFixed(2) : 'STANDBY (11:00 AM) ⏳'}</strong></div>
+              <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">${is11amUnlocked ? '₹' + stopLossPrem.toFixed(2) : 'STANDBY ⏳'}</strong></div>
+              <div><span style="color:var(--text-muted)">Target 1:</span> <strong style="color:var(--color-green)">${is11amUnlocked ? '₹' + target1Prem.toFixed(2) : 'STANDBY ⏳'}</strong></div>
+              <div><span style="color:var(--text-muted)">Target 2:</span> <strong style="color:var(--color-cyan)">${is11amUnlocked ? '₹' + target2Prem.toFixed(2) : 'STANDBY ⏳'}</strong></div>
+            </div>
+
             <div style="font-family:var(--font-mono); font-size:0.8rem; background:${is11amUnlocked ? 'rgba(16,185,129,0.12)' : 'rgba(234,179,8,0.12)'}; border:1px solid ${is11amUnlocked ? 'rgba(16,185,129,0.3)' : 'rgba(234,179,8,0.3)'}; color:${is11amUnlocked ? '#10b981' : '#eab308'}; padding:0.5rem 0.75rem; border-radius:8px; margin-bottom:0.75rem; font-weight:800;">
               Status: ${statusBadgeText}
             </div>
@@ -1457,6 +1465,7 @@ function renderIntradayDesk(ist) {
           `;
         })()}
       </div>
+
 
       <!-- SCAN WINDOW #2 (01:15 PM AFTERNOON BREAKOUT SIGNAL) -->
       <div class="trade-card">
