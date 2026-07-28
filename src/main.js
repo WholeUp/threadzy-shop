@@ -1464,21 +1464,11 @@ function renderIntradayDesk(ist) {
           <span class="trade-time-tag" style="color:var(--color-cyan);">SCAN WINDOW #2 (01:15 PM) - AFTERNOON SIGNAL</span>
           <span class="confidence-badge" style="color:var(--color-cyan);">WIN PROBABILITY: 89%</span>
         </div>
-        <div class="trade-asset-name">
-          ${selectedAsset} ${atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100)} ${isBull ? 'CE' : 'PE'}
-          <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
-        </div>
-
-        <div class="trade-levels-box">
-          <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>₹${(baseEntryPrem * 1.15).toFixed(2)}</strong></div>
-          <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">₹${(baseEntryPrem * 0.82).toFixed(2)}</strong></div>
-          <div><span style="color:var(--text-muted)">Target 1:</span> <strong style="color:var(--color-green)">₹${(baseEntryPrem * 1.75).toFixed(2)}</strong></div>
-          <div><span style="color:var(--text-muted)">Target 2:</span> <strong style="color:var(--color-cyan)">₹${(baseEntryPrem * 2.30).toFixed(2)}</strong></div>
-        </div>
 
         ${(() => {
           const is1pmUnlocked = status.isOpen && (ist.hour > 13 || (ist.hour === 13 && ist.minute >= 15));
           const entry2 = selectedAsset === 'NIFTY50' ? 98.50 : parseFloat((baseEntryPrem * 1.15).toFixed(2));
+          const slPrem2 = parseFloat((entry2 * 0.72).toFixed(2));
           const target1Prem2 = parseFloat((entry2 * 1.50).toFixed(2));
           const target2Prem2 = parseFloat((entry2 * 1.95).toFixed(2));
           const baseIdx = BASE_PRICES[selectedAsset] || curP;
@@ -1498,9 +1488,22 @@ function renderIntradayDesk(ist) {
           const posPillTag2 = !is1pmUnlocked ? 'STANDBY ⏳' : isTarget2Hit2 ? 'TARGET 2 MET 🚀' : isTarget1Hit2 ? 'TARGET 1 MET 🟢' : isPos2 ? 'LIVE PROFIT 🟢' : 'LIVE LOSS 🔴';
 
           return `
+            <div class="trade-asset-name">
+              ${selectedAsset} ${atmStrike + (selectedAsset === 'NIFTY50' ? 50 : 100)} ${isBull ? 'CE' : 'PE'}
+              <span class="trade-action-badge ${isBull ? 'buy' : 'sell'}">${isBull ? 'BUY CALL 🟢' : 'BUY PUT 🔴'}</span>
+            </div>
+
+            <div class="trade-levels-box" style="margin-bottom:0.85rem;">
+              <div><span style="color:var(--text-muted)">Entry Premium:</span> <strong>${is1pmUnlocked ? '₹' + entry2.toFixed(2) : 'STANDBY (01:15 PM) ⏳'}</strong></div>
+              <div><span style="color:var(--text-muted)">Stop Loss:</span> <strong style="color:var(--color-red)">${is1pmUnlocked ? '₹' + slPrem2.toFixed(2) : 'STANDBY ⏳'}</strong></div>
+              <div><span style="color:var(--text-muted)">Target 1:</span> <strong style="color:var(--color-green)">${is1pmUnlocked ? '₹' + target1Prem2.toFixed(2) : 'STANDBY ⏳'}</strong></div>
+              <div><span style="color:var(--text-muted)">Target 2:</span> <strong style="color:var(--color-cyan)">${is1pmUnlocked ? '₹' + target2Prem2.toFixed(2) : 'STANDBY ⏳'}</strong></div>
+            </div>
+
             <div style="font-family:var(--font-mono); font-size:0.8rem; background:${is1pmUnlocked ? 'rgba(6,182,212,0.12)' : 'rgba(234,179,8,0.12)'}; border:1px solid ${is1pmUnlocked ? 'rgba(6,182,212,0.3)' : 'rgba(234,179,8,0.3)'}; color:${is1pmUnlocked ? '#06b6d4' : '#eab308'}; padding:0.5rem 0.75rem; border-radius:8px; margin-bottom:0.75rem; font-weight:800;">
               Status: ${statusBadgeText2}
             </div>
+
 
             <div class="broker-position-card" style="background: linear-gradient(135deg, rgba(9, 13, 22, 0.95), rgba(15, 23, 42, 0.95)); border:1.5px solid ${!is1pmUnlocked ? 'rgba(234,179,8,0.3)' : isTarget2Hit2 ? '#06b6d4' : isPos2 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}; border-radius:14px; padding:1.25rem; box-shadow:0 12px 30px ${is1pmUnlocked ? (isPos2 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)') : 'rgba(234,179,8,0.1)'}; backdrop-filter: blur(12px);">
               <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem; margin-bottom:0.85rem;">
