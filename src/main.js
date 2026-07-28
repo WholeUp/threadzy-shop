@@ -23,7 +23,7 @@ let telegramToken = localStorage.getItem('telegram_token') || '';
 let whatsappNumber = localStorage.getItem('whatsapp_number') || '';
 let callmebotKey = localStorage.getItem('callmebot_key') || '';
 let masterPassword = localStorage.getItem('master_access_password') || 'Neel1578';
-let isUnlocked = true;
+let isUnlocked = localStorage.getItem('terminal_unlocked') === 'true' || sessionStorage.getItem('terminal_unlocked') === 'true';
 let audioMuted = localStorage.getItem('audio_muted') === 'true';
 let loading = false;
 let isRealDataConnected = false;
@@ -230,11 +230,14 @@ const lockErrorMsg = document.getElementById('lock-error-msg');
 const lockTerminalBtn = document.getElementById('lock-terminal-btn');
 
 const simBanner = document.getElementById('simulation-banner');
+const simBannerText = document.getElementById('simulation-banner-text');
 
 function checkTerminalLockState() {
-  if (terminalLockScreen) {
-    terminalLockScreen.classList.add('hidden');
-    terminalLockScreen.style.display = 'none';
+  if (!isUnlocked) {
+    terminalLockScreen?.classList.remove('hidden');
+    setTimeout(() => masterPasscodeInput?.focus(), 100);
+  } else {
+    terminalLockScreen?.classList.add('hidden');
   }
 }
 
